@@ -55,4 +55,8 @@ public class Course {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
+    @Size(max = 255)
+    @Column(name = "image")
+    private String image;
+
 }
