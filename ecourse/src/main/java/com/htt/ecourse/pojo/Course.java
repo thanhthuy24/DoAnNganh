@@ -46,7 +46,7 @@ public class Course {
     private Float price;
 
     @Column(name = "discount", precision = 10)
-    private BigDecimal discount;
+    private Float discount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

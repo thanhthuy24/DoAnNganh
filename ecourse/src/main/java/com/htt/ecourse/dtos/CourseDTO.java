@@ -26,7 +26,7 @@ public class CourseDTO {
     private float price;
     private float discount;
     @JsonProperty("category_id")
-    private String categoryId;
+    private Long categoryId;
 
     private List<MultipartFile> files;
 }
