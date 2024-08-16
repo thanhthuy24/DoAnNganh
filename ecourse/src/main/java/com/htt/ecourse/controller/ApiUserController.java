@@ -2,7 +2,9 @@ package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.UserDTO;
 import com.htt.ecourse.dtos.UserLoginDTO;
+import com.htt.ecourse.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,7 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
+@RequiredArgsConstructor
 public class ApiUserController {
+    private final UserService userService;
     @PostMapping("/register")
     public ResponseEntity<?> createUser(
             @Valid @RequestBody UserDTO userDTO,
@@ -32,6 +36,7 @@ public class ApiUserController {
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
                 return ResponseEntity.badRequest().body("Passwords do not match");
             }
+            userService.register(userDTO);
             return ResponseEntity.ok("Register successful");
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -41,8 +46,8 @@ public class ApiUserController {
     @PostMapping("login")
     public ResponseEntity<String> loginUser(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         //kiểm tra thông tin đăng nhập và token
-
+            String token = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
         // trả về token trong response
-        return ResponseEntity.ok("Login successful");
+        return ResponseEntity.ok(token);
     }
 }

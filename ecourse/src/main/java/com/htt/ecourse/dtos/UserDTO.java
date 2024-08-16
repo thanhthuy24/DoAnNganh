@@ -31,5 +31,8 @@ public class UserDTO {
     private int facebookAccountId;
     @JsonProperty("google_account_id")
     private int googleAccountId;
+    @NotNull(message = "Role ID is required")
+    @JsonProperty("role_id")
+    private Long roleId;
 
 }
