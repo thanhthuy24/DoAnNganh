@@ -15,5 +15,5 @@ public interface LessonService {
     Lesson updateLesson(Long id, LessonDTO lessonDTO);
     void deleteLesson(Long id);
     boolean existByName(String name);
-    Video createVideoDTO(Long lessionId, VideoDTO videoDTO) throws InvalidParamException;
+    Video createVideo(Long lessionId, VideoDTO videoDTO) throws InvalidParamException;
 }

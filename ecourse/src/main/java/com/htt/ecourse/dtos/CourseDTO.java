@@ -28,5 +28,6 @@ public class CourseDTO {
     @JsonProperty("category_id")
     private Long categoryId;
 
-    private List<MultipartFile> files;
+//    private List<MultipartFile> files;
+    private MultipartFile file;
 }

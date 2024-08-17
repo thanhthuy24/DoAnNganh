@@ -1,6 +1,7 @@
 package com.htt.ecourse.service.impl;
 
 import com.htt.ecourse.dtos.CourseDTO;
+import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Category;
 import com.htt.ecourse.pojo.Course;
 import com.htt.ecourse.repository.CategoryRepository;
@@ -22,9 +23,10 @@ public class CourseServiceImpl implements CourseService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public Course createCourse(CourseDTO courseDTO) {
-        Category existCategory = categoryRepository.findById(courseDTO.getCategoryId())
-                .orElseThrow(() -> new DateTimeException("Can not find category by id: " + courseDTO.getCategoryId()));
+    public Course createCourse(CourseDTO courseDTO) throws DataNotFoundException {
+        Category existCategory = categoryRepository
+                .findById(courseDTO.getCategoryId())
+                .orElseThrow(() -> new DataNotFoundException("Can not find category by id: " + courseDTO.getCategoryId()));
 
         Course newCourse = Course.builder()
                 .name(courseDTO.getName())

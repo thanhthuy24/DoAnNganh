@@ -74,7 +74,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Video createVideoDTO(
+    public Video createVideo(
             Long lessionId,
             VideoDTO videoDTO) throws InvalidParamException {
         Lesson existingLesson = lessonRepository

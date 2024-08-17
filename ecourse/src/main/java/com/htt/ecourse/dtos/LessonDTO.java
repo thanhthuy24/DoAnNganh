@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.htt.ecourse.pojo.Course;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
+
 @Data
 @Builder
 @Getter
@@ -21,4 +24,5 @@ public class LessonDTO {
     private String description;
     @JsonProperty("course_id")
     private Long courseId;
+    private List<MultipartFile> files;
 }
