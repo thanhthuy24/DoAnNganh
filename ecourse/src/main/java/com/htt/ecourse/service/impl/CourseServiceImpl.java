@@ -79,4 +79,6 @@ public class CourseServiceImpl implements CourseService {
     public boolean existByName(String name) {
         return courseRepository.existsByName(name);
     }
+
+
 }

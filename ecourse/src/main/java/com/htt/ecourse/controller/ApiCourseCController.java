@@ -3,6 +3,7 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.CategoryDTO;
 import com.htt.ecourse.dtos.CourseDTO;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("api/courses")
+//@RequiredArgsConstructor
 public class ApiCourseCController {
     //hien thi tat ca category
     @GetMapping("")
@@ -71,6 +74,7 @@ public class ApiCourseCController {
                 return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                         .body("File must be an image");
             }
+
             String filename = storeFile(file);
         }
 
