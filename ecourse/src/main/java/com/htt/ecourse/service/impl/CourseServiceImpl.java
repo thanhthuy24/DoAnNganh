@@ -4,8 +4,10 @@ import com.htt.ecourse.dtos.CourseDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Category;
 import com.htt.ecourse.pojo.Course;
+import com.htt.ecourse.pojo.Tag;
 import com.htt.ecourse.repository.CategoryRepository;
 import com.htt.ecourse.repository.CourseRepository;
+import com.htt.ecourse.repository.TagRepository;
 import com.htt.ecourse.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,12 +23,17 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
 
     @Override
     public Course createCourse(CourseDTO courseDTO) throws DataNotFoundException {
         Category existCategory = categoryRepository
                 .findById(courseDTO.getCategoryId())
                 .orElseThrow(() -> new DataNotFoundException("Can not find category by id: " + courseDTO.getCategoryId()));
+
+        Tag existTag = tagRepository
+                .findById(courseDTO.getTagId())
+                .orElseThrow(() -> new DataNotFoundException("Can not find tag by id: " + courseDTO.getTagId()));
 
         Course newCourse = Course.builder()
                 .name(courseDTO.getName())
@@ -35,6 +42,7 @@ public class CourseServiceImpl implements CourseService {
                 .price(courseDTO.getPrice())
                 .discount(courseDTO.getDiscount())
                 .category(existCategory)
+                .tag(existTag)
                 .build();
 
         return courseRepository.save(newCourse);

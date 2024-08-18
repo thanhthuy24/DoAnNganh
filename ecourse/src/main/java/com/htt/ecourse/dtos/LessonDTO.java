@@ -1,5 +1,6 @@
 package com.htt.ecourse.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.htt.ecourse.pojo.Course;
 import jakarta.validation.constraints.Size;
@@ -24,5 +25,6 @@ public class LessonDTO {
     private String description;
     @JsonProperty("course_id")
     private Long courseId;
+    @JsonIgnore
     private List<MultipartFile> files;
 }

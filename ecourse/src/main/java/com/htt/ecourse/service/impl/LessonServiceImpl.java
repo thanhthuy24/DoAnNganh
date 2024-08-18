@@ -26,7 +26,8 @@ public class LessonServiceImpl implements LessonService {
     private final VideoRepository videoRepository;
     @Override
     public Lesson createLesson(LessonDTO lessonDTO) {
-        Course existCourse = courseRepository.findById(lessonDTO.getCourseId())
+        Course existCourse = courseRepository
+                .findById(lessonDTO.getCourseId())
                 .orElseThrow(() -> new DateTimeException("Can nit find course by id " + lessonDTO.getCourseId()));
 
         Lesson newLesson = Lesson.builder()
@@ -75,10 +76,11 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Video createVideo(
-            Long lessionId,
+            Long lessonId,
             VideoDTO videoDTO) throws InvalidParamException {
         Lesson existingLesson = lessonRepository
-                .findById(videoDTO.getLessonId())
+                .findById(lessonId)
+//                .findById(videoDTO.getLessonId())
                 .orElseThrow(() -> new DateTimeException("Can not find Lesson with id " + videoDTO.getLessonId()));
 
         Video newVideo = Video.builder()
@@ -87,9 +89,9 @@ public class LessonServiceImpl implements LessonService {
                 .build();
 
         //khong cho insert qua 5 video trong 1 lesson
-        int size = videoRepository.findByLessonId(lessionId).size();
-        if (size >= 5) {
-            throw new InvalidParamException("Number of videos must be <= 5");
+        int size = videoRepository.findByLessonId(lessonId).size();
+        if (size >= Video.MAXIMUM_VIDEOS_PER_LESSON) {
+            throw new InvalidParamException("Number of videos must be <= " + Video.MAXIMUM_VIDEOS_PER_LESSON);
         }
 
         return videoRepository.save(newVideo);

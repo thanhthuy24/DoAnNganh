@@ -1,5 +1,6 @@
 package com.htt.ecourse.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,8 +20,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class Course {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Size(max = 255)
     @NotNull
@@ -32,13 +34,15 @@ public class Course {
     private String description;
 
     @ColumnDefault("1")
-    @Column(name = "isActive")
+    @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "createdDate")
+    @Column(name = "created_date", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @Column(name = "updatedDate")
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
 
     @NotNull
@@ -49,15 +53,30 @@ public class Course {
     private Float discount;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
     @Size(max = 255)
     @Column(name = "image")
     private String image;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdDate = new Date();
+        if (this.isActive == null) {
+            this.isActive = true; // Mặc định là true (hoặc 1)
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedDate = new Date();
+    }
 
 }

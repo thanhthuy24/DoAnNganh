@@ -1,5 +1,6 @@
 package com.htt.ecourse.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseDTO {
@@ -27,7 +29,10 @@ public class CourseDTO {
     private float discount;
     @JsonProperty("category_id")
     private Long categoryId;
+    @JsonProperty("tag_id")
+    private Long tagId;
 
 //    private List<MultipartFile> files;
+    @JsonIgnore
     private MultipartFile file;
 }

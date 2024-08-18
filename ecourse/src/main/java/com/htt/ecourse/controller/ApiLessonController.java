@@ -43,7 +43,7 @@ public class ApiLessonController {
         return ResponseEntity.ok("get lessons with id: " + lessonId);
     }
 
-    @PostMapping(value = "")
+    @PostMapping("")
     public ResponseEntity<?> createLesson(
             @Valid @ModelAttribute LessonDTO lessonDTO,
             BindingResult rs
@@ -66,16 +66,21 @@ public class ApiLessonController {
 
     }
 
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadVideos(
-            @PathVariable("id") Long productId,
+            @PathVariable("id") Long lessonId,
             @ModelAttribute("files") List<MultipartFile> files
     ) {try {
-        Lesson existingLesson = lessonService.getLesson(productId);
+        Lesson existingLesson = lessonService.getLesson(lessonId);
         files = files == null ? new ArrayList<>() : files;
+
+        if(files.size() > Video.MAXIMUM_VIDEOS_PER_LESSON){
+            return ResponseEntity.badRequest().body("You can upload only 5 videos");
+        }
+
         List<Video> videos = new ArrayList<>();
         for(MultipartFile file : files) {
-            if(!file.isEmpty()) {
+            if(file.isEmpty()) {
                 continue;
             }
             if(file.getSize() > 10 * 1024 * 1024) {

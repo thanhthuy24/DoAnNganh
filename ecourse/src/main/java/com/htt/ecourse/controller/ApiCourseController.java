@@ -2,10 +2,15 @@ package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.CourseDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
+import com.htt.ecourse.pojo.Course;
 import com.htt.ecourse.service.CourseService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +37,19 @@ public class ApiCourseController {
     private final CourseService courseService;
     //hien thi tat ca category
     @GetMapping("")
-    public ResponseEntity<String> getAllCourses(
+    public ResponseEntity<List<Course>> getAllCourses(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        return ResponseEntity.ok("get courses");
+        // tao pageable tu thong tin page va limit
+        Pageable pageRequest = PageRequest.of(page, limit,
+                Sort.by("createdDate").descending());
+        Page<Course> coursePage = courseService.getAllCourses(pageRequest);
+
+        // lay tong so trang
+        int totalPage = coursePage.getTotalPages();
+        List<Course> courses = coursePage.getContent();
+        return ResponseEntity.ok(courses);
     }
 
     @GetMapping("/{courseId}")

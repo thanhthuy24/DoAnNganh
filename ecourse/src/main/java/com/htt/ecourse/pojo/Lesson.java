@@ -1,5 +1,6 @@
 package com.htt.ecourse.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -34,13 +35,15 @@ public class Lesson {
     private String description;
 
     @ColumnDefault("1")
-    @Column(name = "isActive")
+    @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "createdDate")
+    @Column(name = "created_date", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @Column(name = "updatedDate")
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,6 +51,20 @@ public class Lesson {
     private Course course;
 
     @OneToMany(mappedBy = "lesson")
+    @JsonIgnore
     private Set<Video> videos = new LinkedHashSet<>();
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdDate = new Date();
+        if (this.isActive == null) {
+            this.isActive = true; // Mặc định là true (hoặc 1)
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedDate = new Date();
+    }
 
 }
