@@ -3,6 +3,7 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.CourseDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Course;
+import com.htt.ecourse.responses.CouseListResponse;
 import com.htt.ecourse.service.CourseService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
@@ -37,7 +38,7 @@ public class ApiCourseController {
     private final CourseService courseService;
     //hien thi tat ca category
     @GetMapping("")
-    public ResponseEntity<List<Course>> getAllCourses(
+    public ResponseEntity<CouseListResponse> getAllCourses(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
@@ -49,7 +50,10 @@ public class ApiCourseController {
         // lay tong so trang
         int totalPage = coursePage.getTotalPages();
         List<Course> courses = coursePage.getContent();
-        return ResponseEntity.ok(courses);
+        return ResponseEntity.ok(CouseListResponse.builder()
+                        .courses(courses)
+                        .totalPages(totalPage)
+                .build());
     }
 
     @GetMapping("/{courseId}")
