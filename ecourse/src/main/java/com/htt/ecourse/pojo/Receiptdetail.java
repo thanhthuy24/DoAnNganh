@@ -14,7 +14,7 @@ public class Receiptdetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "price")
     private Float price;
@@ -22,15 +22,15 @@ public class Receiptdetail {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "totalMoney")
+    @Column(name = "total_money")
     private Float totalMoney;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courseId")
+    @JoinColumn(name = "course_id")
     private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiptId")
+    @JoinColumn(name = "receipt_id")
     private Receipt receipt;
 
 }

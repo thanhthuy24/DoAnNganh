@@ -1,7 +1,10 @@
 package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.ReceiptDTO;
+import com.htt.ecourse.pojo.Receipt;
+import com.htt.ecourse.service.ReceipService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -11,7 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/receipts")
+@RequiredArgsConstructor
 public class ApiReceiptController {
+    private final ReceipService receipService;
+
     @PostMapping("")
     public ResponseEntity<?> createReceipt(
             @Valid @RequestBody ReceiptDTO receiptDTO,
@@ -25,19 +31,32 @@ public class ApiReceiptController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-
-            return ResponseEntity.ok("create receipt successful");
+            receipService.createReceipt(receiptDTO);
+            return ResponseEntity.ok(receiptDTO);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getReceiptByUserId(
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getReceipts(
             @PathVariable("userId") Long userId
     ) {
         try{
-            return ResponseEntity.ok("Lấy danh sách receipt bằng user id = " + userId);
+            List<Receipt> receipts = receipService.findByUserId(userId);
+            return ResponseEntity.ok(receipts);
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getReceipt(
+            @PathVariable("id") Long id
+    ) {
+        try{
+            Receipt existingReceipt = receipService.getReceipt(id);
+            return ResponseEntity.ok(existingReceipt);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -49,6 +68,7 @@ public class ApiReceiptController {
             @Valid @RequestBody ReceiptDTO receiptDTO
     ) {
         try{
+
             return ResponseEntity.ok("update receipt của id = " + id);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

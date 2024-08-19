@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ReceiptDetailRepository extends JpaRepository<Receiptdetail, Long> {
-    List<Receiptdetail> findReceiptDetailById (Long id);
+    List<Receiptdetail> findByReceiptId(Long receiptId);
 }

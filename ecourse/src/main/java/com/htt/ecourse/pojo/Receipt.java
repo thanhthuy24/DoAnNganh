@@ -1,10 +1,12 @@
 package com.htt.ecourse.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -17,10 +19,10 @@ public class Receipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "order_date")
-    private Instant orderDate;
+    private Date orderDate;
 
     @Column(name = "total_money")
     private Float totalMoney;
@@ -29,7 +31,7 @@ public class Receipt {
     @Column(name = "payment_method", length = 100)
     private String paymentMethod;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

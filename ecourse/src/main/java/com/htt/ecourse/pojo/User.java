@@ -1,5 +1,6 @@
 package com.htt.ecourse.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -21,9 +22,6 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Receipt> receipts = new LinkedHashSet<>();
-
     @Size(max = 100)
     @Column(name = "username", length = 100)
     private String username;
@@ -41,18 +39,17 @@ public class User {
     private String phone;
 
     @Size(max = 255)
-    @Column(name = "firstName")
+    @Column(name = "first_name")
     private String firstName;
 
     @Size(max = 255)
-    @Column(name = "lastName")
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "google_account_id")
+    @JoinColumn(name = "google_account")
     private int googleAccount;
 
     @Column(name = "is_active")
@@ -64,12 +61,8 @@ public class User {
     @Column(name = "updated_date")
     private Date updatedDate;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "facebook_account_id")
+    @JoinColumn(name = "facebook_account")
     private int facebookAccount;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Token> tokens = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")

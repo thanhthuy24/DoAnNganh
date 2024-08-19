@@ -33,8 +33,4 @@ public class Socialaccount {
     @Column(name = "name", length = 100)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
 }

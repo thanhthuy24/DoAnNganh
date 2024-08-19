@@ -27,9 +27,9 @@ public class UserDTO {
     @NotNull(message = "Role must be required")
     private String role;
     private Date dateOfBirth;
-    @JsonProperty("facebook_account_id")
+    @JsonProperty("facebook_account")
     private int facebookAccountId;
-    @JsonProperty("google_account_id")
+    @JsonProperty("google_account")
     private int googleAccountId;
     @NotNull(message = "Role ID is required")
     @JsonProperty("role_id")
