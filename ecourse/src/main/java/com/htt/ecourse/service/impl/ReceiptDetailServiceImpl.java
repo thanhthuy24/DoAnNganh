@@ -30,7 +30,7 @@ public class ReceiptDetailServiceImpl implements ReceiptDetailService {
     @Override
     public Receiptdetail getReceiptDetail(Long id) {
         return receiptDetailRepository.findById(id)
-                .orElseThrow(() -> new DateTimeException("Cannot find receipt id "  + id));
+                .orElseThrow(() -> new DateTimeException("Cannot find receipt detail id "  + id));
     }
 
     @Override

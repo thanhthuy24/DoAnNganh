@@ -24,8 +24,6 @@ public class UserDTO {
     private String password;
     private String retypePassword;
     private String phone;
-    @NotNull(message = "Role must be required")
-    private String role;
     private Date dateOfBirth;
     @JsonProperty("facebook_account")
     private int facebookAccountId;

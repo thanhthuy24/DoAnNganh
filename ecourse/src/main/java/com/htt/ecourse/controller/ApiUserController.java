@@ -2,6 +2,8 @@ package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.UserDTO;
 import com.htt.ecourse.dtos.UserLoginDTO;
+import com.htt.ecourse.exceptions.DataNotFoundException;
+import com.htt.ecourse.pojo.User;
 import com.htt.ecourse.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +38,8 @@ public class ApiUserController {
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
                 return ResponseEntity.badRequest().body("Passwords do not match");
             }
-            userService.register(userDTO);
-            return ResponseEntity.ok("Register successful");
+            User user = userService.register(userDTO);
+            return ResponseEntity.ok(user);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -46,8 +48,13 @@ public class ApiUserController {
     @PostMapping("login")
     public ResponseEntity<String> loginUser(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         //kiểm tra thông tin đăng nhập và token
+        try {
             String token = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
+            return ResponseEntity.ok(token);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         // trả về token trong response
-        return ResponseEntity.ok(token);
+
     }
 }

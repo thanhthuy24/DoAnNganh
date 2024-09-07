@@ -23,7 +23,7 @@ public class ApiReceiptDetailController {
     ) {
         try{
             Receiptdetail existingReceiptdetail = receiptDetailService.getReceiptDetail(id);
-            return ResponseEntity.ok(existingReceiptdetail);
+            return ResponseEntity.ok().body(existingReceiptdetail);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
