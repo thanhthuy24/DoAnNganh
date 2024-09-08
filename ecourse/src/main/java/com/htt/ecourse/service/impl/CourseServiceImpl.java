@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,7 +50,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getCourse(Long id) {
+    public Course getCourseById(Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new DateTimeException("Can not find course with id : " + id));
     }
@@ -60,8 +61,13 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<Course> getCoursesByTeacherId(Long teacherId) {
+        return List.of();
+    }
+
+    @Override
     public Course updateCourse(Long id, CourseDTO courseDTO) {
-        Course existingCourse = getCourse(id);
+        Course existingCourse = getCourseById(id);
         if(existingCourse != null){
             //copy thuộc tính từ DTO sang
             Category existCategory = categoryRepository.findById(courseDTO.getCategoryId())

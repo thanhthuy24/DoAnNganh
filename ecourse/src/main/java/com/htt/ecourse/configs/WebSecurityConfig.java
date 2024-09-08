@@ -30,6 +30,21 @@ public class WebSecurityConfig {
                                     "api/users/login",
                                     "api/users/register")
                             .permitAll()
+                           .requestMatchers(GET, "api/categories/**").permitAll()
+                            .requestMatchers(POST, "api/categories/**").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(PUT, "api/categories/**").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(DELETE, "api/categories/**").hasAnyRole(Role.ADMIN)
+
+                            .requestMatchers(GET, "api/courses/**").permitAll()
+                            .requestMatchers(POST, "api/courses/**").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(PUT, "api/courses/**").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(DELETE, "api/courses/**").hasAnyRole(Role.ADMIN)
+
+                            .requestMatchers(GET, "api/teachers/**").permitAll()
+                            .requestMatchers(POST, "api/teachers/**").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(PUT, "api/teachers/**").hasAnyRole(Role.ADMIN, Role.TEACHER)
+                            .requestMatchers(DELETE, "api/teachers/**").hasAnyRole(Role.ADMIN)
+
                             .requestMatchers(POST, "api/tags").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/receipts/**").hasAnyRole(Role.USER)
                             .anyRequest().authenticated();

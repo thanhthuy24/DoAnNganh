@@ -90,8 +90,6 @@ public class User implements UserDetails {
         if (getRole() != null && getRole().getName() != null) {
             authorityList.add(new SimpleGrantedAuthority("ROLE_" + getRole().getName().toUpperCase()));
         }
-//        authorityList.add(new SimpleGrantedAuthority("ROLE_"+getRole().getName().toUpperCase()));
-//        authorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
         return authorityList;
     }
 

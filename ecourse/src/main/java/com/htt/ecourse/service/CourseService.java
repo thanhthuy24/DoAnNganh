@@ -9,10 +9,15 @@ import com.htt.ecourse.pojo.Video;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CourseService {
-    public Course createCourse(CourseDTO courseDTO) throws DataNotFoundException;
-    Course getCourse(Long id);
+    Course createCourse(CourseDTO courseDTO) throws DataNotFoundException;
+    Course getCourseById(Long id);
     Page<Course> getAllCourses(Pageable pageable);
+
+    List<Course> getCoursesByTeacherId(Long teacherId);
+
     Course updateCourse(Long id, CourseDTO courseDTO);
     void deleteCourse(Long id);
     boolean existByName(String name);

@@ -7,5 +7,5 @@ import com.htt.ecourse.pojo.User;
 
 public interface UserService {
     String login(String username, String password) throws DataNotFoundException, InvalidParamException;
-    User register(UserDTO userDTO) throws DataNotFoundException;
+    User register(UserDTO userDTO) throws Exception;
 }

@@ -1,6 +1,5 @@
 package com.htt.ecourse.responses;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 //import com.htt.ecourse.dtos.CourseDTO;
 import com.htt.ecourse.pojo.Course;
 import lombok.*;
@@ -13,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CouseListResponse {
+public class CourseListResponse {
     private List<Course> courses;
     private int totalPages;
 }

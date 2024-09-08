@@ -7,8 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Date;
 
 @Getter
@@ -65,6 +63,11 @@ public class Course {
     @Size(max = 255)
     @Column(name = "image")
     private String image;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+//    @JsonIgnore
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 
     @PrePersist
     protected void onCreate() {

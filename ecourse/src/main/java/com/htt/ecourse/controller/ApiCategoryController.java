@@ -5,6 +5,7 @@ import com.htt.ecourse.pojo.Category;
 import com.htt.ecourse.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -20,6 +21,7 @@ public class ApiCategoryController {
     private final CategoryService categoryService;
     //hien thi tat ca category
     @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Category>> getAllCategories(
             @RequestParam("page")     int page,
             @RequestParam("limit")    int limit
@@ -31,6 +33,7 @@ public class ApiCategoryController {
 
     //them category
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDTO categoryDTO,
         BindingResult rs) {
         if(rs.hasErrors()){
@@ -45,6 +48,7 @@ public class ApiCategoryController {
     }
 
     @PutMapping("/{cateId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> updateCategory(
             @PathVariable Long cateId,
             @Valid @RequestBody CategoryDTO categoryDTO)
@@ -54,6 +58,7 @@ public class ApiCategoryController {
     }
 
     @DeleteMapping("/{cateId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteCategory(@PathVariable Long cateId) {
         categoryService.deleteCategory(cateId);
         return ResponseEntity.ok("delete category successfully!");

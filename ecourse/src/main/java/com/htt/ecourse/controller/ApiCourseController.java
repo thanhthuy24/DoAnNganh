@@ -3,7 +3,7 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.CourseDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Course;
-import com.htt.ecourse.responses.CouseListResponse;
+import com.htt.ecourse.responses.CourseListResponse;
 import com.htt.ecourse.service.CourseService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
@@ -15,20 +15,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/courses")
@@ -36,9 +30,10 @@ import java.util.UUID;
 public class ApiCourseController {
     private final CloudinaryService cloudinaryService;
     private final CourseService courseService;
-    //hien thi tat ca category
+    //hien thi tat ca courses
     @GetMapping("")
-    public ResponseEntity<CouseListResponse> getAllCourses(
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<CourseListResponse> getAllCourses(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
@@ -50,21 +45,24 @@ public class ApiCourseController {
         // lay tong so trang
         int totalPage = coursePage.getTotalPages();
         List<Course> courses = coursePage.getContent();
-        return ResponseEntity.ok(CouseListResponse.builder()
+        return ResponseEntity.ok(CourseListResponse.builder()
                         .courses(courses)
                         .totalPages(totalPage)
                 .build());
     }
 
     @GetMapping("/{courseId}")
-    public ResponseEntity<String> getCourseById(
-            @PathVariable("courseId") String courseId
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Course> getCourseById(
+            @PathVariable("courseId") Long courseId
     ) {
-        return ResponseEntity.ok("get courses with id: " + courseId);
+        Course courseById = courseService.getCourseById(courseId);
+        return ResponseEntity.ok(courseById);
     }
 
     //them category
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createCourse(
             @Valid @ModelAttribute CourseDTO courseDTO,
             BindingResult rs
@@ -107,11 +105,13 @@ public class ApiCourseController {
     }
 
     @PutMapping("/{courseId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> updateCourse(@PathVariable Long courseId) {
         return ResponseEntity.ok("update course");
     }
 
     @DeleteMapping("/{courseId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteCourse(@PathVariable Long courseId) {
         return ResponseEntity.ok("delete course");
     }

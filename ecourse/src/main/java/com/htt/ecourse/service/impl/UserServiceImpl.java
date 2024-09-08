@@ -4,6 +4,7 @@ import com.htt.ecourse.components.JwtTokenUtil;
 import com.htt.ecourse.dtos.UserDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.exceptions.InvalidParamException;
+import com.htt.ecourse.exceptions.PermissionDenyException;
 import com.htt.ecourse.pojo.Role;
 import com.htt.ecourse.pojo.User;
 import com.htt.ecourse.repository.RoleRepository;
@@ -49,11 +50,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(UserDTO userDTO) throws DataNotFoundException {
+    public User register(UserDTO userDTO) throws Exception {
         // kiểm tra email đã tồn tại chưa
         String email = userDTO.getEmail();
         if(userRepository.existsByEmail(email)){
             throw new DataIntegrityViolationException("Email Already Exists");
+        }
+
+        Role role = roleRepository.findById(userDTO.getRoleId())
+                .orElseThrow(() -> new DataNotFoundException("Role Not Found"));
+
+        if(role.getName().equals(Role.ADMIN)){
+            throw new PermissionDenyException("You cannot register a ADMIN account!!");
         }
 
         //convert from UserDTO -> User
@@ -67,8 +75,7 @@ public class UserServiceImpl implements UserService {
                 .facebookAccount(userDTO.getFacebookAccountId())
                 .googleAccount(userDTO.getGoogleAccountId())
                 .build();
-        Role role = roleRepository.findById(userDTO.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("Role Not Found"));
+
         newUser.setRole(role);
         // kiểm tra nếu có account_id thì không yêu cầu password
         if(userDTO.getFacebookAccountId()==0 && userDTO.getGoogleAccountId()==0){
