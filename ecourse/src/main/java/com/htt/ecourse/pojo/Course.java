@@ -64,8 +64,8 @@ public class Course {
     @Column(name = "image")
     private String image;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-//    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 

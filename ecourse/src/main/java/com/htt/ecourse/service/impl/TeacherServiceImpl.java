@@ -3,6 +3,7 @@ package com.htt.ecourse.service.impl;
 import com.htt.ecourse.dtos.TeacherDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.*;
+import com.htt.ecourse.repository.CourseRepository;
 import com.htt.ecourse.repository.TeacherRepository;
 import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.service.TeacherService;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
+    private final CourseRepository courseRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -69,6 +71,6 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void deleteTeacher(Long id) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
-        optionalTeacher.ifPresent(teacherRepository::delete);
+        teacherRepository.delete(optionalTeacher.get());
     }
 }

@@ -15,16 +15,11 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserUpdateDTO {
     private String firstName;
     private String lastName;
-    @NotBlank(message = "Email must be required")
     private String email;
-    @NotBlank(message = "Username must be required")
     private String username;
-    @NotBlank(message = "Password must be required")
-    private String password;
-    private String retypePassword;
     private String phone;
     private String avatar;
     private Date dateOfBirth;
@@ -32,11 +27,7 @@ public class UserDTO {
     private int facebookAccountId;
     @JsonProperty("google_account")
     private int googleAccountId;
-    @NotNull(message = "Role ID is required")
-    @JsonProperty("role_id")
-    private Long roleId;
 
     @JsonIgnore
     private MultipartFile file;
-
 }

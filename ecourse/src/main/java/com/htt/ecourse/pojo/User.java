@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,6 +48,7 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
@@ -70,6 +72,14 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @Size(max = 255)
+    @Column(name = "avatar")
+    private String avatar;
+
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+//    @JsonIgnore
+//    private Set<Teacher> teacherSet;
 
     @PrePersist
     protected void onCreate() {

@@ -5,9 +5,11 @@ import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Category;
 import com.htt.ecourse.pojo.Course;
 import com.htt.ecourse.pojo.Tag;
+import com.htt.ecourse.pojo.Teacher;
 import com.htt.ecourse.repository.CategoryRepository;
 import com.htt.ecourse.repository.CourseRepository;
 import com.htt.ecourse.repository.TagRepository;
+import com.htt.ecourse.repository.TeacherRepository;
 import com.htt.ecourse.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
+    private final TeacherRepository teacherRepository;
     private final TagRepository tagRepository;
 
     @Override
@@ -36,6 +40,10 @@ public class CourseServiceImpl implements CourseService {
                 .findById(courseDTO.getTagId())
                 .orElseThrow(() -> new DataNotFoundException("Can not find tag by id: " + courseDTO.getTagId()));
 
+        Teacher existTeacher = teacherRepository
+                .findById(courseDTO.getTeacherId())
+                .orElseThrow(() -> new DateTimeException("Can not find teacher by id: " + courseDTO.getTeacherId()));
+
         Course newCourse = Course.builder()
                 .name(courseDTO.getName())
                 .description(courseDTO.getDescription())
@@ -44,9 +52,10 @@ public class CourseServiceImpl implements CourseService {
                 .discount(courseDTO.getDiscount())
                 .category(existCategory)
                 .tag(existTag)
+                .teacher(existTeacher)
                 .build();
-
-        return courseRepository.save(newCourse);
+        courseRepository.save(newCourse);
+        return newCourse;
     }
 
     @Override
@@ -67,17 +76,22 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course updateCourse(Long id, CourseDTO courseDTO) {
-        Course existingCourse = getCourseById(id);
+        Course existingCourse = courseRepository.findById(id)
+                .orElseThrow(() -> new DateTimeException("Can not find course with id : " + id));
         if(existingCourse != null){
             //copy thuộc tính từ DTO sang
             Category existCategory = categoryRepository.findById(courseDTO.getCategoryId())
                     .orElseThrow(() -> new DateTimeException("Can not find category by id: " + courseDTO.getCategoryId()));
+
+            Teacher existTeacher = teacherRepository.findById(courseDTO.getTeacherId())
+                            .orElseThrow(() -> new DateTimeException("Can not find teacher by id: " + courseDTO.getTeacherId()));
             existingCourse.setName(courseDTO.getName());
             existingCourse.setDescription(courseDTO.getDescription());
-            existingCourse.setImage(courseDTO.getImage());
             existingCourse.setPrice(courseDTO.getPrice());
             existingCourse.setDiscount(courseDTO.getDiscount());
             existingCourse.setCategory(existCategory);
+            existingCourse.setTeacher(existTeacher);
+            existingCourse.setUpdatedDate(new Date());
 
             return courseRepository.save(existingCourse);
             //sử dụng ModelMapper

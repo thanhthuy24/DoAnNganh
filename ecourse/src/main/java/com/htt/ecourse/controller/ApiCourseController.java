@@ -96,7 +96,7 @@ public class ApiCourseController {
         // Thiết lập URL của hình ảnh cho CourseDTO
         courseDTO.setImage(imageUrl);
         courseService.createCourse(courseDTO);
-        return ResponseEntity.ok("create course + " + courseDTO);
+        return ResponseEntity.ok(courseDTO);
     }
 
     private String storeFile(MultipartFile file) throws IOException {
@@ -106,8 +106,20 @@ public class ApiCourseController {
 
     @PutMapping("/{courseId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> updateCourse(@PathVariable Long courseId) {
-        return ResponseEntity.ok("update course");
+    public ResponseEntity<?> updateCourse(
+            @PathVariable Long courseId,
+            @Valid @ModelAttribute CourseDTO courseDTO,
+            BindingResult rs
+    ) {
+        if (rs.hasErrors()) {
+            List<String> errorMessages = rs.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        courseService.updateCourse(courseId, courseDTO);
+        return ResponseEntity.ok(courseDTO);
     }
 
     @DeleteMapping("/{courseId}")

@@ -2,6 +2,7 @@ package com.htt.ecourse.service.impl;
 
 import com.htt.ecourse.components.JwtTokenUtil;
 import com.htt.ecourse.dtos.UserDTO;
+import com.htt.ecourse.dtos.UserUpdateDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.exceptions.InvalidParamException;
 import com.htt.ecourse.exceptions.PermissionDenyException;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
 import java.util.Optional;
 
 @Service
@@ -70,6 +72,7 @@ public class UserServiceImpl implements UserService {
                 .lastName(userDTO.getLastName())
                 .email(email)
                 .phone(userDTO.getPhone())
+                .avatar(userDTO.getAvatar())
                 .username(userDTO.getUsername())
                 .dateOfBirth(userDTO.getDateOfBirth())
                 .facebookAccount(userDTO.getFacebookAccountId())
@@ -86,5 +89,28 @@ public class UserServiceImpl implements UserService {
 
         }
         return userRepository.save(newUser);
+    }
+
+    public User getUserById(Long userId){
+        return  userRepository.findById(userId)
+                .orElseThrow(() -> new DateTimeException("Can not find user by id + " + userId));
+    }
+
+    @Override
+    public User updateInformation(Long userId, UserUpdateDTO userUpdateDTO) throws Exception {
+        User existingUser = getUserById(userId);
+
+        if(existingUser != null){
+            existingUser.setFirstName(userUpdateDTO.getFirstName());
+            existingUser.setLastName(userUpdateDTO.getLastName());
+            existingUser.setEmail(userUpdateDTO.getEmail());
+            existingUser.setPhone(userUpdateDTO.getPhone());
+            existingUser.setUsername(userUpdateDTO.getUsername());
+            existingUser.setDateOfBirth(userUpdateDTO.getDateOfBirth());
+            existingUser.setFacebookAccount(userUpdateDTO.getFacebookAccountId());
+            existingUser.setGoogleAccount(userUpdateDTO.getGoogleAccountId());
+            return userRepository.save(existingUser);
+        }
+        return null;
     }
 }

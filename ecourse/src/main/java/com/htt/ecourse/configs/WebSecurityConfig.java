@@ -45,6 +45,11 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/teachers/**").hasAnyRole(Role.ADMIN, Role.TEACHER)
                             .requestMatchers(DELETE, "api/teachers/**").hasAnyRole(Role.ADMIN)
 
+//                            .requestMatchers(GET, "api/users/**").permitAll()
+                            .requestMatchers(POST, "api/users/**").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(PUT, "api/users/update-user/**").hasAnyRole(Role.ADMIN, Role.USER)
+                            .requestMatchers(DELETE, "api/users/**").hasAnyRole(Role.ADMIN)
+
                             .requestMatchers(POST, "api/tags").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/receipts/**").hasAnyRole(Role.USER)
                             .anyRequest().authenticated();
