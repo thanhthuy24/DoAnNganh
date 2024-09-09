@@ -3,12 +3,19 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.LessonDTO;
 import com.htt.ecourse.dtos.VideoDTO;
 import com.htt.ecourse.exceptions.InvalidParamException;
+import com.htt.ecourse.pojo.Course;
 import com.htt.ecourse.pojo.Lesson;
 import com.htt.ecourse.pojo.Video;
+import com.htt.ecourse.responses.CourseListResponse;
+import com.htt.ecourse.responses.LessonListResponse;
 import com.htt.ecourse.service.LessonService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +36,30 @@ public class ApiLessonController {
     private final LessonService lessonService;
     private final CloudinaryService cloudinaryService;
     @GetMapping("")
-    public ResponseEntity<String> getLessons(
+    public ResponseEntity<LessonListResponse> getLessons(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        return ResponseEntity.ok("get lessons");
+        // tao pageable tu thong tin page va limit
+        Pageable pageRequest = PageRequest.of(page, limit,
+                Sort.by("createdDate").descending());
+        Page<Lesson> lessonPage = lessonService.getAllLessons(pageRequest);
+
+        // lay tong so trang
+        int totalPage = lessonPage.getTotalPages();
+        List<Lesson> lessons = lessonPage.getContent();
+        return ResponseEntity.ok(LessonListResponse.builder()
+                .lessons(lessons)
+                .totalPages(totalPage)
+                .build());
     }
 
     @GetMapping("/{lessonId}")
-    public ResponseEntity<String> getLessonById(
-            @PathVariable("lessonId") int lessonId
+    public ResponseEntity<Lesson> getLessonById(
+            @PathVariable("lessonId") Long lessonId
     ) {
-        return ResponseEntity.ok("get lessons with id: " + lessonId);
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        return ResponseEntity.ok(lesson);
     }
 
     @PostMapping("")
@@ -66,12 +85,12 @@ public class ApiLessonController {
 
     }
 
-    @PostMapping(value = "/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/uploads/{lessonId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadVideos(
-            @PathVariable("id") Long lessonId,
+            @PathVariable("lessonId") Long lessonId,
             @ModelAttribute("files") List<MultipartFile> files
     ) {try {
-        Lesson existingLesson = lessonService.getLesson(lessonId);
+        Lesson existingLesson = lessonService.getLessonById(lessonId);
         files = files == null ? new ArrayList<>() : files;
 
         if(files.size() > Video.MAXIMUM_VIDEOS_PER_LESSON){
@@ -100,7 +119,7 @@ public class ApiLessonController {
             );
             videos.add(video);
         }
-        return ResponseEntity.ok().body(videos);
+        return ResponseEntity.ok(videos);
     } catch(Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
@@ -113,12 +132,48 @@ public class ApiLessonController {
     }
 
     @PutMapping("/{lessonId}")
-    public ResponseEntity<String> updateLesson(@PathVariable Long lessonId) {
-        return ResponseEntity.ok("update lesson");
+    public ResponseEntity<?> updateLesson(
+            @PathVariable Long lessonId,
+            @Valid @ModelAttribute LessonDTO lessonDTO,
+            BindingResult rs
+    ) {
+        if (rs.hasErrors()) {
+            List<String> errorMessages = rs.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        lessonService.updateLesson(lessonId, lessonDTO);
+        return ResponseEntity.ok(lessonDTO);
+    }
+
+    @PutMapping("/{lessonId}/active")
+    public ResponseEntity<?> updateActiveLesson(
+            @PathVariable Long lessonId,
+            @Valid @ModelAttribute LessonDTO lessonDTO,
+            BindingResult rs
+    ) {
+        if (rs.hasErrors()) {
+            List<String> errorMessages = rs.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        Lesson updatedLesson = lessonService.updateActiveLesson(lessonId, lessonDTO);
+        if (updatedLesson == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found with id: " + lessonId);
+        }
+
+        return ResponseEntity.ok(lessonDTO);
     }
 
     @DeleteMapping("/{lessonId}")
-    public ResponseEntity<String> deleteLesson(@PathVariable Long lessonId) {
-        return ResponseEntity.ok("delete lesson");
+    public ResponseEntity<String> deleteLesson(
+            @PathVariable Long lessonId
+    ) {
+        lessonService.deleteLesson(lessonId);
+        return ResponseEntity.ok("delete lesson success");
     }
 }

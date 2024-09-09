@@ -39,7 +39,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Lesson getLesson(Long id) {
+    public Lesson getLessonById(Long id) {
         return lessonRepository.findById(id)
                 .orElseThrow(() -> new DateTimeException("Can nit find lesson by id " + id));
     }
@@ -51,7 +51,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Lesson updateLesson(Long id, LessonDTO lessonDTO) {
-        Lesson existingLesson = getLesson(id);
+        Lesson existingLesson = getLessonById(id);
         if (existingLesson != null) {
             Course existCouse = courseRepository.findById(lessonDTO.getCourseId())
                     .orElseThrow(() -> new DateTimeException("Can nit find course by id " + id));
@@ -64,9 +64,29 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    public Lesson updateActiveLesson(Long id, LessonDTO lessonDTO){
+        Lesson existingLesson = getLessonById(id);
+        if (existingLesson != null) {
+            Course existCouse = courseRepository.findById(lessonDTO.getCourseId())
+                    .orElseThrow(() -> new DateTimeException("Can nit find course by id " + id));
+            existingLesson.setName(lessonDTO.getName());
+            existingLesson.setDescription(lessonDTO.getDescription());
+            existingLesson.setCourse(existCouse);
+            existingLesson.setIsActive(lessonDTO.getIsActive());
+            return lessonRepository.save(existingLesson);
+        }
+        return null;
+    }
+
+    @Override
     public void deleteLesson(Long id) {
         Optional<Lesson> optionalLesson = lessonRepository.findById(id);
-        optionalLesson.ifPresent(lessonRepository::delete);
+
+        Lesson lesson = optionalLesson.get();
+
+        videoRepository.deleteAll(lesson.getVideos());
+
+        lessonRepository.delete(lesson);
     }
 
     @Override
@@ -80,7 +100,6 @@ public class LessonServiceImpl implements LessonService {
             VideoDTO videoDTO) throws InvalidParamException {
         Lesson existingLesson = lessonRepository
                 .findById(lessonId)
-//                .findById(videoDTO.getLessonId())
                 .orElseThrow(() -> new DateTimeException("Can not find Lesson with id " + videoDTO.getLessonId()));
 
         Video newVideo = Video.builder()

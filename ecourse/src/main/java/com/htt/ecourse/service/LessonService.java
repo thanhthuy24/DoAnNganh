@@ -9,11 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface LessonService {
-    public Lesson createLesson(LessonDTO lessonDTO);
-    Lesson getLesson(Long id);
+//    Admin use
+    Lesson createLesson(LessonDTO lessonDTO);
+    Lesson getLessonById(Long id);
     Page<Lesson> getAllLessons(Pageable pageable);
     Lesson updateLesson(Long id, LessonDTO lessonDTO);
+    Lesson updateActiveLesson(Long id,LessonDTO lessonDTO);
     void deleteLesson(Long id);
     boolean existByName(String name);
+
     Video createVideo(Long lessionId, VideoDTO videoDTO) throws InvalidParamException;
 }
