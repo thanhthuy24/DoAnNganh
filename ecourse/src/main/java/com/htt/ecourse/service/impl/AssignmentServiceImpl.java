@@ -10,9 +10,12 @@ import com.htt.ecourse.repository.AssignmentRepository;
 import com.htt.ecourse.repository.CourseRepository;
 import com.htt.ecourse.repository.LessonRepository;
 import com.htt.ecourse.repository.TagRepository;
+import com.htt.ecourse.responses.AssignmentResponse;
+import com.htt.ecourse.responses.LessonResponse;
 import com.htt.ecourse.service.AssignmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +33,10 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final AssignmentRepository assignmentRepository;
 
     @Override
-    public Page<Assignment> getAllAssignment(Pageable pageable) {
-        return assignmentRepository.findAll(pageable);
+    public Page<AssignmentResponse> getAllAssignment(PageRequest pageRequest) {
+        return assignmentRepository
+                .findAll(pageRequest)
+                .map(AssignmentResponse::fromAssignment);
     }
 
     @Override

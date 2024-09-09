@@ -9,9 +9,11 @@ import com.htt.ecourse.pojo.Video;
 import com.htt.ecourse.repository.CourseRepository;
 import com.htt.ecourse.repository.LessonRepository;
 import com.htt.ecourse.repository.VideoRepository;
+import com.htt.ecourse.responses.LessonResponse;
 import com.htt.ecourse.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +47,11 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Page<Lesson> getAllLessons(Pageable pageable) {
-        return lessonRepository.findAll(pageable);
+    public Page<LessonResponse> getAllLessons(PageRequest pageRequest) {
+        return lessonRepository
+                .findAll(pageRequest)
+                .map(LessonResponse::fromLesson);
+//        return lessonRepository.findAll(pageRequest);
     }
 
     @Override

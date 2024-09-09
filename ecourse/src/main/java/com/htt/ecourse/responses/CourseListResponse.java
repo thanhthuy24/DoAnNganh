@@ -1,6 +1,5 @@
 package com.htt.ecourse.responses;
 
-//import com.htt.ecourse.dtos.CourseDTO;
 import com.htt.ecourse.pojo.Course;
 import lombok.*;
 

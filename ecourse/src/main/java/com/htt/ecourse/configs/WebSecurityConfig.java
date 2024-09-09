@@ -31,7 +31,7 @@ public class WebSecurityConfig {
                                     "api/users/register")
                             .permitAll()
 
-                            .requestMatchers(GET, "api/assignments/**").permitAll()
+                            .requestMatchers(GET, "api/assignments?**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST, "api/assignments/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/assignments/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(DELETE, "api/assignments/**").hasAnyRole(Role.ADMIN)

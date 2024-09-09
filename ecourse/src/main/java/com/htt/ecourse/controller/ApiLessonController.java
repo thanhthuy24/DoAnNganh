@@ -8,6 +8,7 @@ import com.htt.ecourse.pojo.Lesson;
 import com.htt.ecourse.pojo.Video;
 import com.htt.ecourse.responses.CourseListResponse;
 import com.htt.ecourse.responses.LessonListResponse;
+import com.htt.ecourse.responses.LessonResponse;
 import com.htt.ecourse.service.LessonService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
@@ -41,13 +42,13 @@ public class ApiLessonController {
             @RequestParam("limit") int limit
     ) {
         // tao pageable tu thong tin page va limit
-        Pageable pageRequest = PageRequest.of(page, limit,
+        PageRequest pageRequest = PageRequest.of(page, limit,
                 Sort.by("createdDate").descending());
-        Page<Lesson> lessonPage = lessonService.getAllLessons(pageRequest);
+        Page<LessonResponse> lessonPage = lessonService.getAllLessons(pageRequest);
 
         // lay tong so trang
         int totalPage = lessonPage.getTotalPages();
-        List<Lesson> lessons = lessonPage.getContent();
+        List<LessonResponse> lessons = lessonPage.getContent();
         return ResponseEntity.ok(LessonListResponse.builder()
                 .lessons(lessons)
                 .totalPages(totalPage)

@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LessonListResponse {
-    private List<Lesson> lessons;
+    private List<LessonResponse> lessons;
     private int totalPages;
 }

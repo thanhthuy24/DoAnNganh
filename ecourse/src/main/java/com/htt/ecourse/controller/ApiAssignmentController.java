@@ -6,6 +6,7 @@ import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Assignment;
 import com.htt.ecourse.pojo.Course;
 import com.htt.ecourse.responses.AssignmentListResponse;
+import com.htt.ecourse.responses.AssignmentResponse;
 import com.htt.ecourse.responses.CourseListResponse;
 import com.htt.ecourse.service.AssignmentService;
 import jakarta.validation.Valid;
@@ -34,12 +35,13 @@ public class ApiAssignmentController {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        Pageable pageRequest = PageRequest.of(page, limit);
-        Page<Assignment> assignmentPage = assignmentService.getAllAssignment(pageRequest);
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by("createdDate").descending());
+        Page<AssignmentResponse> assignmentPage = assignmentService.getAllAssignment(pageRequest);
 
         // lay tong so trang
         int totalPage = assignmentPage.getTotalPages();
-        List<Assignment> assignments = assignmentPage.getContent();
+        List<AssignmentResponse> assignments = assignmentPage.getContent();
         return ResponseEntity.ok(AssignmentListResponse.builder()
                 .assignments(assignments)
                 .totalPages(totalPage)
