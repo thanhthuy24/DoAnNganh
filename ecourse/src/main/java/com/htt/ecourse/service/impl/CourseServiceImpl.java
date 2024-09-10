@@ -64,6 +64,10 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new DateTimeException("Can not find course with id : " + id));
     }
 
+    public List<Course> searchCourses(String keyword) {
+        return courseRepository.searchByKeyword(keyword);
+    }
+
     @Override
     public Page<Course> getAllCourses(Pageable pageable) {
         return courseRepository.findAll(pageable);

@@ -44,7 +44,7 @@ public class ReceiptDetailServiceImpl implements ReceiptDetailService {
                 .receipt(receipt)
                 .course(course)
                 .price(receiptDetailDTO.getPrice())
-                .totalMoney(receiptDetailDTO.getTotalMoney())
+                .discount(receiptDetailDTO.getDiscount())
                 .quantity(receiptDetailDTO.getQuantity())
                 .build();
         return receiptDetailRepository.save(receiptDetail);

@@ -23,9 +23,6 @@ public class Receiptdetail {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "total_money")
-    private Float totalMoney;
-
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
@@ -35,5 +32,8 @@ public class Receiptdetail {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id")
     private Receipt receipt;
+
+    @Column(name = "discount")
+    private Float discount;
 
 }

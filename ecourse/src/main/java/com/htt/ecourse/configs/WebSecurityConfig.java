@@ -46,6 +46,9 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/courses/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(DELETE, "api/courses/**").hasAnyRole(Role.ADMIN)
 
+                            .requestMatchers(GET, "api/enrollments/**").hasAnyRole(Role.USER)
+                            .requestMatchers(POST, "api/enrollments").hasAnyRole(Role.USER)
+
                             .requestMatchers(GET, "api/lessons/**").hasAnyRole(Role.USER, Role.ADMIN)
                             .requestMatchers(POST, "api/lessons/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST, "api/lessons/uploads/**").hasAnyRole(Role.ADMIN)

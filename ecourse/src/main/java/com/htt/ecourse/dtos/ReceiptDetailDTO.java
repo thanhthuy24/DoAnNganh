@@ -23,6 +23,6 @@ public class ReceiptDetailDTO {
     @Min(value=1, message = "quantity must be >= 1")
     @JsonProperty("quantity")
     private Integer quantity;
-    @JsonProperty("total_money")
-    private Float totalMoney;
+    @JsonProperty("discount")
+    private Float discount;
 }
