@@ -21,18 +21,20 @@ public class Receipt {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "order_date")
+    @Column(name = "order_date", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
 
     @Column(name = "total_money")
     private Float totalMoney;
 
-    @Size(max = 100)
-    @Column(name = "payment_method", length = 100)
-    private String paymentMethod;
-
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @PrePersist
+    protected void onCreate() {
+        this.orderDate = new Date();
+    }
 
 }

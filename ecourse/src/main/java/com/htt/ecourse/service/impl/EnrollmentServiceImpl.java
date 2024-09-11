@@ -25,8 +25,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final UserRepository userRepository;
 
     @Override
-    public List<Enrollment> getEnrollmentByCourseAndUser(Long courseId, Long userId) {
+    public List<Enrollment> findByUserIdAndCourseId(Long courseId, Long userId) {
         return enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
+    }
+
+    @Override
+    public Enrollment getEnrollmentByCourseAndUser(Long courseId, Long userId) {
+        return null;
     }
 
     @Override

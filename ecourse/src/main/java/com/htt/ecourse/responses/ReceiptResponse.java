@@ -1,6 +1,7 @@
 package com.htt.ecourse.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.htt.ecourse.pojo.Receipt;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
@@ -20,6 +21,13 @@ public class ReceiptResponse {
     private Float totalMoney;
     @JsonProperty("user_id")
     private Long userId;
-    @JsonProperty("payment_method")
-    private String paymentMethod;
+
+    public static ReceiptResponse fromReceipt(Receipt receipt) {
+        ReceiptResponse receiptResponse = ReceiptResponse.builder()
+                .totalMoney(receipt.getTotalMoney())
+                .userId(receipt.getUser().getId())
+                .build();
+        receiptResponse.setOrderDate(receipt.getOrderDate());
+        return receiptResponse;
+    }
 }

@@ -13,13 +13,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiptDTO {
-    @JsonProperty("order_date")
-    private Date orderDate;
     @JsonProperty("total_money")
     @Min(value = 0, message = "Total money must be >= 0")
     private Float totalMoney;
     @JsonProperty("user_id")
     private Long userId;
-    @JsonProperty("payment_method")
-    private String paymentMethod;
 }

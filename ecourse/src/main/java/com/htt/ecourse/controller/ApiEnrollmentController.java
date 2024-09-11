@@ -3,6 +3,7 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.EnrollmentDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Enrollment;
+import com.htt.ecourse.repository.EnrollmentRepository;
 import com.htt.ecourse.service.EnrollmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApiEnrollmentController {
     private final EnrollmentService enrollmentService;
+    private final EnrollmentRepository enrollmentRepository;
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,13 +43,17 @@ public class ApiEnrollmentController {
     @GetMapping("/user/{userId}/course/{courseId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getEnrollmentByUserAndCourse(
-            @PathVariable("userId") Long userId,
-            @PathVariable("courseId") Long courseId
+            @PathVariable(value = "userId") Long userId,
+            @PathVariable(value = "courseId") Long courseId
     ){
-        return ResponseEntity.ok(enrollmentService.getEnrollmentByCourseAndUser(userId, courseId));
+        List<Enrollment> enrollments = enrollmentRepository.findByUserIdAndCourseId(courseId, userId);
+        if (enrollments.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(enrollments);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Enrollment>> getEnrollmentsByUser(
             @PathVariable("userId") Long userId
