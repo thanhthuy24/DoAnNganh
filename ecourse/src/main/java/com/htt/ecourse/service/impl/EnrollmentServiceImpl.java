@@ -9,12 +9,14 @@ import com.htt.ecourse.repository.EnrollmentRepository;
 import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,13 +27,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final UserRepository userRepository;
 
     @Override
-    public List<Enrollment> findByUserIdAndCourseId(Long courseId, Long userId) {
+    public Optional<Enrollment> findByUserIdAndCourseId(Long userId, Long courseId) {
         return enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
-    }
-
-    @Override
-    public Enrollment getEnrollmentByCourseAndUser(Long courseId, Long userId) {
-        return null;
     }
 
     @Override

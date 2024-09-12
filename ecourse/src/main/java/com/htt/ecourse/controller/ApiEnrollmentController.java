@@ -7,6 +7,7 @@ import com.htt.ecourse.repository.EnrollmentRepository;
 import com.htt.ecourse.service.EnrollmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/enrollments")
@@ -40,17 +42,15 @@ public class ApiEnrollmentController {
         return ResponseEntity.ok(enrollmentDTO);
     }
 
-    @GetMapping("/user/{userId}/course/{courseId}")
+    @GetMapping("check-enrollment")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getEnrollmentByUserAndCourse(
-            @PathVariable(value = "userId") Long userId,
-            @PathVariable(value = "courseId") Long courseId
+            @RequestParam Long userId,
+            @RequestParam Long courseId
     ){
-        List<Enrollment> enrollments = enrollmentRepository.findByUserIdAndCourseId(courseId, userId);
-        if (enrollments.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(enrollments);
+        Optional<Enrollment> enrollment = enrollmentService.findByUserIdAndCourseId(userId, courseId);
+        return enrollment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 
     @GetMapping("/user/{userId}")

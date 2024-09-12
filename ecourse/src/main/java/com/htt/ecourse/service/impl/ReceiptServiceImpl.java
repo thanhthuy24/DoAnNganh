@@ -1,17 +1,11 @@
 package com.htt.ecourse.service.impl;
 
 import com.htt.ecourse.dtos.ReceiptDTO;
-import com.htt.ecourse.pojo.Cart;
-import com.htt.ecourse.pojo.Enrollment;
-import com.htt.ecourse.pojo.Receipt;
-import com.htt.ecourse.pojo.User;
-import com.htt.ecourse.repository.EnrollmentRepository;
-import com.htt.ecourse.repository.ReceiptRepository;
-import com.htt.ecourse.repository.UserRepository;
-import com.htt.ecourse.responses.AssignmentResponse;
-import com.htt.ecourse.responses.ReceiptListResponse;
+import com.htt.ecourse.exceptions.DataNotFoundException;
+import com.htt.ecourse.pojo.*;
+import com.htt.ecourse.repository.*;
 import com.htt.ecourse.responses.ReceiptResponse;
-import com.htt.ecourse.service.ReceipService;
+import com.htt.ecourse.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -22,13 +16,16 @@ import org.springframework.stereotype.Service;
 import java.time.DateTimeException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ReceiptServiceImpl implements ReceipService {
+public class ReceiptServiceImpl implements ReceiptService {
     private final EnrollmentRepository enrollmentRepository;
     private final ReceiptRepository receiptRepository;
+    private final ReceiptDetailRepository receiptDetailRepository;
     private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -79,17 +76,50 @@ public class ReceiptServiceImpl implements ReceipService {
     }
 
     @Override
-    public void addReceipt(List<Cart> cartList){
-        if (cartList != null && cartList.size() > 0){
+    public void addReceipt(List<Cart> cartList) throws DataNotFoundException {
+        if (cartList != null){
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             Long userId = this.userRepository.getUserByUsername(username).getId();
 
-            for (Cart cart : cartList){
+            for (Cart cart : cartList) {
                 Long courseId = cart.getId();
 
-                List<Enrollment> enrollments = enrollmentRepository.findByUserId(userId);
+                Optional<Enrollment> enrollments = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
+                if (!enrollments.isEmpty()) {
+                    throw new DataNotFoundException("This course had in your list course!!");
+                }
+            }
+
+            Receipt receipt = new Receipt();
+            receipt.setUser(this.userRepository.getUserByUsername(username));
+            receipt.setOrderDate(new Date());
+
+            float totalPrice = (float) cartList.stream()
+                    .mapToDouble(c ->(c.getPrice() * c.getQuantity() * (1 - c.getDiscount() / 100)))
+                    .sum();
+            receipt.setTotalMoney(totalPrice);
+
+            receiptRepository.save(receipt);
+
+            for (Cart c : cartList) {
+                Receiptdetail d = new Receiptdetail();
+                d.setPrice(c.getPrice());
+                d.setQuantity(c.getQuantity());
+                d.setDiscount(c.getDiscount());
+                d.setReceipt(receipt);
+                d.setCourse(courseRepository.getCourseById(c.getId()));
+
+                receiptDetailRepository.save(d);
+
+                Enrollment enrollment = new Enrollment();
+                enrollment.setEnrollmentDate(new Date());
+                enrollment.setUser(this.userRepository.getUserByUsername(username));
+                enrollment.setCourse(courseRepository.getCourseById(c.getId()));
+
+                enrollmentRepository.save(enrollment);
             }
 
         }
+
     }
 }

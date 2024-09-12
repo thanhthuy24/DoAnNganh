@@ -14,13 +14,4 @@ public class Cart {
     private int quantity;
     private float discount;
     private float price;
-    // Getter for id
-    public Long getId() {
-        return id;
-    }
-
-    // Setter for id
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

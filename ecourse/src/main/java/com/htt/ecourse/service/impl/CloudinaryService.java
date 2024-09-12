@@ -15,12 +15,13 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class CloudinaryService {
-    @Autowired
     private final Cloudinary cloudinary;
 
     public Map uploadFile(MultipartFile file) throws IOException {
         File fileToUpload = convert(file);
-        Map uploadResult = cloudinary.uploader().upload(fileToUpload, ObjectUtils.emptyMap());
+//        Map uploadResult = cloudinary.uploader().upload(fileToUpload, ObjectUtils.emptyMap());
+        Map uploadResult = cloudinary.uploader().upload(fileToUpload, ObjectUtils.asMap("resource_type", "auto"));
+
         fileToUpload.delete();
         return uploadResult;
     }

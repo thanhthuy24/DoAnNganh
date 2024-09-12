@@ -90,7 +90,8 @@ public class ApiLessonController {
     public ResponseEntity<?> uploadVideos(
             @PathVariable("lessonId") Long lessonId,
             @ModelAttribute("files") List<MultipartFile> files
-    ) {try {
+    ) {
+        try {
         Lesson existingLesson = lessonService.getLessonById(lessonId);
         files = files == null ? new ArrayList<>() : files;
 
@@ -103,7 +104,7 @@ public class ApiLessonController {
             if(file.isEmpty()) {
                 continue;
             }
-            if(file.getSize() > 10 * 1024 * 1024) {
+            if(file.getSize() > 20 * 1024 * 1024) {
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
                         .body("File is too large! Maximum size is 10MB");
             }
@@ -177,4 +178,14 @@ public class ApiLessonController {
         lessonService.deleteLesson(lessonId);
         return ResponseEntity.ok("delete lesson success");
     }
+
+    @GetMapping("/course/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<Lesson>> getLessonsByCourseId(
+            @PathVariable("courseId") Long courseId
+    ){
+        List<Lesson> listLesson = lessonService.getLessonByCourseId(courseId);
+        return ResponseEntity.ok(listLesson);
+    }
+
 }

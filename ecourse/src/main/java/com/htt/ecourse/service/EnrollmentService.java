@@ -5,11 +5,11 @@ import com.htt.ecourse.pojo.Enrollment;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EnrollmentService {
-    Enrollment getEnrollmentByCourseAndUser(Long courseId, Long userId);
+    Optional<Enrollment> findByUserIdAndCourseId(Long userId, Long courseId);
     List<Enrollment> getEnrollmentByUser(Long userId);
 
     Enrollment createEnrollment(EnrollmentDTO enrollmentDTO);
-    List<Enrollment> findByUserIdAndCourseId(@Param("courseId") Long courseId, @Param("userId") Long userId);
 }

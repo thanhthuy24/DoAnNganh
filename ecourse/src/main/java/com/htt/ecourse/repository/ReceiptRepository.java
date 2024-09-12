@@ -1,5 +1,6 @@
 package com.htt.ecourse.repository;
 
+import com.htt.ecourse.pojo.Cart;
 import com.htt.ecourse.pojo.Receipt;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -46,7 +46,7 @@ public class Lesson {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
     private Course course;
 

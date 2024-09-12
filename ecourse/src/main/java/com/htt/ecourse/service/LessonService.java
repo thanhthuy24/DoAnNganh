@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface LessonService {
 //    Admin use
     Lesson createLesson(LessonDTO lessonDTO);
@@ -20,5 +22,6 @@ public interface LessonService {
     void deleteLesson(Long id);
     boolean existByName(String name);
 
-    Video createVideo(Long lessionId, VideoDTO videoDTO) throws InvalidParamException;
+    List<Lesson> getLessonByCourseId(Long courseId);
+    Video createVideo(Long lessonId, VideoDTO videoDTO) throws InvalidParamException;
 }

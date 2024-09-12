@@ -15,6 +15,4 @@ public class EnrollmentDTO {
     private Date enrollmentDate;
     @JsonProperty("course_id")
     private Long courseId;
-//    @JsonProperty("user_id")
-//    private Long userId;
 }

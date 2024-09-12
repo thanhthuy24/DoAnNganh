@@ -3,7 +3,6 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.UserDTO;
 import com.htt.ecourse.dtos.UserLoginDTO;
 import com.htt.ecourse.dtos.UserUpdateDTO;
-import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.User;
 import com.htt.ecourse.service.UserService;
 import com.htt.ecourse.service.impl.CloudinaryService;
@@ -18,8 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/users")
@@ -27,6 +28,13 @@ import java.util.Map;
 public class ApiUserController {
     private final UserService userService;
     private final CloudinaryService cloudinaryService;
+
+    @GetMapping(path = "/current-user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
+    public ResponseEntity<Optional<User>> details(Principal user) {
+        Optional<User> u = this.userService.getUserByUsername(user.getName());
+        return ResponseEntity.ok(u);
+    }
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createUser(

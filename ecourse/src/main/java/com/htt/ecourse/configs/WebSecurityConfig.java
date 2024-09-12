@@ -56,6 +56,8 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/lessons/**/active").hasAnyRole(Role.ADMIN)
                             .requestMatchers(DELETE, "api/lessons/**").hasAnyRole(Role.ADMIN)
 
+                            .requestMatchers(POST, "api/receipts/create-payment").hasAnyRole(Role.USER)
+
                             .requestMatchers(GET, "api/teachers/**").permitAll()
                             .requestMatchers(POST, "api/teachers/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/teachers/**").hasAnyRole(Role.ADMIN, Role.TEACHER)

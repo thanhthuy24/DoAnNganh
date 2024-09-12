@@ -1,10 +1,13 @@
 package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.ReceiptDTO;
+import com.htt.ecourse.exceptions.DataNotFoundException;
+import com.htt.ecourse.pojo.Cart;
 import com.htt.ecourse.pojo.Receipt;
-import com.htt.ecourse.service.ReceipService;
+import com.htt.ecourse.service.ReceiptService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -16,7 +19,7 @@ import java.util.List;
 @RequestMapping("api/receipts")
 @RequiredArgsConstructor
 public class ApiReceiptController {
-    private final ReceipService receipService;
+    private final ReceiptService receipService;
 
     @PostMapping("")
     public ResponseEntity<?> createReceipt(
@@ -84,6 +87,14 @@ public class ApiReceiptController {
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/create-payment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addReceipt(
+            @RequestBody List<Cart> carts
+    ) throws DataNotFoundException {
+        this.receipService.addReceipt(carts);
     }
 
 }

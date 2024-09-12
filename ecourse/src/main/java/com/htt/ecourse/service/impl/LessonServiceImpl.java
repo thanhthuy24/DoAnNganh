@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -97,6 +98,11 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public boolean existByName(String name) {
         return lessonRepository.existsByName(name);
+    }
+
+    @Override
+    public List<Lesson> getLessonByCourseId(Long courseId) {
+        return lessonRepository.findByCourseId(courseId);
     }
 
     @Override
