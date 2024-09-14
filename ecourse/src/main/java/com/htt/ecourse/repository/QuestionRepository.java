@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findByAssignmentId(Long id);
-    Question findById(long questionId);
+//    Question findById(Long id);
 }

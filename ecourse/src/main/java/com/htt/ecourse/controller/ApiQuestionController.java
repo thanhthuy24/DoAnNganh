@@ -26,13 +26,14 @@ public class ApiQuestionController {
     public ResponseEntity<List<QuestionChoiceDTO>> getQuestionByAssignmentId(
             @PathVariable(value = "assignmentId") Long assignmentId
     ){
-        return null;
+        List<QuestionChoiceDTO> questionChoiceDTOList = questionService.getQuestionsByAssignmentId(assignmentId);
+        return ResponseEntity.ok(questionChoiceDTOList);
     }
 
-    @PostMapping
+    @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createQuestion(
-            @Valid @ModelAttribute QuestionDTO questionDTO,
+            @RequestBody QuestionDTO questionDTO,
             BindingResult rs
     ){
         try {
@@ -50,5 +51,17 @@ public class ApiQuestionController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PutMapping("/{questionId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> updateQuestion(
+            @PathVariable(value = "questionId") Long questionId,
+            @Valid
+            @RequestBody QuestionDTO questionDTO
+    ){
+        questionService.updateQuestion(questionId, questionDTO);
+
+        return ResponseEntity.ok(questionDTO);
     }
 }

@@ -62,11 +62,11 @@ public class LessonServiceImpl implements LessonService {
     public Lesson updateLesson(Long id, LessonDTO lessonDTO) {
         Lesson existingLesson = getLessonById(id);
         if (existingLesson != null) {
-            Course existCouse = courseRepository.findById(lessonDTO.getCourseId())
+            Course existCourse = courseRepository.findById(lessonDTO.getCourseId())
                     .orElseThrow(() -> new DateTimeException("Can nit find course by id " + id));
             existingLesson.setName(lessonDTO.getName());
             existingLesson.setDescription(lessonDTO.getDescription());
-            existingLesson.setCourse(existCouse);
+            existingLesson.setCourse(existCourse);
             return lessonRepository.save(existingLesson);
         }
         return null;

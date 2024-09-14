@@ -2,6 +2,7 @@ package com.htt.ecourse.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class Question {
     private Long id;
 
     @Size(max = 255)
+    @NotNull
     @Column(name = "content")
     private String content;
 
