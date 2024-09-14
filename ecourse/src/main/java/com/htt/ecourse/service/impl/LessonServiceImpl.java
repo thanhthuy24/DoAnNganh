@@ -1,25 +1,25 @@
 package com.htt.ecourse.service.impl;
 
-import com.htt.ecourse.dtos.LessonDTO;
-import com.htt.ecourse.dtos.VideoDTO;
+import com.htt.ecourse.dtos.*;
 import com.htt.ecourse.exceptions.InvalidParamException;
 import com.htt.ecourse.pojo.Course;
+import com.htt.ecourse.pojo.Enrollment;
 import com.htt.ecourse.pojo.Lesson;
 import com.htt.ecourse.pojo.Video;
-import com.htt.ecourse.repository.CourseRepository;
-import com.htt.ecourse.repository.LessonRepository;
-import com.htt.ecourse.repository.VideoRepository;
+import com.htt.ecourse.repository.*;
 import com.htt.ecourse.responses.LessonResponse;
 import com.htt.ecourse.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +27,9 @@ public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final CourseRepository courseRepository;
     private final VideoRepository videoRepository;
+    private final UserRepository userRepository;
+    private final EnrollmentRepository enrollmentRepository;
+
     @Override
     public Lesson createLesson(LessonDTO lessonDTO) {
         Course existCourse = courseRepository
@@ -101,8 +104,39 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<Lesson> getLessonByCourseId(Long courseId) {
-        return lessonRepository.findByCourseId(courseId);
+    public List<LessonVideoDTO> getLessonByCourseId(Long courseId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userRepository.getUserByUsername(username).getId();
+
+        Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
+        if (checkEnrollment.isEmpty()) {
+            throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
+        }
+        List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
+        return lessons.stream().map(this::convertToDTO).collect(Collectors.toList());
+
+    }
+
+    private LessonVideoDTO convertToDTO(Lesson lesson) {
+        // Xây dựng danh sách VideoDTO bằng builder
+        List<VideoListDTO> videos = lesson.getVideos().stream()
+                .map(video -> VideoListDTO.builder()
+                        .name(video.getName())
+                        .build())
+                .collect(Collectors.toList());
+
+//        CourseDTO course = CourseDTO.builder()
+//                .name(lesson.getCourse().getName())
+//                        .build();
+
+        // Sử dụng builder để tạo LessonDTO
+        return LessonVideoDTO.builder()
+                .id(lesson.getId())
+                .name(lesson.getName())
+                .description(lesson.getDescription())
+                .videos(videos)
+//                .course(course)
+                .build();
     }
 
     @Override

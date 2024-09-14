@@ -1,6 +1,7 @@
 package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.LessonDTO;
+import com.htt.ecourse.dtos.LessonVideoDTO;
 import com.htt.ecourse.dtos.VideoDTO;
 import com.htt.ecourse.exceptions.InvalidParamException;
 import com.htt.ecourse.pojo.Course;
@@ -181,10 +182,10 @@ public class ApiLessonController {
 
     @GetMapping("/course/{courseId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Lesson>> getLessonsByCourseId(
+    public ResponseEntity<List<LessonVideoDTO>> getLessonsByCourseId(
             @PathVariable("courseId") Long courseId
     ){
-        List<Lesson> listLesson = lessonService.getLessonByCourseId(courseId);
+        List<LessonVideoDTO> listLesson = lessonService.getLessonByCourseId(courseId);
         return ResponseEntity.ok(listLesson);
     }
 

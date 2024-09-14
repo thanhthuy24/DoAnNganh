@@ -1,19 +1,15 @@
 package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.AssignmentDTO;
-import com.htt.ecourse.dtos.CategoryDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Assignment;
-import com.htt.ecourse.pojo.Course;
 import com.htt.ecourse.responses.AssignmentListResponse;
 import com.htt.ecourse.responses.AssignmentResponse;
-import com.htt.ecourse.responses.CourseListResponse;
 import com.htt.ecourse.service.AssignmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +53,15 @@ public class ApiAssignmentController {
         return ResponseEntity.ok(assignmentById);
     }
 
+    @GetMapping("/course/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getAssignmentsByCourseId(
+            @PathVariable(value = "courseId") Long courseId
+    ){
+        List<Assignment> assignmentList = assignmentService.getAssignmentByCourseId(courseId);
+        return ResponseEntity.ok(assignmentList);
+    }
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createAssignment(
@@ -71,6 +76,25 @@ public class ApiAssignmentController {
             return ResponseEntity.badRequest().body(errorMessages);
         }
         assignmentService.createAssignment(assignmentDTO);
+        return ResponseEntity.ok(assignmentDTO);
+    }
+
+    @PutMapping("/{assignmentId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> updateAssignment(
+            @Valid
+            @ModelAttribute AssignmentDTO assignmentDTO,
+            @PathVariable("assignmentId") Long assignmentId,
+            BindingResult rs
+    )throws DataNotFoundException{
+        if(rs.hasErrors()){
+            List<String> errorMessages = rs.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        assignmentService.updateAssignment(assignmentId, assignmentDTO);
         return ResponseEntity.ok(assignmentDTO);
     }
 

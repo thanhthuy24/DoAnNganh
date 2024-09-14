@@ -2,14 +2,8 @@ package com.htt.ecourse.service.impl;
 
 import com.htt.ecourse.dtos.AssignmentDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
-import com.htt.ecourse.pojo.Assignment;
-import com.htt.ecourse.pojo.Course;
-import com.htt.ecourse.pojo.Lesson;
-import com.htt.ecourse.pojo.Tag;
-import com.htt.ecourse.repository.AssignmentRepository;
-import com.htt.ecourse.repository.CourseRepository;
-import com.htt.ecourse.repository.LessonRepository;
-import com.htt.ecourse.repository.TagRepository;
+import com.htt.ecourse.pojo.*;
+import com.htt.ecourse.repository.*;
 import com.htt.ecourse.responses.AssignmentResponse;
 import com.htt.ecourse.responses.LessonResponse;
 import com.htt.ecourse.service.AssignmentService;
@@ -17,11 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +27,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final CourseRepository courseRepository;
     private final LessonRepository lessonRepository;
     private final AssignmentRepository assignmentRepository;
+    private final UserRepository userRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @Override
     public Page<AssignmentResponse> getAllAssignment(PageRequest pageRequest) {
@@ -78,11 +76,18 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public List<Assignment> getAssignmentByCourseId(Long courseId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userRepository.getUserByUsername(username).getId();
+
+        Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
+        if (checkEnrollment.isEmpty()) {
+            throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
+        }
         return assignmentRepository.findByCourseId(courseId);
     }
 
     @Override
-    public Assignment updateAssignment(Long id, Long assignmentId, AssignmentDTO assignmentDTO) throws DataNotFoundException {
+    public Assignment updateAssignment(Long id, AssignmentDTO assignmentDTO) throws DataNotFoundException {
         Assignment existingAssignment = getAssignmentById(id);
         if(existingAssignment != null) {
             Tag existTag = tagRepository

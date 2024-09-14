@@ -23,6 +23,7 @@ public class AssignmentDTO {
     private String name;
     @Column(name = "dueDate")
     @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
     private Date dueDate;
     @JsonProperty("tag_id")
     private Long tagId;

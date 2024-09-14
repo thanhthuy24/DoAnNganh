@@ -18,7 +18,7 @@ public interface AssignmentService {
     List<Assignment> getAssignmentByLessonId(Long lessonId);
     List<Assignment> getAssignmentByCourseId(Long courseId);
 
-    Assignment updateAssignment(Long id, Long assignmentId, AssignmentDTO assignmentDTO) throws DataNotFoundException;
+    Assignment updateAssignment(Long assignmentId, AssignmentDTO assignmentDTO) throws DataNotFoundException;
     void deleteAssignment(Long id);
 
 }

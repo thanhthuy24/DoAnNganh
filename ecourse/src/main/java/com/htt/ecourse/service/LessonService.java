@@ -1,6 +1,7 @@
 package com.htt.ecourse.service;
 
 import com.htt.ecourse.dtos.LessonDTO;
+import com.htt.ecourse.dtos.LessonVideoDTO;
 import com.htt.ecourse.dtos.VideoDTO;
 import com.htt.ecourse.exceptions.InvalidParamException;
 import com.htt.ecourse.pojo.Lesson;
@@ -22,6 +23,6 @@ public interface LessonService {
     void deleteLesson(Long id);
     boolean existByName(String name);
 
-    List<Lesson> getLessonByCourseId(Long courseId);
+    List<LessonVideoDTO> getLessonByCourseId(Long courseId);
     Video createVideo(Long lessonId, VideoDTO videoDTO) throws InvalidParamException;
 }
