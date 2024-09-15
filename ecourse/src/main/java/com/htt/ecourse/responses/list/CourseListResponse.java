@@ -1,4 +1,4 @@
-package com.htt.ecourse.responses;
+package com.htt.ecourse.responses.list;
 
 import com.htt.ecourse.pojo.Course;
 import lombok.*;

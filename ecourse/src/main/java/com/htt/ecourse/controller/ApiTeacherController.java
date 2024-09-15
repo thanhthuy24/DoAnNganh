@@ -3,7 +3,7 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.TeacherDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Teacher;
-import com.htt.ecourse.responses.TeacherListResponse;
+import com.htt.ecourse.responses.list.TeacherListResponse;
 import com.htt.ecourse.service.TeacherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController

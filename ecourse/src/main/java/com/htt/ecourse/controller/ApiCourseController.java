@@ -3,7 +3,7 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.CourseDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Course;
-import com.htt.ecourse.responses.CourseListResponse;
+import com.htt.ecourse.responses.list.CourseListResponse;
 import com.htt.ecourse.service.CourseService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;

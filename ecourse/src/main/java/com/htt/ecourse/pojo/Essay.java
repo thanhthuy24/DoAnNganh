@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @Entity
@@ -17,9 +19,13 @@ public class Essay {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Size(max = 255)
+    @Size(max = 4000)
     @Column(name = "content")
     private String content;
+
+    @Column(name = "created_date", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignment_id")
@@ -32,5 +38,10 @@ public class Essay {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdDate = new Date();
+    }
 
 }

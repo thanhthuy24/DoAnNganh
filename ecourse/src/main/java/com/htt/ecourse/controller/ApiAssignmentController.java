@@ -3,7 +3,7 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.AssignmentDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Assignment;
-import com.htt.ecourse.responses.AssignmentListResponse;
+import com.htt.ecourse.responses.list.AssignmentListResponse;
 import com.htt.ecourse.responses.AssignmentResponse;
 import com.htt.ecourse.service.AssignmentService;
 import jakarta.validation.Valid;

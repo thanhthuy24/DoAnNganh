@@ -1,6 +1,6 @@
-package com.htt.ecourse.responses;
+package com.htt.ecourse.responses.list;
 
-import com.htt.ecourse.pojo.Assignment;
+import com.htt.ecourse.responses.AssignmentResponse;
 import lombok.*;
 
 import java.util.List;

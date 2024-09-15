@@ -27,7 +27,7 @@ public class Course {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Size(max = 255)
+    @Size(max = 4000)
     @Column(name = "description")
     private String description;
 
