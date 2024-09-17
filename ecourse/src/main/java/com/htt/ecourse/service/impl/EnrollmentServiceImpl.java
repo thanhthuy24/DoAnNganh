@@ -6,8 +6,10 @@ import com.htt.ecourse.pojo.Enrollment;
 import com.htt.ecourse.pojo.User;
 import com.htt.ecourse.repository.CourseRepository;
 import com.htt.ecourse.repository.EnrollmentRepository;
+import com.htt.ecourse.repository.ProgressRepository;
 import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.service.EnrollmentService;
+import com.htt.ecourse.service.ProgressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +27,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentRepository enrollmentRepository ;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    private final ProgressService progressService;
 
     @Override
     public Optional<Enrollment> findByUserIdAndCourseId(Long userId, Long courseId) {
@@ -48,6 +51,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .user(user1)
                 .build();
         enrollmentRepository.save(enrollment);
+
+        progressService.calculateProgress(existingCourse.getId());
+
         return enrollment;
     }
 }

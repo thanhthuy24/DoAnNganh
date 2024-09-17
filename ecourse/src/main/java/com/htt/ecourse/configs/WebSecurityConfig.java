@@ -66,11 +66,15 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/lessons/**/active").hasAnyRole(Role.ADMIN)
                             .requestMatchers(DELETE, "api/lessons/**").hasAnyRole(Role.ADMIN)
 
+                            .requestMatchers(POST, "api/progress/**").hasAnyRole(Role.USER)
+
                             .requestMatchers(GET, "api/questions/**").hasAnyRole(Role.TEACHER, Role.USER)
                             .requestMatchers(POST, "api/questions/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
                             .requestMatchers(PUT, "api/questions/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
 
                             .requestMatchers(POST, "api/receipts/create-payment").hasAnyRole(Role.USER)
+
+                            .requestMatchers(POST, "api/score/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
 
                             .requestMatchers(GET, "api/teachers/**").permitAll()
                             .requestMatchers(POST, "api/teachers/**").hasAnyRole(Role.ADMIN)
@@ -83,7 +87,11 @@ public class WebSecurityConfig {
                             .requestMatchers(DELETE, "api/users/**").hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(POST, "api/tags").hasAnyRole(Role.ADMIN)
+
                             .requestMatchers(PUT, "api/receipts/**").hasAnyRole(Role.USER)
+
+                            .requestMatchers(POST, "api/video-completed/").hasAnyRole(Role.USER)
+
                             .anyRequest().authenticated();
                 });
         return http.build();

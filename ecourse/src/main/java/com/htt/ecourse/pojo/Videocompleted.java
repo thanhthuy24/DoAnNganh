@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "videocompleted")
