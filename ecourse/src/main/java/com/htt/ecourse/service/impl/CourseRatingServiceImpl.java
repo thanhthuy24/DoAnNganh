@@ -6,10 +6,13 @@ import com.htt.ecourse.pojo.*;
 import com.htt.ecourse.repository.*;
 import com.htt.ecourse.service.CourseRatingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,5 +62,38 @@ public class CourseRatingServiceImpl implements CourseRatingService {
         courseRatingRepository.save(newRating);
         return newRating;
 
+    }
+
+    @Override
+    public Page<Courserating> getRatingByCourseId(Long courseId, PageRequest pageRequest) throws DataNotFoundException {
+        Course existingCourse = courseRepository.findById(courseId)
+                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+
+        return courseRatingRepository.findByCourseId(courseId, pageRequest)
+                .map(Courserating::fromRating);
+    }
+
+    @Override
+    public Float averageRatingByCourseId(Long courseId) throws DataNotFoundException {
+        Course existingCourse = courseRepository.findById(courseId)
+                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+
+        List<Courserating> getCourseRating = courseRatingRepository.findByCourseId(existingCourse.getId());
+        Long countRating = courseRatingRepository.countByCourseId(existingCourse.getId());
+
+        if (countRating == 0) {
+            throw new DataNotFoundException("Don't have any rating to count!!!");
+        }
+
+        Long sum = 0L;
+        for (Courserating courseRating : getCourseRating) {
+            sum += courseRating.getRating();
+        }
+
+        // Calculate average and round to 1 decimal place
+        Float averageRating = (float) sum / countRating;
+        averageRating = Math.round(averageRating * 10) / 10.0f;
+
+        return averageRating;
     }
 }

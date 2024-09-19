@@ -53,12 +53,11 @@ public class ApiEnrollmentController {
 
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/get-courses")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Enrollment>> getEnrollmentsByUser(
-            @PathVariable("userId") Long userId
+    public ResponseEntity<List<Enrollment>> getEnrollments(
     ){
-        List<Enrollment> enrollments = enrollmentService.getEnrollmentByUser(userId);
+        List<Enrollment> enrollments = enrollmentService.getEnrollmentByUser();
         return ResponseEntity.ok(enrollments);
     }
 }

@@ -35,8 +35,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public List<Enrollment> getEnrollmentByUser(Long userId) {
-        return enrollmentRepository.findByUserId(userId);
+    public List<Enrollment> getEnrollmentByUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.getUserByUsername(username);
+
+        List<Enrollment> enrollments = enrollmentRepository.findByUserId(user.getId());
+        return enrollments;
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface EnrollmentService {
     Optional<Enrollment> findByUserIdAndCourseId(Long userId, Long courseId);
-    List<Enrollment> getEnrollmentByUser(Long userId);
+    List<Enrollment> getEnrollmentByUser();
 
     Enrollment createEnrollment(EnrollmentDTO enrollmentDTO);
 }

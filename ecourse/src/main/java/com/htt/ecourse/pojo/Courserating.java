@@ -1,5 +1,6 @@
 package com.htt.ecourse.pojo;
 
+import com.htt.ecourse.responses.AssignmentResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,11 +25,11 @@ public class Courserating {
     @Column(name = "rating_date")
     private Date ratingDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
     private Course course;
 
@@ -43,6 +44,17 @@ public class Courserating {
     @PrePersist
     protected void onCreate() {
         this.ratingDate = new Date();
+    }
+
+    public static Courserating fromRating(Courserating courserating) {
+        Courserating courseRating = Courserating.builder()
+                .rating(courserating.getRating())
+                .course(courserating.getCourse())
+                .user(courserating.getUser())
+                .comment(courserating.getComment())
+                .build();
+        courseRating.setRatingDate(courserating.getRatingDate());
+        return courseRating;
     }
 
 }
