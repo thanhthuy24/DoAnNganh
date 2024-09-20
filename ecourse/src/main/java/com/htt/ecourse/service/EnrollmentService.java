@@ -2,7 +2,6 @@ package com.htt.ecourse.service;
 
 import com.htt.ecourse.dtos.EnrollmentDTO;
 import com.htt.ecourse.pojo.Enrollment;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
