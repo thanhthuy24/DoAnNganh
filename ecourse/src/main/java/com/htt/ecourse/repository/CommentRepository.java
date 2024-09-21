@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByLessonId(Long lessonId, PageRequest pageRequest);
-    Comment findById(Long id);
+    Comment getCommentById(Long id);
 
 }

@@ -27,7 +27,7 @@ public class CommentResponse {
                 .content(comment.getContent())
                 .lessonId(comment.getLesson().getId())
                 .userId(comment.getUser().getId())
-                .parentId(comment.getParent().getId())
+                .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
                 .build();
         commentResponse.setCreatedDate(comment.getCreatedDate());
         return commentResponse;

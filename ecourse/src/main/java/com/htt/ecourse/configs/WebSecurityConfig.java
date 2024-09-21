@@ -55,6 +55,9 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "api/choices/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
                             .requestMatchers(PUT, "api/choices/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
 
+                            .requestMatchers(GET, "api/comments/**").hasAnyRole(Role.USER, Role.TEACHER, Role.ADMIN)
+                            .requestMatchers(POST, "api/comments").hasAnyRole(Role.USER, Role.TEACHER)
+
                             .requestMatchers(GET, "api/enrollments/**").hasAnyRole(Role.USER)
                             .requestMatchers(POST, "api/enrollments").hasAnyRole(Role.USER)
 
@@ -68,6 +71,9 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/lessons/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/lessons/**/active").hasAnyRole(Role.ADMIN)
                             .requestMatchers(DELETE, "api/lessons/**").hasAnyRole(Role.ADMIN)
+
+                            .requestMatchers(GET, "api/like/**").hasAnyRole(Role.USER, Role.TEACHER)
+                            .requestMatchers(POST, "api/like").hasAnyRole(Role.USER, Role.TEACHER)
 
                             .requestMatchers(POST, "api/progress/**").hasAnyRole(Role.USER)
 
@@ -94,6 +100,8 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/receipts/**").hasAnyRole(Role.USER)
 
                             .requestMatchers(POST, "api/video-completed/").hasAnyRole(Role.USER)
+
+                            .requestMatchers(GET, "api/vn-pay/").hasAnyRole(Role.USER)
 
                             .anyRequest().authenticated();
                 });
