@@ -75,6 +75,8 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, "api/like/**").hasAnyRole(Role.USER, Role.TEACHER)
                             .requestMatchers(POST, "api/like").hasAnyRole(Role.USER, Role.TEACHER)
 
+                            .requestMatchers(POST, "api/payment/update-payment").hasAnyRole(Role.USER)
+
                             .requestMatchers(POST, "api/progress/**").hasAnyRole(Role.USER)
 
                             .requestMatchers(GET, "api/questions/**").hasAnyRole(Role.TEACHER, Role.USER)
@@ -100,8 +102,6 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/receipts/**").hasAnyRole(Role.USER)
 
                             .requestMatchers(POST, "api/video-completed/").hasAnyRole(Role.USER)
-
-                            .requestMatchers(GET, "api/vn-pay/").hasAnyRole(Role.USER)
 
                             .anyRequest().authenticated();
                 });
