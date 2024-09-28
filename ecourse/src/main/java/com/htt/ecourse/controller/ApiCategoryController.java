@@ -17,14 +17,15 @@ import java.util.List;
 @RestController
 @RequestMapping("api/categories")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ApiCategoryController {
     private final CategoryService categoryService;
     //hien thi tat ca category
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Category>> getAllCategories(
-            @RequestParam("page")     int page,
-            @RequestParam("limit")    int limit
+//            @RequestParam("page")     int page,
+//            @RequestParam("limit")    int limit
     ) {
         List<Category> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
