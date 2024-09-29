@@ -1,5 +1,6 @@
 <!-- eslint-disable -->
 <template>
+<ToastContainer />
     <component :is="layout">
         <router-view />
     </component>

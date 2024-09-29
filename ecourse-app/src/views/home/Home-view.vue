@@ -216,14 +216,13 @@
 							<span class=" text-xl font-bold" style="color: red">
 								{{ formatCurrencyWithRounding(course.price * (1 - course.discount / 100)) }} VNĐ
 							</span>
-							<router-link 
-								to="/" 
+							<button @click="addToCart(course)"
 								class=" text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
 								>
-								<span>
+								<!-- <span> -->
 								Add to cart
-								</span>
-							</router-link>
+								<!-- </span> -->
+							</button>
 						</div>
 					</div>
 				</div>
@@ -243,12 +242,18 @@
 
 <script>
 import { mdiStarCircle } from '@mdi/js';
-import { endpoints } from '@/configs/APIs.js'
+import { authAPIs, endpoints } from '@/configs/APIs.js'
 import APIs from '@/configs/APIs.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { onMounted, ref } from 'vue';
 import Pagination from '@/views/Pagination-view.vue'
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { useToaster } from 'vue3-toaster';
+import { useCookies } from "vue3-cookies";
+
+
 
 export default {
   name: "my-cool-component",
@@ -258,9 +263,13 @@ export default {
   },
   setup() {
     const selectedRating = ref(null);
+	const toaster = useToaster();
+	const { cookies } = useCookies();
     
 	const categories = ref([]);
     const courses = ref([]);
+	const enrollments = ref([]);
+	// const courseId = ref('');
 
 	const currentPage = ref(0);
 	const itemsPerPage = ref(4);
@@ -272,6 +281,13 @@ export default {
 
     const starPath = mdiStarCircle;
     const starIcon = faStar;
+
+	const store = useStore();
+	
+
+	// const isLoggedIn = computed(() => store.state.isLoggedIn);
+    const user = computed(() => store.state.user);
+	const totalQuantity = computed(() => store.state.totalQuantity);
 
     const fetchCategories = async () => {
 		try {
@@ -288,12 +304,66 @@ export default {
 			const res = await APIs.get(`${endpoints.courses}?page=${page}&&limit=${limit}`);
 			courses.value = res.data.courses;
 			totalPages.value = res.data.totalPages;
-			// console.log(res.data.courses);
 			
 		} catch (error) {
 			console.error(error);
 		}
     };
+
+const fetchCheckEnrollment = async (courseId) => {
+    try {
+        const userId = user.value?.id; // Lấy userId từ user.value
+        const token = store.getters.token; // Lấy token từ store hoặc nơi bạn lưu trữ
+        const res = await authAPIs().get(`${endpoints.checkEnrollment}?userId=${userId}&courseId=${courseId}`,{
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+        enrollments.value = res.data;
+        return res.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+	const addToCart = async (c) => {
+		
+		if (!user.value || !user.value.id) {
+        toaster.error("Please log in to add products to the cart.");
+        return;
+    }
+		// console.log(1);
+		await fetchCheckEnrollment(c.id);
+		if (enrollments.value && enrollments.value.length > 0 && 
+			enrollments.value.some(e => e.courseId?.id === c.id)) {
+        toaster.error("You are already enrolled in this course.");
+        return;
+    }
+
+    // let cart = cookies.get("cart") || null;
+	let cart = store.getters.cart;
+	console.log(cart);
+    if (cart === null)
+        cart = {};
+
+    if (!(c.id in cart)) {
+        cart[c.id] = {
+            "id": c.id,
+            "name": c.name,
+            "price": c.price,
+            "quantity": 1,
+            "discount": c.discount,
+        };
+		// console.log(cart);
+        cookies.set("cart", cart); // Lưu giỏ hàng vào cookies
+        store.commit('updateCart', cart); 
+		// Giả sử bạn có một mutation trong Vuex để cập nhật giỏ hàng
+        toaster.success("Product added to cart!");
+    } else {
+        toaster.error("Product is already in the cart and cannot be added again.");
+    }
+	}
 
 	const formatCurrencyWithRounding = (value) => {
 		const roundedValue = Math.floor(value) + (value % 1 >= 0.5 ? 1 : 0);
@@ -309,6 +379,7 @@ export default {
     onMounted(() => {
       fetchCategories();
       fetchCourses(currentPage.value, itemsPerPage.value);
+	// fetchCheckEnrollment(courseId);
     });
 
     return {
@@ -317,7 +388,6 @@ export default {
 		courses,
 		stars,
 		items,
-		
 		starPath,
 		starIcon,
 		fetchCategories,
@@ -325,8 +395,9 @@ export default {
 		currentPage, 
 		itemsPerPage,
 		totalPages,
-		// customPrice,
+		addToCart,
 		handlePageChange,
+		totalQuantity,
 		formatCurrencyWithRounding
 		// prevPage,
 		// nextPage

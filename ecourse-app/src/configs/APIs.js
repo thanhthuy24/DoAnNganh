@@ -10,6 +10,9 @@ export const endpoints = {
     currentUser: '/users/current-user',
     register: '/users/register',
 
+    checkEnrollment: `/enrollments/check-enrollment`,
+    
+
     categories: '/categories',
     courses: '/courses'
 }

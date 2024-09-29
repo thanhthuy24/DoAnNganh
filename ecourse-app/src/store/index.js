@@ -15,7 +15,9 @@ export default createStore({
     isLoggedIn: false,
     user: null, // Lưu thông tin người dùng
     token: null,
-    currentUser: null
+    currentUser: null,
+    cart: {},
+    totalQuantity: 0,
   },
   mutations: {
     login(state, user) {
@@ -29,7 +31,18 @@ export default createStore({
     },
     set_token(state, token) {
       state.token = token;
-    }
+    },
+    updateCart(state, cart) {
+      state.cart = cart;
+
+      // Calculate total quantity
+      state.totalQuantity = Object.values(cart).reduce((total, item) => total + item.quantity, 0);
+      // Save updated cart to cookies
+      cookies.save("cart", state.cart, { path: '/' });
+  },
+  paid(state) {
+      state.totalQuantity = 0;
+  },
   },
   actions: {
     async login({ commit }, credentials) {
@@ -38,6 +51,8 @@ export default createStore({
         const token = res.data;
       
         commit('set_token', token);
+
+        cookies.set('token', token);
         
         const response = await APIs.get(endpoints.currentUser, {
           headers: {
@@ -47,6 +62,8 @@ export default createStore({
 
         const user = response.data;
         commit('login', user);
+
+        // console.log(response.data);
 
       } catch(err){
         console.error('Login failed: ', err);
@@ -70,6 +87,9 @@ export default createStore({
   getters: {
     isLoggedIn: (state) => state.isLoggedIn,
     user: (state) => state.user,
+    token: (state) => state.token,
+    cart: (state) => state.cart,
+    totalQuantity: (state) => state.totalQuantity
   },
 
   // modules: {

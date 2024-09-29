@@ -40,9 +40,14 @@
 					</li>
                     <div class="flex" v-if="isLoggedIn">
                         <li>
-                            <a href="#" class="mr-10 block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+							<router-link to="">
+                            <a class="mr-10 flex block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                                 <svg-icon type="mdi" :path="cartPath"></svg-icon>
+								<span class="inline-flex items-center justify-center w-4 h-4 ms-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+								{{totalQuantity}}
+								</span>
                             </a>
+							</router-link>
                         </li>
                         <li>
                             <a href="#" class="mr-10 block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
@@ -95,6 +100,7 @@
 	</nav>
     </header>
     <main>
+		<ToastContainer />
         <slot />
     </main>
     <footer>
@@ -107,6 +113,8 @@ import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiCartOutline, mdiBellOutline, mdiMagnify } from '@mdi/js';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+// import { useCookies } from 'vue3-cookies';
+// const { cookies } = useCookies();
 
 export default {
     name: "my-cool-component",
@@ -119,6 +127,7 @@ export default {
         const searchPath = mdiMagnify;
 
         const store = useStore();
+		const totalQuantity = computed(() => store.state.totalQuantity);
 
 		const isLoggedIn = computed(() => store.state.isLoggedIn);
     const user = computed(() => store.state.user);
@@ -141,6 +150,7 @@ export default {
       logout,
 	cartPath,
 		bellPath,
+		totalQuantity,
 		searchPath,
     };
 

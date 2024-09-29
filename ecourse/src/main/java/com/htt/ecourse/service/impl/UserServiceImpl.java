@@ -63,11 +63,12 @@ public class UserServiceImpl implements UserService {
             throw new DataIntegrityViolationException("Username Already Exists");
         }
 
-        Role r = roleRepository.getRoleById(1L);
+        Role role = roleRepository.findById(userDTO.getRoleId())
+                .orElseThrow(() -> new DataNotFoundException("Role not found!"));
 
-//        if(role.getName().equals(Role.ADMIN)){
-//            throw new PermissionDenyException("You cannot register a ADMIN account!!");
-//        }
+        if(role.getName().equals(Role.ADMIN)){
+            throw new PermissionDenyException("You cannot register a ADMIN account!!");
+        }
 
         //convert from UserDTO -> User
         User newUser = User.builder()
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
                 .googleAccount(userDTO.getGoogleAccountId())
                 .build();
 
-        newUser.setRole(r);
+        newUser.setRole(role);
         // kiểm tra nếu có account_id thì không yêu cầu password
         if(userDTO.getFacebookAccountId()==0 && userDTO.getGoogleAccountId()==0){
             String password = userDTO.getPassword();
