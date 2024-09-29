@@ -1,4 +1,5 @@
 <!-- eslint-disable -->
+<!--eslint-disable-next-line no-mixed-spaces-and-tabs-->
 <template>  
     <header>
         <nav class="bg-white border-gray-200 dark:bg-gray-900">
@@ -65,18 +66,19 @@
 			<!-- Dropdown menu -->
 			<div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
 				<div class="px-4 py-3">
-				<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-				<span class="block text-sm  text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+				<span class="block text-sm text-gray-900 dark:text-white">{{ user.username }}</span>
+				<span class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{ user.email }}</span>
 				</div>
 				<ul class="py-2" aria-labelledby="user-menu-button">
 				<li>
-					<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
+					<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Information</a>
 				</li>
 				<li>
 					<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
 				</li>
-				<li>
-					<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+				<li><router-link to="">
+					<a v-if="isLoggedIn" @click="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+					</router-link>
 				</li>
 				
 				</ul>
@@ -118,29 +120,30 @@ export default {
 
         const store = useStore();
 
-        // Tạo các computed properties cho các getter từ store
-        const isLoggedIn = computed(() => store.getters.isLoggedIn);
-        const user = computed(() => store.getters.user);
+		const isLoggedIn = computed(() => store.state.isLoggedIn);
+    const user = computed(() => store.state.user);
 
-        //Định nghĩa các phương thức
-        const login = (user) => {
-            store.dispatch('login', user);
-        }
+    // Định nghĩa các phương thức
+    const login = () => {
+      // Thông tin người dùng giả lập
+      const userInfo = { name: 'John Doe', email: 'john@example.com' };
+      store.dispatch('login', userInfo);
+    };
 
-        const logout = () => {
-            store.dispatch('logout');
-        }
+    const logout = () => {
+      store.dispatch('logout');
+    };
 
-        return {
-        cartPath,
+    return {
+      isLoggedIn,
+      user,
+      login,
+      logout,
+	cartPath,
 		bellPath,
 		searchPath,
-        store,
-        isLoggedIn,
-        user,
-        login,
-        logout
     };
+
     },
 }
 </script>

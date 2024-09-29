@@ -59,12 +59,15 @@ public class UserServiceImpl implements UserService {
             throw new DataIntegrityViolationException("Email Already Exists");
         }
 
-        Role role = roleRepository.findById(userDTO.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("Role Not Found"));
-
-        if(role.getName().equals(Role.ADMIN)){
-            throw new PermissionDenyException("You cannot register a ADMIN account!!");
+        if(userRepository.existsByUsername(userDTO.getUsername())){
+            throw new DataIntegrityViolationException("Username Already Exists");
         }
+
+        Role r = roleRepository.getRoleById(1L);
+
+//        if(role.getName().equals(Role.ADMIN)){
+//            throw new PermissionDenyException("You cannot register a ADMIN account!!");
+//        }
 
         //convert from UserDTO -> User
         User newUser = User.builder()
@@ -79,7 +82,7 @@ public class UserServiceImpl implements UserService {
                 .googleAccount(userDTO.getGoogleAccountId())
                 .build();
 
-        newUser.setRole(role);
+        newUser.setRole(r);
         // kiểm tra nếu có account_id thì không yêu cầu password
         if(userDTO.getFacebookAccountId()==0 && userDTO.getGoogleAccountId()==0){
             String password = userDTO.getPassword();

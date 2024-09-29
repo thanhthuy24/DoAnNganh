@@ -6,15 +6,20 @@ import axios from "axios";
 const BASE_URL = "http://localhost:8080/api/";
 
 export const endpoints = {
+    login: '/users/login',
+    currentUser: '/users/current-user',
+    register: '/users/register',
+
     categories: '/categories',
     courses: '/courses'
 }
 
 export const authAPIs = () => {
+    // const token = cookies.get('token');
     return axios.create({
         baseURL: BASE_URL,
         headers: {
-            // Authorization: cookies.get('token')
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         }
     })
 }

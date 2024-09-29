@@ -263,9 +263,8 @@ export default {
     const courses = ref([]);
 
 	const currentPage = ref(0);
-	const itemsPerPage = ref(12);
+	const itemsPerPage = ref(4);
 	const totalPages = ref(0);
-
 
     const stars = [1, 2, 3, 4, 5];
     const items = ['Column 1', 'Column 2', 'Column 3', 'Column 4'];
