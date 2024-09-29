@@ -1,86 +1,7 @@
 // <!-- eslint-disable -->
 <!--eslint-disable-next-line no-mixed-spaces-and-tabs-->
 <template>
-  	<nav class="bg-white border-gray-200 dark:bg-gray-900">
-	<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-		<img :src="require('@/assets/logo.png')" class="h-16" alt="HR*YJ Logo" />
-		<div class="flex">
-			<label for="simple-search" class="sr-only">Search</label>
-			<div class="relative w-full">
-				<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-					<svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-					</svg>
-				</div>
-			<input 
-				type="text" 
-				id="simple-search" 
-				class="bg-gray-50 border search-input border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-				placeholder="Search branch name..." required />
-			</div>
-			<button type="submit" class="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-				<svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-				</svg>
-				<span class="sr-only">Search</span>
-			</button>
-		</div>
-		<div>
-			<div class="hidden w-full md:block md:w-auto" id="navbar-default">
-				<ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-					<li>
-						<a href="#" class="mr-10 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</a>
-					</li>
-					<li>
-						<a href="#" class="mr-10 block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">About</a>
-					</li>
-					<li>
-						<a href="#" class="mr-10 block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Details</a>
-					</li>
-					<li>
-						<a href="#" class="mr-10 block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-							<svg-icon type="mdi" :path="cartPath"></svg-icon>
-						</a>
-					</li>
-					<li>
-						<a href="#" class="mr-10 block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-							<svg-icon type="mdi" :path="bellPath"></svg-icon>
-						</a>
-					</li>
-				</ul>
-    		</div>
-		</div>
-		<div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-			<button type="button" 
-					class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" 
-					id="user-menu-button"
-					@click="toggleDropdown"
-					aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-				<span class="sr-only">Open user menu</span>
-				<img class="w-8 h-8 rounded-full" :src="require('@/assets/avatar-default.png')" alt="user photo">
-			</button>
-			<!-- Dropdown menu -->
-			<div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-				<div class="px-4 py-3">
-				<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-				<span class="block text-sm  text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
-				</div>
-				<ul class="py-2" aria-labelledby="user-menu-button">
-				<li>
-					<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
-				</li>
-				<li>
-					<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-				</li>
-				<li>
-					<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-				</li>
-				
-				</ul>
-			</div>
-		</div>
-	</div>	
-	</nav>
+  	
 
 	<div>
 		<div id="default-carousel" class="relative w-full" data-carousel="slide">
@@ -129,9 +50,11 @@
 		
 		</div>
 		<div class="flex">
-			<aside id="default-sidebar" 
-					class="ml-3 mt-5 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" 
-					aria-label="Sidebar">
+			<aside 
+				style="height: 1000px"
+				id="default-sidebar" 
+				class="ml-3 mt-5 z-40 w-64 transition-transform -translate-x-full sm:translate-x-0" 
+				aria-label="Sidebar">
 			<div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
       		<ul class="space-y-2 font-medium mb-3">
 				<label>Sort by Filter</label>
@@ -151,6 +74,26 @@
 					</svg>
 
 					<span class="ms-3">{{ categories.length ? categories[3].name : 'Loading...' }}</span>
+					</a>
+				</li>
+				<li>
+					<a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>
+					</svg>
+
+
+					<span class="ms-3">{{ categories.length ? categories[4].name : 'Loading...' }}</span>
+					</a>
+				</li>
+				<li>
+					<a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+					<path fill-rule="evenodd" d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7Zm5.01 1H5v2.01h2.01V8Zm3 0H8v2.01h2.01V8Zm3 0H11v2.01h2.01V8Zm3 0H14v2.01h2.01V8Zm3 0H17v2.01h2.01V8Zm-12 3H5v2.01h2.01V11Zm3 0H8v2.01h2.01V11Zm3 0H11v2.01h2.01V11Zm3 0H14v2.01h2.01V11Zm3 0H17v2.01h2.01V11Zm-12 3H5v2.01h2.01V14ZM8 14l-.001 2 8.011.01V14H8Zm11.01 0H17v2.01h2.01V14Z" clip-rule="evenodd"/>
+					</svg>
+
+
+					<span class="ms-3">{{ categories.length ? categories[5].name : 'Loading...' }}</span>
 					</a>
 				</li>
 				<li>
@@ -181,15 +124,15 @@
 			<div class="mt-3">
 				<form class="max-w-md mx-auto mb-3">
 					<div class="mb-5">
-						<label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">From price</label>
+						<label for="number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">From price</label>
 						<input 
 							type="number" 
-							id="email" 
+							id="number" 
 							class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="from price" required />
 					</div>
 					<div class="mb-5">
 						<label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">To price</label>
-						<input type="number" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+						<input type="number" id="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
 					</div>
 					<button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
 				</form>
@@ -226,20 +169,20 @@
 							to="/">
         					<img class="p-8 rounded-t-lg" :src="course.image" alt="product image" />
     					</router-link >
-						<div class="px-5 pb-5">
-						<router-link 
-							class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white" 
-							to="/">
-							{{course.name}}
-						</router-link>
-						<p class="mt-3">{{course.description}}</p>
-						<div class="flex justify-between mt-2">
-							<span class="bg-purple-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
-							<svg class="w-3 h-3 me-1.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-								<path fill-rule="evenodd" d="M11 4.717c-2.286-.58-4.16-.756-7.045-.71A1.99 1.99 0 0 0 2 6v11c0 1.133.934 2.022 2.044 2.007 2.759-.038 4.5.16 6.956.791V4.717Zm2 15.081c2.456-.631 4.198-.829 6.956-.791A2.013 2.013 0 0 0 22 16.999V6a1.99 1.99 0 0 0-1.955-1.993c-2.885-.046-4.76.13-7.045.71v15.081Z" clip-rule="evenodd"/>
-							</svg>
-						?? lessons
-						</span>
+						<div class="px-5 pb-5 flex-grow">
+							<router-link 
+								class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white" 
+								to="/">
+								{{course.name}}
+							</router-link>
+							<p class="mt-3">{{course.description}}</p>
+							<div class="flex justify-between mt-2">
+								<span class="bg-purple-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
+								<svg class="w-3 h-3 me-1.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+									<path fill-rule="evenodd" d="M11 4.717c-2.286-.58-4.16-.756-7.045-.71A1.99 1.99 0 0 0 2 6v11c0 1.133.934 2.022 2.044 2.007 2.759-.038 4.5.16 6.956.791V4.717Zm2 15.081c2.456-.631 4.198-.829 6.956-.791A2.013 2.013 0 0 0 22 16.999V6a1.99 1.99 0 0 0-1.955-1.993c-2.885-.046-4.76.13-7.045.71v15.081Z" clip-rule="evenodd"/>
+								</svg>
+							?? lessons
+							</span>
 
 						<span class="bg-purple-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
 							<svg class="w-3 h-3 me-1.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -269,7 +212,7 @@
 							<br />
 							
 						</div>
-						<div class="flex items-center justify-between">
+						<div class="mt-auto flex items-center justify-between">
 							<span class=" text-xl font-bold" style="color: red">
 								{{ formatCurrencyWithRounding(course.price * (1 - course.discount / 100)) }} VNĐ
 							</span>
@@ -283,7 +226,7 @@
 							</router-link>
 						</div>
 					</div>
-					</div>
+				</div>
 				</div>
 			</div> 
 			<pagination 
@@ -299,8 +242,7 @@
 </template>
 
 <script>
-import SvgIcon from '@jamescoyle/vue-icon';
-import { mdiCartOutline, mdiBellOutline, mdiMagnify, mdiStarCircle } from '@mdi/js';
+import { mdiStarCircle } from '@mdi/js';
 import { endpoints } from '@/configs/APIs.js'
 import APIs from '@/configs/APIs.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -311,7 +253,6 @@ import Pagination from '@/views/Pagination-view.vue'
 export default {
   name: "my-cool-component",
   components: {
-    SvgIcon,
     FontAwesomeIcon, 
 	Pagination
   },
@@ -329,9 +270,7 @@ export default {
     const stars = [1, 2, 3, 4, 5];
     const items = ['Column 1', 'Column 2', 'Column 3', 'Column 4'];
 
-    const cartPath = mdiCartOutline;
-    const bellPath = mdiBellOutline;
-    const searchPath = mdiMagnify;
+
     const starPath = mdiStarCircle;
     const starIcon = faStar;
 
@@ -379,9 +318,7 @@ export default {
 		courses,
 		stars,
 		items,
-		cartPath,
-		bellPath,
-		searchPath,
+		
 		starPath,
 		starIcon,
 		fetchCategories,
