@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router"
 import HomeView from "../views/home/Home-view.vue"
+import CourseEnrolled from "@/views/courses/course-enrolled.vue";
 import store from '@/store/index.js'
 
 const routes = [
@@ -34,6 +35,30 @@ const routes = [
             layout: "register"
         },
         component: (() => import("@/views/login/register.vue"))
+    },
+    {
+        path: "/cart",
+        name: "Cart",
+        meta: {
+            layout: "cart"
+        },
+        component: (() => import("@/views/cart/cart-courses.vue"))
+    },
+    {
+        path: "/user",
+        name: "User",
+        meta: {
+            layout: "user"
+        },
+        component: (() => import("@/views/user/user-information.vue"))
+    },
+    {
+        path: `/course-enrolled/:courseId`,
+        name: "CourseEnrolled",
+        meta: {
+            layout: "CourseEnrolled"
+        },
+        component: CourseEnrolled
     },
 ];
 

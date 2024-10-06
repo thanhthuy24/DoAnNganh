@@ -1,8 +1,6 @@
 // <!-- eslint-disable -->
 <!--eslint-disable-next-line no-mixed-spaces-and-tabs-->
 <template>
-  	
-
 	<div>
 		<div id="default-carousel" class="relative w-full" data-carousel="slide">
 			<!-- Carousel wrapper -->
@@ -250,8 +248,11 @@ import { onMounted, ref } from 'vue';
 import Pagination from '@/views/Pagination-view.vue'
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { useToaster } from 'vue3-toaster';
+// import { useToaster } from 'vue3-toaster';
 import { useCookies } from "vue3-cookies";
+
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 
 
@@ -263,7 +264,7 @@ export default {
   },
   setup() {
     const selectedRating = ref(null);
-	const toaster = useToaster();
+	// const toaster = useToaster();
 	const { cookies } = useCookies();
     
 	const categories = ref([]);
@@ -283,9 +284,6 @@ export default {
     const starIcon = faStar;
 
 	const store = useStore();
-	
-
-	// const isLoggedIn = computed(() => store.state.isLoggedIn);
     const user = computed(() => store.state.user);
 	const totalQuantity = computed(() => store.state.totalQuantity);
 
@@ -330,23 +328,30 @@ const fetchCheckEnrollment = async (courseId) => {
 	const addToCart = async (c) => {
 		
 		if (!user.value || !user.value.id) {
-        toaster.error("Please log in to add products to the cart.");
+         toast("Login first!!", {
+			"theme": "auto",
+			"type": "error","autoClose": 2000,
+			"dangerouslyHTMLString": true
+			})
         return;
     }
 		// console.log(1);
-		await fetchCheckEnrollment(c.id);
+		fetchCheckEnrollment(c.id);
 		if (enrollments.value && enrollments.value.length > 0 && 
 			enrollments.value.some(e => e.courseId?.id === c.id)) {
-        toaster.error("You are already enrolled in this course.");
+			toast("This course you had enrolled!!", {
+				"theme": "auto",
+				"type": "error","autoClose": 2000,
+				"dangerouslyHTMLString": true
+				})
         return;
     }
 
-    // let cart = cookies.get("cart") || null;
-	let cart = store.getters.cart;
-	console.log(cart);
+	let cart = cookies.get("cart") || {};  // Load cart from cookies or initialize as an empty object
+
     if (cart === null)
         cart = {};
-
+	
     if (!(c.id in cart)) {
         cart[c.id] = {
             "id": c.id,
@@ -355,13 +360,23 @@ const fetchCheckEnrollment = async (courseId) => {
             "quantity": 1,
             "discount": c.discount,
         };
-		// console.log(cart);
+		
         cookies.set("cart", cart); // Lưu giỏ hàng vào cookies
         store.commit('updateCart', cart); 
+
+		console.log(cart);
+		let total = cookies.get("totalQuantity");
+		console.log(total);
+
 		// Giả sử bạn có một mutation trong Vuex để cập nhật giỏ hàng
-        toaster.success("Product added to cart!");
+        // toaster.success("Product added to cart!");
     } else {
-        toaster.error("Product is already in the cart and cannot be added again.");
+        // toaster.error("Product is already in the cart and cannot be added again.");
+		toast("This course you had enrolled!!", {
+				"theme": "auto",
+				"type": "error","autoClose": 2000,
+				"dangerouslyHTMLString": true
+				})
     }
 	}
 
@@ -380,6 +395,7 @@ const fetchCheckEnrollment = async (courseId) => {
       fetchCategories();
       fetchCourses(currentPage.value, itemsPerPage.value);
 	// fetchCheckEnrollment(courseId);
+	// console.log(store.state.totalQuantity);
     });
 
     return {

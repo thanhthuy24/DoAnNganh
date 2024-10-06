@@ -11,7 +11,15 @@ export const endpoints = {
     register: '/users/register',
 
     checkEnrollment: `/enrollments/check-enrollment`,
-    
+    getCourse: (courseId) => `/courses/${courseId}`,
+    getEnrollments: '/enrollments/get-courses',
+
+    lessons: `/lessons/course`,
+    comments: '/comments/lesson',
+
+    cart:'/cart',
+    checkout: '/payment/create-payment',
+    updatePayment: '/payment/update-payment',
 
     categories: '/categories',
     courses: '/courses'

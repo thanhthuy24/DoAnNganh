@@ -1,4 +1,5 @@
-/* * {
-    font-family: monospace !important;
-    font-size: large !important;
-} */
+* {
+    /* font-family: monospace !important; */
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+}

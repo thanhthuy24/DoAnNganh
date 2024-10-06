@@ -37,8 +37,10 @@ export default createStore({
 
       // Calculate total quantity
       state.totalQuantity = Object.values(cart).reduce((total, item) => total + item.quantity, 0);
+
       // Save updated cart to cookies
-      cookies.save("cart", state.cart, { path: '/' });
+      cookies.set("cart", state.cart, { path: '/' });
+      cookies.set("totalQuantity", state.totalQuantity, { path: '/' });
   },
   paid(state) {
       state.totalQuantity = 0;
@@ -83,6 +85,9 @@ export default createStore({
         commit('setUser', JSON.parse(user));
       }
     },
+    updateCart({commit}){
+      commit('updateCart');
+    }
   },
   getters: {
     isLoggedIn: (state) => state.isLoggedIn,
