@@ -85,6 +85,8 @@ public class WebSecurityConfig {
 
                             .requestMatchers(POST, "api/receipts/create-payment").hasAnyRole(Role.USER)
 
+                            .requestMatchers(POST, "api/register/").hasAnyRole(Role.USER)
+
                             .requestMatchers(POST, "api/score/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
 
                             .requestMatchers(GET, "api/teachers/**").permitAll()
