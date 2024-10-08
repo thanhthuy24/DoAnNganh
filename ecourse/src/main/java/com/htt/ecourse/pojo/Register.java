@@ -28,9 +28,7 @@ public class Register {
     @Column(name = "status")
     private Boolean status;
 
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

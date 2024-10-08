@@ -83,12 +83,21 @@ export default({
         const router = useRouter();
         const username = ref('');
         const password = ref('');
-    
+
         const login = async () => {
             const user = {username: username.value, password: password.value};
+        
             await store.dispatch('login', user);
-            router.push('/');
-        }
+            const userRole = store.getters.userRole;
+            
+            console.log(userRole);
+            
+            if (userRole === 'ADMIN') {
+                router.push('/admin');
+            } else {
+                router.push('/');
+            }
+            }
 
         return {
             login,

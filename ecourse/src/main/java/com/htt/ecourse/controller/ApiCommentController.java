@@ -2,11 +2,15 @@ package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.CommentDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
+import com.htt.ecourse.pojo.Comment;
+import com.htt.ecourse.pojo.Courserating;
 import com.htt.ecourse.repository.LessonRepository;
 import com.htt.ecourse.responses.AssignmentResponse;
 import com.htt.ecourse.responses.CommentResponse;
 import com.htt.ecourse.responses.list.AssignmentListResponse;
+import com.htt.ecourse.responses.list.CommentListRes;
 import com.htt.ecourse.responses.list.CommentListResponse;
+import com.htt.ecourse.responses.list.RatingListResponse;
 import com.htt.ecourse.service.CommentService;
 import com.htt.ecourse.service.LessonService;
 import jakarta.validation.Valid;
@@ -64,8 +68,7 @@ public class ApiCommentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found.");
         }
 
-        PageRequest pageRequest = PageRequest.of(page, limit,
-                Sort.by("createdDate").descending());
+        PageRequest pageRequest = PageRequest.of(page, limit);
         Page<CommentResponse> commentResponsePage = commentService.getCommentsByLessonId(lessonId, pageRequest);
 
         // lay tong so trang
@@ -77,4 +80,22 @@ public class ApiCommentController {
                 .build());
     }
 
+    @GetMapping("/{lessonId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<CommentListRes> getComments(
+            @PathVariable("lessonId") Long lessonId,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
+    ) throws DataNotFoundException {
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        Page<Comment> list = commentService.getComments(lessonId, pageRequest);
+
+        int totalPages = list.getTotalPages();
+
+        List<Comment> cmts = list.getContent();
+        return ResponseEntity.ok(CommentListRes.builder()
+                .comments(cmts)
+                .totalPages(totalPages)
+                .build());
+    }
 }

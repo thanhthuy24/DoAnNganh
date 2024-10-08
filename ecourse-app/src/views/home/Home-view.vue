@@ -266,7 +266,7 @@ export default {
     const selectedRating = ref(null);
 	// const toaster = useToaster();
 	const { cookies } = useCookies();
-    
+    const userRole = computed(() => store.getters.userRole);
 	const categories = ref([]);
     const courses = ref([]);
 	const enrollments = ref([]);
@@ -414,7 +414,8 @@ const fetchCheckEnrollment = async (courseId) => {
 		addToCart,
 		handlePageChange,
 		totalQuantity,
-		formatCurrencyWithRounding
+		formatCurrencyWithRounding,
+		userRole
 		// prevPage,
 		// nextPage
     };

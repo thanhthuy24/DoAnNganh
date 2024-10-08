@@ -1,11 +1,9 @@
 package com.htt.ecourse.service.impl;
 
+import com.htt.ecourse.controller.ApiCommentController;
 import com.htt.ecourse.dtos.CommentDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
-import com.htt.ecourse.pojo.Comment;
-import com.htt.ecourse.pojo.Enrollment;
-import com.htt.ecourse.pojo.Lesson;
-import com.htt.ecourse.pojo.User;
+import com.htt.ecourse.pojo.*;
 import com.htt.ecourse.repository.CommentRepository;
 import com.htt.ecourse.repository.EnrollmentRepository;
 import com.htt.ecourse.repository.LessonRepository;
@@ -53,7 +51,6 @@ public class CommentServiceImpl implements CommentService {
         Comment newComment = Comment.builder()
                 .content(commentDTO.getContent())
                 .createdDate(new Date())
-                .parent(existingParentComment)
                 .user(user)
                 .lesson(existingLesson)
                 .build();
@@ -71,5 +68,17 @@ public class CommentServiceImpl implements CommentService {
         Page<Comment> list = commentRepository.findByLessonId(lessonId, pageRequest);
 
         return list.map(CommentResponse::fromComment);
+    }
+
+    @Override
+    public Page<Comment> getComments(Long lessonId, PageRequest pageRequest) throws DataNotFoundException {
+        Lesson existingLesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new DataNotFoundException("Lesson not found"));
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.getUserByUsername(username);
+
+        return commentRepository.getCommentByLessonId(lessonId, pageRequest)
+                .map(Comment::fromComment);
     }
 }

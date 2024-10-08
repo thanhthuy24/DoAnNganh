@@ -18,16 +18,22 @@ export default createStore({
     currentUser: null,
     cart: {},
     totalQuantity: 0,
+    userRole: null
   },
   mutations: {
     login(state, user) {
       state.isLoggedIn = true;
       state.user = user;
     },
+    setUserRole(state, role) {
+      state.userRole = role;
+    }
+    ,
     logout(state) {
       state.token = null;
       state.isLoggedIn = false;
       state.user = null;
+      state.userRole = null;
     },
     set_token(state, token) {
       state.token = token;
@@ -64,8 +70,9 @@ export default createStore({
 
         const user = response.data;
         commit('login', user);
-
-        // console.log(response.data);
+        commit('setUserRole', user.role.name);
+        console.log(user.role.name);
+        // console.log(this.state.role + "77777");
 
       } catch(err){
         console.error('Login failed: ', err);
@@ -87,9 +94,14 @@ export default createStore({
     },
     updateCart({commit}){
       commit('updateCart');
-    }
+    },
+    // set_role({commit}){
+
+    // }
+    
   },
   getters: {
+    userRole: (state) => state.userRole,
     isLoggedIn: (state) => state.isLoggedIn,
     user: (state) => state.user,
     token: (state) => state.token,

@@ -9,20 +9,24 @@ export const endpoints = {
     login: '/users/login',
     currentUser: '/users/current-user',
     register: '/users/register',
+    users: '/users',
 
     checkEnrollment: `/enrollments/check-enrollment`,
     getCourse: (courseId) => `/courses/${courseId}`,
     getEnrollments: '/enrollments/get-courses',
 
     lessons: `/lessons/course`,
-    comments: '/comments/lesson',
+    comments: '/comments',
+    like: '/like',
 
     cart:'/cart',
     checkout: '/payment/create-payment',
     updatePayment: '/payment/update-payment',
 
     categories: '/categories',
-    courses: '/courses'
+    courses: '/courses',
+
+    registerForm: '/register',
 }
 
 export const authAPIs = () => {

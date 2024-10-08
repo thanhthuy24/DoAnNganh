@@ -1,7 +1,11 @@
 import {createRouter, createWebHistory} from "vue-router"
 import HomeView from "../views/home/Home-view.vue"
+import AdminLayout from "@/layouts/admin.vue";
 import CourseEnrolled from "@/views/courses/course-enrolled.vue";
-import store from '@/store/index.js'
+import RegisterForm from "@/views/register/register-form-user.vue";
+import TeacherList from "@/views/admin/teacher-list.vue";
+import RegisterFormDetails from "@/views/admin/teacher-forms-detail.vue";
+import { useStore } from "vuex";
 
 const routes = [
     {
@@ -16,9 +20,11 @@ const routes = [
         path: "/admin",
         name: "Admin",
         meta: {
-            layout: "admin"
+            layout: "admin",
+            requiresAuth: true,
+            role: 'Admin'
         },
-        component: (() => import("@/views/home/Admin-view.vue"))
+        component: AdminLayout
     },
     {
         path: "/login",
@@ -60,6 +66,30 @@ const routes = [
         },
         component: CourseEnrolled
     },
+    {
+        path: `/register-form`,
+        name: "RegisterForm",
+        meta: {
+            layout: "RegisterForm"
+        },
+        component: RegisterForm
+    },
+    {
+        path: `/teacher`,
+        name: "TeacherList",
+        meta: {
+            layout: "TeacherList"
+        },
+        component: TeacherList
+    },
+    {
+        path: `/register-form-detail/:registerId`,
+        name: "RegisterFormDetails",
+        meta: {
+            layout: "RegisterFormDetails"
+        },
+        component: RegisterFormDetails
+    },
 ];
 
 const router = createRouter({
@@ -68,7 +98,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    const store = useStore();
     const isLoggedIn = store.getters.isLoggedIn;
+    // const userRole = store.getters.userRole;
     
     if(to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
         next({
@@ -78,5 +110,23 @@ router.beforeEach((to, from, next) => {
         next();
     }
 })
+// router.beforeEach((to, from, next) => {
+//     const store = useStore();
+//     const isLoggedIn = store.getters.isAuthenticated;
+//     const userRole = store.getters.userRole;
+  
+//     if (to.matched.some(record => record.meta.requiresAuth)) {
+//       if (!isLoggedIn) {
+//         return next({ name: 'Login' });  // Nếu chưa đăng nhập, chuyển đến trang Login
+//       }
+      
+//       if (to.meta.role && to.meta.role !== userRole) {
+//         return next();  // Nếu role không hợp lệ, chuyển đến trang Forbidden
+//       }
+//     }
+  
+//     next();
+//   });
+
 
 export default router;

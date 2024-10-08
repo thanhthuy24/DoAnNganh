@@ -2,6 +2,7 @@ package com.htt.ecourse.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.htt.ecourse.pojo.Comment;
+import com.htt.ecourse.pojo.User;
 import lombok.*;
 
 import java.util.Date;
@@ -27,7 +28,7 @@ public class CommentResponse {
                 .content(comment.getContent())
                 .lessonId(comment.getLesson().getId())
                 .userId(comment.getUser().getId())
-                .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
+//                .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
                 .build();
         commentResponse.setCreatedDate(comment.getCreatedDate());
         return commentResponse;

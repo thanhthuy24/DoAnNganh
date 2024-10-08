@@ -34,18 +34,25 @@ public class Comment {
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "parent_id")
-    private Comment parent;
 
     @PrePersist
     protected void onCreate() {
         this.createdDate = new Date();
+    }
+
+    public static Comment fromComment(Comment comment) {
+        Comment cmt = Comment.builder()
+                .id(comment.getId())
+                .lesson(comment.getLesson())
+                .content(comment.getContent())
+                .user(comment.getUser())
+//                .parent(comment.getParent())
+                .build();
+        cmt.setCreatedDate(comment.getCreatedDate());
+        return cmt;
     }
 
 }

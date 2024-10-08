@@ -95,6 +95,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newUser);
     }
 
+    @Override
     public User getUserById(Long userId){
         return  userRepository.findById(userId)
                 .orElseThrow(() -> new DateTimeException("Can not find user by id + " + userId));

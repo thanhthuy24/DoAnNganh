@@ -3,6 +3,7 @@ package com.htt.ecourse.service.impl;
 import com.htt.ecourse.dtos.RegisterDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Register;
+import com.htt.ecourse.pojo.Teacher;
 import com.htt.ecourse.pojo.User;
 import com.htt.ecourse.repository.RegisterRepository;
 import com.htt.ecourse.repository.TeacherRepository;
@@ -32,7 +33,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public List<Register> getRegisterInActive() {
-        List<Register> list = registerRepository.findByStatus(0L);
+        List<Register> list = registerRepository.findByStatus(false);
         if (list.isEmpty())
             return null;
         return list;
@@ -40,7 +41,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public List<Register> getRegisterActive() {
-        List<Register> list = registerRepository.findByStatus(1L);
+        List<Register> list = registerRepository.findByStatus(true);
         if (list.isEmpty())
             return null;
         return list;
@@ -80,6 +81,12 @@ public class RegisterServiceImpl implements RegisterService {
             existingRegister.setReason(registerDTO.getReason());
             existingRegister.setUser(existingUser);
 
+            Teacher newTeacher = Teacher.builder()
+                    .description(registerDTO.getReason())
+                    .position(registerDTO.getPosition())
+                    .user(existingUser)
+                    .build();
+            teacherRepository.save(newTeacher);
             return registerRepository.save(existingRegister);
         }
         return null;

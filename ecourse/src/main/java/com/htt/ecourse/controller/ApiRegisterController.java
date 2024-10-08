@@ -23,8 +23,9 @@ public class ApiRegisterController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Register>> getAllRegister() {
-        return ResponseEntity.ok(registerService.getAllRegisters());
+    public ResponseEntity<?> getAllRegister() {
+        List<Register> list = registerService.getAllRegisters();
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{registerId}")
@@ -54,10 +55,23 @@ public class ApiRegisterController {
         return ResponseEntity.ok(registerDTO);
     }
 
-//    @PutMapping("/approve/{registerId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity<?> approveRegister(){
-//
-//    }
+    @PatchMapping("/update/{registerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> updateRegister(
+            @PathVariable Long registerId,
+            @Valid @ModelAttribute RegisterDTO registerDTO,
+            BindingResult rs
+    ) throws DataNotFoundException {
+        if (rs.hasErrors()) {
+            List<String> errorMessages = rs.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+
+        registerService.updateRegister(registerDTO, registerId);
+        return ResponseEntity.ok(registerDTO);
+    }
 
 }

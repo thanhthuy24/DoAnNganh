@@ -16,15 +16,9 @@ app.use(router);
 app.use(VueCookies, {expireTimes: '7d'}); // Cấu hình thời gian hết hạn cookie
 app.use(store);
 store.dispatch('initializeStore');
-// app.component('font-awesome-icon', FontAwesomeIcon)
-
 app.mount('#app', () => {
     nextTick(() => {
         initFlowbite();
 
     })
 });
-
-{/* <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-</style> */}

@@ -4,6 +4,7 @@ import com.htt.ecourse.dtos.UserDTO;
 import com.htt.ecourse.dtos.UserLoginDTO;
 import com.htt.ecourse.dtos.UserUpdateDTO;
 import com.htt.ecourse.pojo.User;
+import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.service.UserService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
@@ -28,6 +29,7 @@ import java.util.Optional;
 public class ApiUserController {
     private final UserService userService;
     private final CloudinaryService cloudinaryService;
+    private final UserRepository userRepository;
 
     @GetMapping(path = "/current-user", produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
@@ -115,6 +117,14 @@ public class ApiUserController {
         }
         userService.updateInformation(userId, userUpdateDTO);
         return ResponseEntity.ok(userUpdateDTO);
+    }
+
+    @GetMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getUser(
+            @PathVariable("userId") Long userId
+    ) {
+        return ResponseEntity.ok(userService.getUserById(userId));
     }
 
 }
