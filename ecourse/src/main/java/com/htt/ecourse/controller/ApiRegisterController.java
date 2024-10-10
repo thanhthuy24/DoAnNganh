@@ -59,7 +59,7 @@ public class ApiRegisterController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> updateRegister(
             @PathVariable Long registerId,
-            @Valid @ModelAttribute RegisterDTO registerDTO,
+            @Valid @RequestBody RegisterDTO registerDTO,
             BindingResult rs
     ) throws DataNotFoundException {
         if (rs.hasErrors()) {
@@ -72,6 +72,27 @@ public class ApiRegisterController {
 
         registerService.updateRegister(registerDTO, registerId);
         return ResponseEntity.ok(registerDTO);
+    }
+
+    @GetMapping("/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getRegisterByUserId(
+            @PathVariable Long userId
+    ){
+        Register r = registerService.getRegisterByUserId(userId);
+        if (r == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(registerService.getRegisterByUserId(userId));
+    }
+
+    @GetMapping("/user-form/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getRegisterByUser(
+            @PathVariable Long userId
+    ){
+//        Register r = registerService.getRegisterByUser(userId);
+        return ResponseEntity.ok(registerService.getRegisterByUser(userId));
     }
 
 }

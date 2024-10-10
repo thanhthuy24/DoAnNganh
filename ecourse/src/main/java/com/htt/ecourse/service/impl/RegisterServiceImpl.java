@@ -9,6 +9,7 @@ import com.htt.ecourse.repository.RegisterRepository;
 import com.htt.ecourse.repository.TeacherRepository;
 import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.service.RegisterService;
+import com.htt.ecourse.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ import java.util.List;
 public class RegisterServiceImpl implements RegisterService {
     private final RegisterRepository registerRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final TeacherRepository teacherRepository;
 
     @Override
@@ -45,6 +47,26 @@ public class RegisterServiceImpl implements RegisterService {
         if (list.isEmpty())
             return null;
         return list;
+    }
+
+    @Override
+    public Register getRegisterByUserId(Long userId) {
+        if (registerRepository.findByUserId(userId) == null) {
+            return null;
+        }
+        Register r = registerRepository.findByUserId(userId);
+        if(r.getStatus() == true){
+            return r;
+        }
+        return null;
+    }
+
+    public Register getRegisterByUser(Long userId) {
+        Register r = registerRepository.findByUserId(userId);
+        if (r != null) {
+            return r;
+        }
+        return null;
     }
 
     @Override
@@ -80,6 +102,8 @@ public class RegisterServiceImpl implements RegisterService {
             existingRegister.setStatus(true);
             existingRegister.setReason(registerDTO.getReason());
             existingRegister.setUser(existingUser);
+
+            userService.updateRole(existingUser.getId());
 
             Teacher newTeacher = Teacher.builder()
                     .description(registerDTO.getReason())

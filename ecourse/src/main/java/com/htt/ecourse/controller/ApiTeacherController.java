@@ -88,5 +88,13 @@ public class ApiTeacherController {
         return  ResponseEntity.ok("delete teacher successfully!!");
     }
 
+    @GetMapping("/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getTeacherByUserId(
+            @PathVariable Long userId
+    ){
+        return ResponseEntity.ok(teacherService.getTeacherByUserId(userId));
+    }
+
 }
 

@@ -10,6 +10,8 @@ public interface RegisterService {
     List<Register> getAllRegisters();
     List<Register> getRegisterInActive();
     List<Register> getRegisterActive();
+    Register getRegisterByUserId(Long userId);
+    Register getRegisterByUser(Long userId);
     Register getRegisterById(Long registerId) throws DataNotFoundException;
     Register createRegister(RegisterDTO registerDTO);
     Register updateRegister(RegisterDTO registerDTO, Long id) throws DataNotFoundException;

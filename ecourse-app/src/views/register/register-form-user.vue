@@ -50,6 +50,9 @@
                     </section>
                 </div>
             </div>
+            <div class="mt-10">
+                
+            </div>
         </main>
     </AppLayout>
 </template>
@@ -58,7 +61,7 @@
 // import { authAPIs, endpoints } from "@/configs/APIs";
 import { authAPIs, endpoints } from "@/configs/APIs";
 import AppLayout from "@/layouts/default.vue";
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
@@ -102,10 +105,42 @@ export default({
         }
     }
 
+    const list = {};
+    const user = computed(() => store.state.user);
+    const loadRegisterForm = async() => {
+        try {
+            let token = store.getters.token;
+            let userId = user.value.id;
+
+            let res = await authAPIs().get(`${endpoints.listRegister}/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            list.value = res.data;
+            console.log(list.value);
+
+        } catch(err){
+            console.error(err);
+        }
+    }
+
+    // const truncateReason = (reason) => {
+    //         return reason.length > 50 ? reason.slice(0, 50) + '...' : reason;
+    //     }
+
+    onMounted(() => {
+        loadRegisterForm();
+    })
+
     return {
         register,
+        list,
         reason, position,
-        notify
+        notify,
+        loadRegisterForm,
+        // truncateReason
     }
   },
 })

@@ -22,4 +22,5 @@ public interface CourseService {
     Course updateCourse(Long id, CourseDTO courseDTO);
     void deleteCourse(Long id);
     boolean existByName(String name);
+    List<Course> getCoursesByTeacher(Long teacherId) throws DataNotFoundException;
 }

@@ -135,4 +135,10 @@ public class ApiCourseController {
         return ResponseEntity.ok("delete course");
     }
 
+    @GetMapping("/teacher/{teacherId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getCoursesByTeacher(@PathVariable Long teacherId) {
+        return ResponseEntity.ok(courseService.getCoursesByTeacherId(teacherId));
+    }
+
 }

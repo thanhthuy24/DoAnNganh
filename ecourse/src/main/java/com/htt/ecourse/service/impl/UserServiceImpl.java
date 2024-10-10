@@ -123,4 +123,17 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    @Override
+    public User updateRole(Long userId) {
+        User existingUser = getUserById(userId);
+
+        Role teacherRole = roleRepository.getRoleById(3L);
+
+        if (existingUser != null){
+            existingUser.setRole(teacherRole);
+            return userRepository.save(existingUser);
+        }
+        return null;
+    }
 }

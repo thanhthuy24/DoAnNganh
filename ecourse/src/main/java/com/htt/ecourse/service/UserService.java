@@ -14,4 +14,5 @@ public interface UserService {
     User getUserById(Long userId);
     User updateInformation(Long userId, UserUpdateDTO userUpdateDTO) throws Exception;
     Optional<User> getUserByUsername(String username);
+    User updateRole(Long userId);
 }

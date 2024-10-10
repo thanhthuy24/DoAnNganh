@@ -253,7 +253,7 @@ import { useCookies } from "vue3-cookies";
 
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-
+import { onMessageListener } from '@/firebase/firebase.js'
 
 
 export default {
@@ -286,6 +286,31 @@ export default {
 	const store = useStore();
     const user = computed(() => store.state.user);
 	const totalQuantity = computed(() => store.state.totalQuantity);
+
+	const register = ref('');
+
+	const loadRegisterStatus = async() => {
+		try {
+			const userId = user.value?.id; // Lấy userId từ user.value
+		const token = store.getters.token;
+			const res = await authAPIs().get(`${endpoints.registerStatus}/${userId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`		
+				}
+			})
+			register.value = res.data;
+			console.log(res.data);
+			if(register.value != null) {
+				toast("Your register have been approved!! Please check now!!", {
+					"theme": "auto",
+					"type": "success","autoClose": 3000,
+					"dangerouslyHTMLString": true
+				});
+			}
+		} catch(err) {
+			console.error(err);
+		}
+	}
 
     const fetchCategories = async () => {
 		try {
@@ -392,10 +417,11 @@ const fetchCheckEnrollment = async (courseId) => {
         };
 
     onMounted(() => {
-      fetchCategories();
-      fetchCourses(currentPage.value, itemsPerPage.value);
-	// fetchCheckEnrollment(courseId);
-	// console.log(store.state.totalQuantity);
+		fetchCategories();
+		fetchCourses(currentPage.value, itemsPerPage.value);
+
+		onMessageListener();
+		loadRegisterStatus();
     });
 
     return {
@@ -415,7 +441,8 @@ const fetchCheckEnrollment = async (courseId) => {
 		handlePageChange,
 		totalQuantity,
 		formatCurrencyWithRounding,
-		userRole
+		userRole,
+		loadRegisterStatus
 		// prevPage,
 		// nextPage
     };

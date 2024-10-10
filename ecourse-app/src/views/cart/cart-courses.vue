@@ -202,6 +202,7 @@ export default ({
       window.location.href = payUrl;
         cookies.remove('cart'); // Xóa cookie 'cart'
       cookies.set('totalQuantity', 0);
+    //   cookies.remove('totalQuantity');
         store.dispatch("paid");
 
         updateCartAfterPayment();

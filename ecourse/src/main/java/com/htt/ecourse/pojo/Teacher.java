@@ -11,6 +11,7 @@ import lombok.*;
 @Entity
 @Table(name = "teacher")
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Teacher {
@@ -30,7 +31,6 @@ public class Teacher {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-//    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -94,6 +94,8 @@ export default({
             
             if (userRole === 'ADMIN') {
                 router.push('/admin');
+            } else if (userRole === 'TEACHER'){
+                router.push('/teacher-view');
             } else {
                 router.push('/');
             }

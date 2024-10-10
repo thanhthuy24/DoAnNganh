@@ -114,5 +114,17 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.existsByName(name);
     }
 
+    @Override
+    public List<Course> getCoursesByTeacher(Long teacherId) throws DataNotFoundException {
+        Teacher existingTeacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy giảng viên!"));
+
+        List<Course> list = courseRepository.findCourseByTeacherId(teacherId);
+        if (!list.isEmpty()){
+            return list;
+        }
+        return null;
+    }
+
 
 }

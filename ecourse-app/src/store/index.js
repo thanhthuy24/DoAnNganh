@@ -7,7 +7,7 @@ import { useCookies } from "vue3-cookies";
 import createPersistedState from "vuex-persistedstate";
 // import {  } from 'configs/APIs';
 // import auth from './modules/auth';
-
+import { handleLogin } from '@/firebase/firebase.js';
 const { cookies } = useCookies();
 
 export default createStore({
@@ -72,6 +72,9 @@ export default createStore({
         commit('login', user);
         commit('setUserRole', user.role.name);
         console.log(user.role.name);
+
+        handleLogin(user, token);
+
         // console.log(this.state.role + "77777");
 
       } catch(err){

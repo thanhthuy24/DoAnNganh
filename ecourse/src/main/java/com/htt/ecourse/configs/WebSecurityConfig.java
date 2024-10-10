@@ -86,19 +86,21 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "api/receipts/create-payment").hasAnyRole(Role.USER)
 
                             .requestMatchers(POST, "api/register/").hasAnyRole(Role.USER)
-                            .requestMatchers(GET, "api/register/**").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(GET, "api/register/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(PATCH, "api/register/update/**").hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(POST, "api/score/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
+
+                            .requestMatchers(POST, "api/token").permitAll()
 
                             .requestMatchers(GET, "api/teachers/**").permitAll()
                             .requestMatchers(POST, "api/teachers/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/teachers/**").hasAnyRole(Role.ADMIN, Role.TEACHER)
                             .requestMatchers(DELETE, "api/teachers/**").hasAnyRole(Role.ADMIN)
 
-                            .requestMatchers(GET, "api/users/**").hasAnyRole(Role.ADMIN, Role.USER)
+                            .requestMatchers(GET, "api/users/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(POST, "api/users/**").hasAnyRole(Role.ADMIN)
-                            .requestMatchers(PUT, "api/users/update-user/**").hasAnyRole(Role.ADMIN, Role.USER)
+                            .requestMatchers(PUT, "api/users/update-user/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(DELETE, "api/users/**").hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(POST, "api/tags").hasAnyRole(Role.ADMIN)

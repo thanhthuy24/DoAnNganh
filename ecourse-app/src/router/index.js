@@ -4,6 +4,7 @@ import AdminLayout from "@/layouts/admin.vue";
 import CourseEnrolled from "@/views/courses/course-enrolled.vue";
 import RegisterForm from "@/views/register/register-form-user.vue";
 import TeacherList from "@/views/admin/teacher-list.vue";
+import TeacherView from "@/views/home/Teacher-view.vue";
 import RegisterFormDetails from "@/views/admin/teacher-forms-detail.vue";
 import { useStore } from "vuex";
 
@@ -25,6 +26,16 @@ const routes = [
             role: 'Admin'
         },
         component: AdminLayout
+    },
+    {
+        path: "/teacher-view",
+        name: "Teacher",
+        meta: {
+            layout: "teacher-view",
+            requiresAuth: true,
+            role: 'Teacher'
+        },
+        component: TeacherView
     },
     {
         path: "/login",

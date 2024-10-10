@@ -14,6 +14,7 @@ export const endpoints = {
     checkEnrollment: `/enrollments/check-enrollment`,
     getCourse: (courseId) => `/courses/${courseId}`,
     getEnrollments: '/enrollments/get-courses',
+    courseTeacher: '/courses/teacher',
 
     lessons: `/lessons/course`,
     comments: '/comments',
@@ -26,7 +27,15 @@ export const endpoints = {
     categories: '/categories',
     courses: '/courses',
 
+    token: '/token',
+
     registerForm: '/register',
+    registerStatus: '/register/user',
+    listRegister: '/register/user-form',
+    approvalForm: '/register/update',
+
+    teacherInfor: '/teachers/user',
+
 }
 
 export const authAPIs = () => {

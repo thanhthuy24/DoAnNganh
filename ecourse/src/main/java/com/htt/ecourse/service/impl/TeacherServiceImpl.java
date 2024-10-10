@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,5 +73,14 @@ public class TeacherServiceImpl implements TeacherService {
     public void deleteTeacher(Long id) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
         teacherRepository.delete(optionalTeacher.get());
+    }
+
+    @Override
+    public List<Teacher> getTeacherByUserId(Long userId) {
+        List<Teacher> teacher = teacherRepository.findByUserId(userId);
+        if (!teacher.isEmpty()) {
+            return teacher;
+        }
+        return null;
     }
 }
