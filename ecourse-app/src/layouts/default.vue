@@ -87,7 +87,7 @@
 				<li>
 					<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
 				</li>
-				<li><router-link to="">
+				<li><router-link to="/">
 					<a v-if="isLoggedIn" @click="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
 					</router-link>
 				</li>

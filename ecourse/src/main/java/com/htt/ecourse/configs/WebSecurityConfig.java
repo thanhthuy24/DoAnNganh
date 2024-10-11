@@ -103,6 +103,7 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/users/update-user/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(DELETE, "api/users/**").hasAnyRole(Role.ADMIN)
 
+                            .requestMatchers(GET, "api/tags").hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST, "api/tags").hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(PUT, "api/receipts/**").hasAnyRole(Role.USER)

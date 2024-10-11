@@ -38,6 +38,10 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
     @PrePersist
     protected void onCreate() {
         this.createdDate = new Date();

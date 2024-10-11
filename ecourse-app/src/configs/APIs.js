@@ -28,6 +28,9 @@ export const endpoints = {
     courses: '/courses',
 
     token: '/token',
+    tag: '/tags',
+
+    teachers: '/teachers/all',
 
     registerForm: '/register',
     registerStatus: '/register/user',

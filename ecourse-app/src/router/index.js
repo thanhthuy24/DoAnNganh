@@ -3,9 +3,11 @@ import HomeView from "../views/home/Home-view.vue"
 import AdminLayout from "@/layouts/admin.vue";
 import CourseEnrolled from "@/views/courses/course-enrolled.vue";
 import RegisterForm from "@/views/register/register-form-user.vue";
-import TeacherList from "@/views/admin/teacher-list.vue";
+import TeacherList from "@/views/admin/teachers/teacher-list.vue";
+import CourseAdmin from "@/views/admin/courses/course-create.vue";
+import CourseListAdmin from "@/views/admin/courses/course-list.vue";
 import TeacherView from "@/views/home/Teacher-view.vue";
-import RegisterFormDetails from "@/views/admin/teacher-forms-detail.vue";
+import RegisterFormDetails from "@/views/admin/teachers/teacher-forms-detail.vue";
 import { useStore } from "vuex";
 
 const routes = [
@@ -92,6 +94,22 @@ const routes = [
             layout: "TeacherList"
         },
         component: TeacherList
+    },
+    {
+        path: `/course-list-admin`,
+        name: "CourseListAdmin",
+        meta: {
+            layout: "CourseListAdmin"
+        },
+        component: CourseListAdmin
+    },
+    {
+        path: `/course-view-admin`,
+        name: "CourseAdmin",
+        meta: {
+            layout: "CourseAdmin"
+        },
+        component: CourseAdmin
     },
     {
         path: `/register-form-detail/:registerId`,

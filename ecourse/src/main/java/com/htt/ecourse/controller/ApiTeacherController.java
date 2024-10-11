@@ -42,6 +42,12 @@ public class ApiTeacherController {
                 .build());
     }
 
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getAll(){
+        return ResponseEntity.ok(teacherService.getAll());
+    }
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createTeacher(

@@ -28,11 +28,14 @@ if ('serviceWorker' in navigator) {
         console.error('Service Worker registration failed:', error);
       });
   }
-  
 
-app.mount('#app', () => {
-    nextTick(() => {
-        initFlowbite();
+app.mount('#app');
+nextTick(() => {
+  initFlowbite();
+});
 
-    })
+router.afterEach(() => {
+  nextTick(() => {
+    initFlowbite();
+  });
 });
