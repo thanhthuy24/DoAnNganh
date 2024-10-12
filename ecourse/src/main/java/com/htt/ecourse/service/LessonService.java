@@ -25,4 +25,6 @@ public interface LessonService {
 
     List<LessonVideoDTO> getLessonByCourseId(Long courseId);
     Video createVideo(Long lessonId, VideoDTO videoDTO) throws InvalidParamException;
+
+    Long countLessonInCourse(Long courseId);
 }

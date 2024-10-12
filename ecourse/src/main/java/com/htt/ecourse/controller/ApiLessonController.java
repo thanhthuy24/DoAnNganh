@@ -185,4 +185,12 @@ public class ApiLessonController {
         return ResponseEntity.ok(listLesson);
     }
 
+    @GetMapping("/course/{courseId}/count")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> countLessonsByCourseId(
+            @PathVariable Long courseId
+    ){
+        return ResponseEntity.ok(lessonService.countLessonInCourse(courseId));
+    }
+
 }

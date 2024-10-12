@@ -50,7 +50,7 @@ public class Lesson {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany(mappedBy = "lesson")
+    @OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Video> videos = new LinkedHashSet<>();
 

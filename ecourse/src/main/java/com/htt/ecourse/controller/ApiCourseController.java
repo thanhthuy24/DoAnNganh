@@ -132,6 +132,7 @@ public class ApiCourseController {
     @DeleteMapping("/{courseId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteCourse(@PathVariable Long courseId) {
+        courseService.deleteCourse(courseId);
         return ResponseEntity.ok("delete course");
     }
 

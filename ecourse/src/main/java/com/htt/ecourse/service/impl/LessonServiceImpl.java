@@ -160,4 +160,13 @@ public class LessonServiceImpl implements LessonService {
 
         return videoRepository.save(newVideo);
     }
+
+    @Override
+    public Long countLessonInCourse(Long courseId) {
+        Long number = lessonRepository.countLessonsByCourseId(courseId);
+        if (number != null) {
+            return number;
+        }
+        return 0L;
+    }
 }
