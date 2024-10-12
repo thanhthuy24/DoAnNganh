@@ -16,6 +16,10 @@ export const endpoints = {
     getEnrollments: '/enrollments/get-courses',
     courseTeacher: '/courses/teacher',
 
+    lessonsList: '/lessons',
+
+    videos: '/videos',
+
     lessons: `/lessons/course`,
     comments: '/comments',
     like: '/like',

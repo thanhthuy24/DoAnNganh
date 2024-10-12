@@ -10,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.Instant;
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -52,7 +53,7 @@ public class Lesson {
 
     @OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Video> videos = new LinkedHashSet<>();
+    private List<Video> videos;
 
     @PrePersist
     protected void onCreate() {

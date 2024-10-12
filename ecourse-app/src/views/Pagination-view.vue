@@ -11,7 +11,7 @@
             >
             Previous
         </button>
-        <span>Page {{ currentPage+1 }} of {{ totalPages }}</span>
+        <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
         <button 
         type="button" 
             class="text-white bg-gradient-to-r from-cyan-500 

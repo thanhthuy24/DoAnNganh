@@ -23,4 +23,5 @@ public interface CourseService {
     void deleteCourse(Long id);
     boolean existByName(String name);
     List<Course> getCoursesByTeacher(Long teacherId) throws DataNotFoundException;
+    List<Course> getAllCourseName();
 }

@@ -2,11 +2,11 @@
     <AdminLayout>
         <main>
             <div class="flex justify-between">
-                <h1 class="mt-5 font-large">Course</h1>
+                <h1 class="mt-5 font-large">Lesson</h1>
                 <div class="mt-3">
                     <router-link to="/course-view-admin">
                         <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Add course
+                            Add Lesson
                         </button>
                     </router-link>
                 </div>
@@ -36,16 +36,13 @@
                                     ID
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Course's name
+                                    Lesson's name
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Teacher
+                                    Course's ID
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Price
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Lessons
+                                    Videos
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Status
@@ -56,7 +53,7 @@
                             </tr>
                         </thead>
                     <tbody>
-                        <template v-for="(item, id) in courses" :key="id">
+                        <template v-for="(item, id) in lessons" :key="id">
                             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                 <td class="px-6 py-4" style="color: blue; text-decoration: underline;">
                                     <!-- <router-link 
@@ -69,14 +66,14 @@
                                     {{item.name}}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{item.teacher?.user?.firstName}} {{item.teacher?.user?.lastName}} 
+                                    {{item.course.id}} 
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{formatCurrencyWithRounding(item.price)}} VND
+                                    {{videosNum[item.id] !== 0 ? videosNum[item.id] : 0}}
                                 </td>
-                                <td class="px-6 py-4">
+                                <!-- <td class="px-6 py-4">
                                      {{ lessonsCount[item.id] !== 0 ? lessonsCount[item.id] : 0 }}
-                                </td>
+                                </td> -->
                                 <td class="px-6 py-4">
                                      <span style="font-weight: bold" :class="item.isActive ? 'text-green-500' : 'text-red-500'">
                                         {{ item.isActive ? 'Active' : 'Inactice' }}
@@ -84,8 +81,8 @@
                                 </td>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     <router-link 
-                                        :to="{ name: 'CourseDetailAdmin', 
-                                                params: { courseId: item.id || 'defaultId' } }">
+                                        :to="{ name: 'LessonDetailAdmin', 
+                                                params: { lessonId: item.id || 'defaultId' } }">
                                         <button class="mr-3 style-icon-actions" style="background-color: #D6EFED">
                                             <svg style="margin-left: 2.5px;" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
@@ -149,13 +146,12 @@
         </main>
     </AdminLayout>
 </template>
-
 <script>
-import APIs, { authAPIs, endpoints } from "@/configs/APIs";
-import Pagination from '@/views/admin/pagination-admin.vue';
+import { authAPIs, endpoints } from "@/configs/APIs";
 import AdminLayout from "@/layouts/admin.vue";
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
+import Pagination from '@/views/admin/pagination-admin.vue';
 
 export default ({
     components: {
@@ -164,114 +160,63 @@ export default ({
 },
     setup() {
         const store = useStore();
-        // const route = useRoute();
-
-        // const user = computed(() => store.state.user);
-        const token = store.getters.token;
-
         const currentPage = ref(0);
         const itemsPerPage = ref(5);
         const totalPages = ref(0);
 
-        const courses = ref([]);
-        const lessonsCount = ref({});
-        const loadCourses = async(page, limit) => {
+        const lessons = ref([]);
+        const loadLessons = async(page, limit) => {
             try {
-                const res = await APIs.get(`${endpoints.courses}?page=${page}&&limit=${limit}`);
-                courses.value = res.data.courses;
-                totalPages.value = res.data.totalPages;
-                
-                courses.value.forEach(course => {
-                    countLessons(course.id);  // Truyền courseId để đếm số bài học
-                });
-            } catch(err){
-                console.error(err);
-            }
-        }
-
-        const selectCourseId = ref('');
-        const handleButton = (courseId) => {
-            selectCourseId.value = courseId;
-        }
-
-        const deleteCourse = async(selectCourseId) => {
-            console.log(selectCourseId);
-            try {
-                await authAPIs().delete(`${endpoints.courses}/${selectCourseId}`, {
+                let token = store.getters.token;
+                let res = await authAPIs().get(`${endpoints.lessonsList}?page=${page}&&limit=${limit}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 })
-                console.log("delete successful");
-                await loadCourses(currentPage.value, itemsPerPage.value);
-            } catch(err) {
-                console.error(err);
-            }
-        }
+                lessons.value = res.data.lessons;
+                totalPages.value = res.data.totalPages;
 
-        onMounted(() => {
-            loadCourses(currentPage.value, itemsPerPage.value);
-        })
-        
-        // const countLesson = ref(null);
-        const countLessons = async(courseId) => {
-            try {
-                let res = await authAPIs().get(`${endpoints.lessons}/${courseId}/count`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                }
+                // console.log(lessons.value);
+
+                lessons.value.forEach(lesson => {
+                    countVideo(lesson.id);
+                    // Truyền lessonId để đếm số video
                 });
-                lessonsCount.value[courseId] = res.data;
-                // console.log( courseId + ": " + lessonsCount.value[courseId]);
             } catch(err){
                 console.error(err);
             }
         }
 
-        const formatCurrencyWithRounding = (value) => {
-            const roundedValue = Math.floor(value) + (value % 1 >= 0.5 ? 1 : 0);
-            return roundedValue.toLocaleString().replace(/\B(?=(\d{3})+(?!))/g, ",");
-        };
-
-        // const currentPage = ref(3); // Trang hiện tại
+        const videosNum = ref({});
+        const countVideo = async(lessonId) => {
+            try {
+                let token = store.getters.token;
+                let res = await authAPIs().get(`${endpoints.videos}/lesson/${lessonId}/count`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                // console.log(res.data);
+                videosNum.value[lessonId] = res.data;
+            } catch(err){
+                console.error(err);
+            }
+        }
 
         const changePage = (page) => {
             currentPage.value = page; // Cập nhật trang hiện tại
-            loadCourses(currentPage.value, itemsPerPage.value);
+            loadLessons(currentPage.value, itemsPerPage.value);
         };
 
+        onMounted(() => {
+            loadLessons(currentPage.value, itemsPerPage.value);
+        })
+
         return {
-            token,
-            courses,
-            // handlePageChange,
-            currentPage, 
-            itemsPerPage,
-            totalPages,
-            formatCurrencyWithRounding,
-            // countLesson,
-            lessonsCount,
-            deleteCourse,
-            selectCourseId, handleButton,
-            Pagination,
-            changePage
+            lessons,
+            currentPage, itemsPerPage, totalPages, changePage,
+            videosNum, countVideo
         }
     },
 })
 </script>
-<style>
-    .font-large {
-        font-size: large;
-        font-weight: bold;
-    }
-
-    .border-style {
-        border: 1px solid black;
-        width: 1200px;
-    }
-    
-    .style-icon-actions {
-        width: 1.7rem;
-        height: 1.7rem;
-        border-radius: 10px;
-    }
-</style>

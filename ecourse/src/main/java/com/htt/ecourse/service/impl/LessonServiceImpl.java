@@ -51,10 +51,9 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Page<LessonResponse> getAllLessons(PageRequest pageRequest) {
+    public Page<Lesson> getAllLessons(PageRequest pageRequest) {
         return lessonRepository
-                .findAll(pageRequest)
-                .map(LessonResponse::fromLesson);
+                .findAll(pageRequest);
 //        return lessonRepository.findAll(pageRequest);
     }
 

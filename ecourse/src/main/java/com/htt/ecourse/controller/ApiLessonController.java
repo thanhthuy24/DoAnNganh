@@ -41,11 +41,11 @@ public class ApiLessonController {
         // tao pageable tu thong tin page va limit
         PageRequest pageRequest = PageRequest.of(page, limit,
                 Sort.by("createdDate").descending());
-        Page<LessonResponse> lessonPage = lessonService.getAllLessons(pageRequest);
+        Page<Lesson> lessonPage = lessonService.getAllLessons(pageRequest);
 
         // lay tong so trang
         int totalPage = lessonPage.getTotalPages();
-        List<LessonResponse> lessons = lessonPage.getContent();
+        List<Lesson> lessons = lessonPage.getContent();
         return ResponseEntity.ok(LessonListResponse.builder()
                 .lessons(lessons)
                 .totalPages(totalPage)

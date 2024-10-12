@@ -7,6 +7,8 @@ import TeacherList from "@/views/admin/teachers/teacher-form-list.vue";
 import CourseAdmin from "@/views/admin/courses/course-create.vue";
 import CourseListAdmin from "@/views/admin/courses/course-list.vue";
 import CourseDetailAdmin from "@/views/admin/courses/course-detail.vue";
+import LessonListAdmin from "@/views/admin/lessons/lesson-list.vue";
+import LessonDetailAdmin from "@/views/admin/lessons/lesson-detail.vue";
 import TeacherView from "@/views/home/Teacher-view.vue";
 import RegisterFormDetails from "@/views/admin/teachers/teacher-forms-detail.vue";
 import { useStore } from "vuex";
@@ -127,6 +129,22 @@ const routes = [
             layout: "RegisterFormDetails"
         },
         component: RegisterFormDetails
+    },
+    {
+        path: `/lessons-list-admin`,
+        name: "LessonListAdmin",
+        meta: {
+            layout: "LessonListAdmin"
+        },
+        component: LessonListAdmin
+    },
+    {
+        path: `/lesson-detail/:lessonId`,
+        name: "LessonDetailAdmin",
+        meta: {
+            layout: "LessonDetailAdmin"
+        },
+        component: LessonDetailAdmin
     },
 ];
 

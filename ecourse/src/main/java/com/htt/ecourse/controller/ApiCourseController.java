@@ -58,6 +58,12 @@ public class ApiCourseController {
         return courseService.searchCourses(keyword);
     }
 
+    @GetMapping("/name-course")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getAllCourseName(){
+        return ResponseEntity.ok(courseService.getAllCourseName());
+    }
+
     @GetMapping("/{courseId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Course> getCourseById(
