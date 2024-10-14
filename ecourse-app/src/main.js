@@ -10,6 +10,10 @@ import store from '@/store/index.js'
 import { registerGlobalComponents } from './utils/import'
 import { requestFCMToken } from '@/firebase/firebase.js';
 
+// Import Simple DataTables
+import 'simple-datatables/dist/style.css'; // Import the stylesheet
+import { DataTable } from 'simple-datatables'; // Import the DataTable class
+
 
 const app = createApp(App);
 registerGlobalComponents(app);
@@ -28,6 +32,8 @@ if ('serviceWorker' in navigator) {
         console.error('Service Worker registration failed:', error);
       });
   }
+
+app.config.globalProperties.$DataTable = DataTable;
 
 app.mount('#app');
 nextTick(() => {

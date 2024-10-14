@@ -4,7 +4,7 @@
             <div class="flex justify-between">
                 <h1 class="mt-5 font-large">Lesson</h1>
                 <div class="mt-3">
-                    <router-link to="/course-view-admin">
+                    <router-link to="/lesson-create">
                         <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Add Lesson
                         </button>
@@ -23,58 +23,70 @@
                     </div>
                     <input 
                         type="text" 
+                        v-model="searchQuery"
                         id="simple-search" 
+                        @input="handleSearch"
                         class="bg-gray-50 border search-input border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                         placeholder="Search branch name..." required />
                 </div>
                 <div>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <table id="sorting-table" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    ID
+                                <th scope="col" style="padding: 11px 20px;" class="px-6 py-3">
+                                    <span class="flex items-center">
+                                        ID
+                                    </span>
                                 </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Lesson's name
+                                <th scope="col" style="padding: 11px 20px;" class="px-6 py-3">
+                                    <span class="flex items-center">
+                                        Lesson's name
+                                    </span>
+                                    
                                 </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Course's ID
+                                <th scope="col" style="padding: 11px 20px;" class="px-6 py-3">
+                                    <span class="flex items-center">
+                                        Course's ID
+                                    </span>
+                                    
                                 </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Videos
+                                <th scope="col" style="padding: 11px 20px;" class="px-6 py-3">
+                                    <span class="flex items-center">
+                                        Videos
+                                    </span>
+                                    
                                 </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Status
+                                <th scope="col" style="padding: 11px 20px;" class="px-6 py-3">
+                                    <span class="flex items-center">
+                                        Status
+                                    </span>
+                                    
                                 </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Actions
+                                <th scope="col" style="padding: 11px 20px;" class="px-6 py-3">
+                                    <span class="flex items-center">
+                                        Actions
+                                    </span>
+                                    
                                 </th>
                             </tr>
                         </thead>
                     <tbody>
                         <template v-for="(item, id) in lessons" :key="id">
                             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                <td class="px-6 py-4" style="color: blue; text-decoration: underline;">
-                                    <!-- <router-link 
-                                        :to="{ name: 'RegisterFormDetails', params: { registerId: item.id || 'defaultId' } }"
-                                    > -->
+                                <td class="px-6 py-4" style="padding: 11px 20px; color: blue; text-decoration: underline;">
                                     {{item.id}}
-                                    <!-- </router-link> -->
                                 </td>
-                                <td class="px-6 py-4">
+                                <td style="padding: 11px 20px;" class="px-6 py-4">
                                     {{item.name}}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td style="padding: 11px 20px;" class="px-6 py-4">
                                     {{item.course.id}} 
                                 </td>
-                                <td class="px-6 py-4">
-                                    {{videosNum[item.id] !== 0 ? videosNum[item.id] : 0}}
+                                <td style="padding: 11px 20px;" class="px-6 py-4">
+                                    {{videosNum[item.id]}}
                                 </td>
-                                <!-- <td class="px-6 py-4">
-                                     {{ lessonsCount[item.id] !== 0 ? lessonsCount[item.id] : 0 }}
-                                </td> -->
-                                <td class="px-6 py-4">
+                                <td style="padding: 11px 20px;" class="px-6 py-4">
                                      <span style="font-weight: bold" :class="item.isActive ? 'text-green-500' : 'text-red-500'">
                                         {{ item.isActive ? 'Active' : 'Inactice' }}
                                     </span>
@@ -152,6 +164,8 @@ import AdminLayout from "@/layouts/admin.vue";
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import Pagination from '@/views/admin/pagination-admin.vue';
+// import { DataTable } from "simple-datatables";
+// import 'simple-datatables/dist/style.css';
 
 export default ({
     components: {
@@ -176,11 +190,8 @@ export default ({
                 lessons.value = res.data.lessons;
                 totalPages.value = res.data.totalPages;
 
-                // console.log(lessons.value);
-
                 lessons.value.forEach(lesson => {
                     countVideo(lesson.id);
-                    // Truyền lessonId để đếm số video
                 });
             } catch(err){
                 console.error(err);
@@ -196,8 +207,9 @@ export default ({
                         Authorization: `Bearer ${token}`
                     }
                 })
-                // console.log(res.data);
+                
                 videosNum.value[lessonId] = res.data;
+                // console.log(lessonId + ": " + videosNum.value[lessonId]);
             } catch(err){
                 console.error(err);
             }
@@ -208,15 +220,50 @@ export default ({
             loadLessons(currentPage.value, itemsPerPage.value);
         };
 
-        onMounted(() => {
-            loadLessons(currentPage.value, itemsPerPage.value);
-        })
+        const searchQuery = ref(''); // Biến lưu trữ từ khóa tìm kiếm
+        let dataTable = null;
+        const handleSearch = () => {
+            if (dataTable) {
+                dataTable.search(searchQuery.value); // Sử dụng hàm search của DataTable
+            }
+        };
+
+        onMounted(async () => {
+            // Load lessons
+            await loadLessons(currentPage.value, itemsPerPage.value);
+
+            // Wait for DOM update
+            // await nextTick();
+
+            // const sortingTable = document.getElementById("sorting-table");
+            // if (sortingTable && typeof DataTable !== 'undefined') {
+            //     // eslint-disable-next-line no-unused-vars
+            //     dataTable = new DataTable(sortingTable, {
+            //     searchable: false,
+            //     perPageSelect: false,
+            //     sortable: true,
+            //     columns: [
+            //         { select: 0, sortable: true },   // Cột đầu tiên
+            //         { select: 1, sortable: true },   // Cột thứ hai
+            //         { select: 2, sortable: true },  // Cột video (không cho phép sắp xếp)
+            //         { select: 3, sortable: false },   // Cột thứ tư (cho phép sắp xếp)
+            //         // Thêm các cột khác nếu có
+            //     ]
+            //     });
+            // } else {
+            //     console.error('Table with ID "sorting-table" not found or DataTable is undefined.');
+            // }
+        });
 
         return {
             lessons,
             currentPage, itemsPerPage, totalPages, changePage,
-            videosNum, countVideo
+            videosNum, countVideo, 
+            handleSearch, searchQuery, dataTable
         }
     },
 })
+
+
+
 </script>

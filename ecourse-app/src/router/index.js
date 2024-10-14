@@ -9,6 +9,7 @@ import CourseListAdmin from "@/views/admin/courses/course-list.vue";
 import CourseDetailAdmin from "@/views/admin/courses/course-detail.vue";
 import LessonListAdmin from "@/views/admin/lessons/lesson-list.vue";
 import LessonDetailAdmin from "@/views/admin/lessons/lesson-detail.vue";
+import LessonCreateAdmin from "@/views/admin/lessons/lesson-create.vue";
 import TeacherView from "@/views/home/Teacher-view.vue";
 import RegisterFormDetails from "@/views/admin/teachers/teacher-forms-detail.vue";
 import { useStore } from "vuex";
@@ -145,6 +146,14 @@ const routes = [
             layout: "LessonDetailAdmin"
         },
         component: LessonDetailAdmin
+    },
+    {
+        path: `/lesson-create`,
+        name: "LessonCreateAdmin",
+        meta: {
+            layout: "LessonCreateAdmin"
+        },
+        component: LessonCreateAdmin
     },
 ];
 

@@ -110,6 +110,7 @@ public class WebSecurityConfig {
 
                             .requestMatchers(GET, "api/videos/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
 
+                            .requestMatchers(GET, "api//**").hasAnyRole(Role.USER, Role.ADMIN, Role.TEACHER)
                             .requestMatchers(POST, "api/video-completed/").hasAnyRole(Role.USER)
 
                             .anyRequest().authenticated();

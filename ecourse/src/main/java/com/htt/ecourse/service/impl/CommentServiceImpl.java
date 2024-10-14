@@ -60,15 +60,15 @@ public class CommentServiceImpl implements CommentService {
         return newComment;
     }
 
-    @Override
-    public Page<CommentResponse> getCommentsByLessonId(Long lessonId, PageRequest pageRequest) throws DataNotFoundException {
-        Lesson existingLesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new DataNotFoundException("Lesson not found"));
-
-        Page<Comment> list = commentRepository.findByLessonId(lessonId, pageRequest);
-
-        return list.map(CommentResponse::fromComment);
-    }
+//    @Override
+//    public Page<CommentResponse> getCommentsByLessonId(Long lessonId, PageRequest pageRequest) throws DataNotFoundException {
+//        Lesson existingLesson = lessonRepository.findById(lessonId)
+//                .orElseThrow(() -> new DataNotFoundException("Lesson not found"));
+//
+//        Page<Comment> list = commentRepository.findByLessonId(lessonId, pageRequest);
+//
+//        return list.map(CommentResponse::fromComment);
+//    }
 
     @Override
     public Page<Comment> getComments(Long lessonId, PageRequest pageRequest) throws DataNotFoundException {
@@ -80,5 +80,37 @@ public class CommentServiceImpl implements CommentService {
 
         return commentRepository.getCommentByLessonId(lessonId, pageRequest)
                 .map(Comment::fromComment);
+    }
+
+    @Override
+    public Comment createCommentChild(CommentDTO commentDTO, Long commentId) throws DataNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.getUserByUsername(username);
+
+        Long userId = user.getId();
+
+        Lesson existingLesson = lessonRepository.findById(commentDTO.getLessonId())
+                .orElseThrow(() -> new DataNotFoundException("Lesson not found"));
+
+        Optional<Enrollment> existingEnrollment = enrollmentRepository
+                .findByUserIdAndCourseId(userId, existingLesson.getCourse().getId());
+
+        if (existingEnrollment == null || !existingEnrollment.isPresent()) {
+            throw new DataNotFoundException("Enrollment not found");
+        }
+
+        Comment existingParentComment = commentRepository.getCommentById(commentId);
+
+        Comment newComment = Comment.builder()
+                .content(commentDTO.getContent())
+                .createdDate(new Date())
+                .user(user)
+                .lesson(existingLesson)
+                .parent(existingParentComment)
+                .build();
+
+        commentRepository.save(newComment);
+
+        return newComment;
     }
 }

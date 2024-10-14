@@ -20,6 +20,10 @@ export const endpoints = {
 
     videos: '/videos',
 
+    listVideosCompleted: '/video-completed',
+
+    progress: '/progress',
+
     lessons: `/lessons/course`,
     comments: '/comments',
     like: '/like',

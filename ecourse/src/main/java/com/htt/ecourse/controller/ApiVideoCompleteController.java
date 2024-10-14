@@ -20,6 +20,15 @@ import java.util.List;
 public class ApiVideoCompleteController {
     private final VideoCompleteService videoCompleteService;
 
+    @GetMapping("/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getVideoCompleted(
+            @PathVariable Long userId
+    ) throws DataNotFoundException {
+        List<Videocompleted> list = videoCompleteService.getVideoCompletedBy(userId);
+        return ResponseEntity.ok(list);
+    }
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createVideoComplete(

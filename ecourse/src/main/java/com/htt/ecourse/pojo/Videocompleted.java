@@ -23,7 +23,7 @@ public class Videocompleted {
     @Column(name = "completed_date", updatable = false)
     private Date completedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "video_id")
     private Video video;
 

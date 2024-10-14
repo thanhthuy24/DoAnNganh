@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 
 public interface CommentService {
     Comment createComment(CommentDTO commentDTO) throws DataNotFoundException;
-    Page<CommentResponse> getCommentsByLessonId(Long lessonId, PageRequest pageRequest) throws DataNotFoundException;
+//    Page<CommentResponse> getCommentsByLessonId(Long lessonId, PageRequest pageRequest) throws DataNotFoundException;
     Page<Comment> getComments(Long lessonId, PageRequest pageRequest) throws DataNotFoundException;
+    Comment createCommentChild(CommentDTO commentDTO, Long commentId) throws DataNotFoundException;
 }

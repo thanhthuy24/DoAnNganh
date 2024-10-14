@@ -118,8 +118,9 @@ public class LessonServiceImpl implements LessonService {
 
     private LessonVideoDTO convertToDTO(Lesson lesson) {
         // Xây dựng danh sách VideoDTO bằng builder
-        List<VideoListDTO> videos = lesson.getVideos().stream()
-                .map(video -> VideoListDTO.builder()
+        List<Video> videos = lesson.getVideos().stream()
+                .map(video -> Video.builder()
+                        .id(video.getId())
                         .name(video.getName())
                         .build())
                 .collect(Collectors.toList());

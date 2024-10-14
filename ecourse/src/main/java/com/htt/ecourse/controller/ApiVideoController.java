@@ -15,7 +15,7 @@ public class ApiVideoController {
 
     @GetMapping("/lesson/{lessonId}/count")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getLessonCount(
+    public ResponseEntity<Long> getLessonCount(
             @PathVariable Long lessonId
     ) {
         return ResponseEntity.ok(videoService.countVideoByLessonId(lessonId));

@@ -4,7 +4,7 @@
             <!-- <h1>{{lessonId}}</h1> -->
             <section class="bg-white dark:bg-gray-900">
                 <div class="flex justify-between">
-                    <h1 class="mt-5 font-large">Update Course</h1>
+                    <h1 class="mt-5 font-large">Update Lesson</h1>
                 </div>
                 <div>
                     <h1>Let's check your update today!!</h1>
@@ -16,7 +16,7 @@
                     <div>
                         <form class="ml-6 mb-5" @submit.prevent="updateLesson">
                             <div class="sm:col-span-2 mr-5">
-                                <label for="name" class="block mb-3 mt-2 text-sm font-medium text-gray-900 dark:text-white">Course Name: <span style="color: red">*</span></label>
+                                <label for="name" class="block mb-3 mt-2 text-sm font-medium text-gray-900 dark:text-white">Lesson Name: <span style="color: red">*</span></label>
                                  <input 
                                     v-model="lesson.name"
                                     type="text" 
@@ -27,13 +27,13 @@
                                     required="">    
                             </div>
                             <div class="sm:col-span-2 mr-5">
-                                <label for="description" class="block mb-3 mt-5 text-sm font-medium text-gray-900 dark:text-white">Course Description: <span style="color: red">*</span></label>
+                                <label for="description" class="block mb-3 mt-5 text-sm font-medium text-gray-900 dark:text-white">Lesson Description: <span style="color: red">*</span></label>
                                 <textarea
                                 v-model="lesson.description"
                                  id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here"></textarea>
                             </div>
                             <div class="mb-5 mr-5 mt-5">
-                                <label class="block mb-3 mt-5 text-sm font-medium text-gray-900 dark:text-white" for="image">Course Image: <span style="color: red">*</span></label>
+                                <label class="block mb-3 mt-5 text-sm font-medium text-gray-900 dark:text-white" for="image">Lesson Videos: <span style="color: red">*</span></label>
                                 <div class="flex" style="display: flex; flex-wrap: wrap; gap: 10px;">
                                     <video 
                                         v-for="(item, id) in videos" 
@@ -50,7 +50,7 @@
                                 <label for="course" class="block mb-3 mt-5 text-sm font-medium text-gray-900 dark:text-white">Course: <span style="color: red">*</span></label>
                                 <select 
                                     v-model="courseName" 
-                                    id="category" 
+                                    id="course" 
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     <option 
                                         v-for="(item, id) in courses" 
