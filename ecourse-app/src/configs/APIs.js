@@ -22,10 +22,17 @@ export const endpoints = {
 
     listVideosCompleted: '/video-completed',
 
+    rating: '/rating',
+
+    assignment: '/assignments',
+
+    assignmentDone: '/assignment-done',
+
     progress: '/progress',
 
     lessons: `/lessons/course`,
     comments: '/comments',
+    reply: '/reply',
     like: '/like',
 
     cart:'/cart',

@@ -71,4 +71,23 @@ public class ApiCourseRatingController {
         return ResponseEntity.ok(courseRatingService.averageRatingByCourseId(courseId));
     }
 
+    @GetMapping("/{courseId}/rating/{rating}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> averageRatingByStar(
+            @PathVariable Long courseId,
+            @PathVariable Long rating
+    ) throws DataNotFoundException {
+        return ResponseEntity.ok(courseRatingService.averageRatingByStar(rating, courseId));
+    }
+
+    @GetMapping("/{courseId}/rate/{rating}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> countRatingByCourseIdAndRating(
+            @PathVariable Long courseId,
+            @PathVariable Long rating
+    ) throws DataNotFoundException {
+        return ResponseEntity.ok(courseRatingService.countRatingByCourseIdByRating(courseId, rating));
+    }
+
+
 }

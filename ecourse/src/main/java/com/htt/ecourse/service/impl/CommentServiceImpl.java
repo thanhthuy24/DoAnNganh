@@ -99,14 +99,11 @@ public class CommentServiceImpl implements CommentService {
             throw new DataNotFoundException("Enrollment not found");
         }
 
-        Comment existingParentComment = commentRepository.getCommentById(commentId);
-
         Comment newComment = Comment.builder()
                 .content(commentDTO.getContent())
                 .createdDate(new Date())
                 .user(user)
                 .lesson(existingLesson)
-                .parent(existingParentComment)
                 .build();
 
         commentRepository.save(newComment);

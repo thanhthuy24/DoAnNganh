@@ -96,4 +96,38 @@ public class CourseRatingServiceImpl implements CourseRatingService {
 
         return averageRating;
     }
+
+    @Override
+    public Long countRatingByCourseIdByRating(Long courseId, Long rating) throws DataNotFoundException {
+        Course existingCourse = courseRepository.findById(courseId)
+                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+
+        Long countRating = courseRatingRepository.countByCourseIdAndRating(existingCourse.getId(), rating);
+        if (countRating == 0) {
+            return 0L;
+        }
+        return countRating;
+    }
+
+    @Override
+    public Float averageRatingByStar(Long rate, Long courseId) throws DataNotFoundException {
+        Course existingCourse = courseRepository.findById(courseId)
+                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+
+        List<Courserating> getCourseRating = courseRatingRepository.findByCourseId(existingCourse.getId());
+        //đếm số luong tai khoan danh gia khoa hoc nay
+        Long countAll = courseRatingRepository.countByCourseId(existingCourse.getId());
+        Long countRate = courseRatingRepository.countByCourseIdAndRating(courseId, rate);
+
+        if (countAll == 0) {
+            throw new DataNotFoundException("Don't have any rating to count!!!");
+        }
+
+        Float averageRating = (float) countRate / countAll;
+
+        // Nhân với 100 để chuyển thành phần trăm và làm tròn
+        Float percentageRating = (float) Math.round(averageRating * 100);
+
+        return percentageRating;
+    }
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,7 +31,7 @@ public class Comment {
     @Column(name = "created_date")
     private Date createdDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
@@ -38,9 +39,6 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Comment parent;
 
     @PrePersist
     protected void onCreate() {
@@ -53,7 +51,6 @@ public class Comment {
                 .lesson(comment.getLesson())
                 .content(comment.getContent())
                 .user(comment.getUser())
-//                .parent(comment.getParent())
                 .build();
         cmt.setCreatedDate(comment.getCreatedDate());
         return cmt;

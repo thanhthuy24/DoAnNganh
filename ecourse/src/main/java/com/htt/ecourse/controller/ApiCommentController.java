@@ -106,7 +106,8 @@ public class ApiCommentController {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) throws DataNotFoundException {
-        PageRequest pageRequest = PageRequest.of(page, limit);
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by("createdDate").descending());
         Page<Comment> list = commentService.getComments(lessonId, pageRequest);
 
         int totalPages = list.getTotalPages();

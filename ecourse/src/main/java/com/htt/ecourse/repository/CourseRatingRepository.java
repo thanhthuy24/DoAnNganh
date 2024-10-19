@@ -13,4 +13,6 @@ public interface CourseRatingRepository extends JpaRepository<Courserating, Long
     Page<Courserating> findByCourseId(Long courseId, PageRequest pageRequest);
     List<Courserating> findByCourseId(Long courseId);
     Long countByCourseId(Long courseId);
+    Long countByRating(Long rating);
+    Long countByCourseIdAndRating(Long courseId, Long rating);
 }
