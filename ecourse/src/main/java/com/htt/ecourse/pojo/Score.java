@@ -18,12 +18,11 @@ public class Score {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotNull
     @Column(name = "score")
     private Float score;
 
     @Size(max = 255)
-    @Column(name = "feedBack")
+    @Column(name = "feed_back")
     private String feedBack;
 
     @ManyToOne(fetch = FetchType.LAZY)

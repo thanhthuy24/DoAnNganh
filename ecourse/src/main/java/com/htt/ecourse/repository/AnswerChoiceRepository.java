@@ -9,8 +9,8 @@ import java.util.Optional;
 
 public interface AnswerChoiceRepository extends JpaRepository<Answerchoice, Long> {
     Optional<Answerchoice> findById(Long id);
-    List<Answerchoice> findByAssignmentId(Long assignmentId);
-    Optional<Answerchoice> findByAssignmentIdAndQuestionIdAndChoiceId
-            (Long assignmentId, Long questionId, Long choiceId);
+    List<Answerchoice> findByAssignmentIdAndUserId(Long assignmentId, Long userId);
+    Optional<Answerchoice> findByAssignmentIdAndQuestionIdAndUserId
+            (Long assignmentId, Long questionId, Long userId);
 
 }

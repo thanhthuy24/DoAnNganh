@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findByAssignmentId(Long id);
     Optional<Question> findById(Long id);
-//    Question findByQuestionId(Long id);
+    Long countQuestionsByAssignmentId(Long assignmentId);
 }

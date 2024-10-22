@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from "vue-router"
 import HomeView from "../views/home/Home-view.vue"
 import AdminLayout from "@/layouts/admin.vue";
 import CourseEnrolled from "@/views/courses/course-enrolled.vue";
+import AssignmentDetail from "@/views/assignments/assignment-detail.vue";
 import RegisterForm from "@/views/register/register-form-user.vue";
 import TeacherList from "@/views/admin/teachers/teacher-form-list.vue";
 import CourseAdmin from "@/views/admin/courses/course-create.vue";
@@ -82,6 +83,14 @@ const routes = [
             layout: "CourseEnrolled"
         },
         component: CourseEnrolled
+    },
+    {
+        path: `/assignment/:assignmentId`,
+        name: "AssignmentDetail",
+        meta: {
+            layout: "AssignmentDetail"
+        },
+        component: AssignmentDetail
     },
     {
         path: `/register-form`,

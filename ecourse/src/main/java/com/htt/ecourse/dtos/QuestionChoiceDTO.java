@@ -13,6 +13,6 @@ import java.util.List;
 public class QuestionChoiceDTO {
     private Long id;
     private String content;
-    private List<ChoiceDTO> choices;
+    private List<Choice> choices;
 }
 

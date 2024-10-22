@@ -21,11 +21,12 @@ import java.util.List;
 public class ApiAnswerChoiceController {
     private final AnswerChoiceService answerChoiceService;
 
-    @PostMapping
+    @PostMapping("/{assignmentId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createAnswerChoice(
             @Valid
-            @RequestBody AnswerChoiceDTO answerChoiceDTO,
+            @RequestBody List<AnswerChoiceDTO> answerChoiceDTOs,
+            @PathVariable Long assignmentId,
             BindingResult rs
     ) throws DataNotFoundException {
         if(rs.hasErrors()){
@@ -35,8 +36,11 @@ public class ApiAnswerChoiceController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
-        answerChoiceService.createAnswerChoice(answerChoiceDTO);
-        return ResponseEntity.ok(answerChoiceDTO);
+        for (AnswerChoiceDTO answerChoiceDTO : answerChoiceDTOs) {
+            answerChoiceService.createAnswerChoice(answerChoiceDTO, assignmentId);
+        }
+
+        return ResponseEntity.ok(answerChoiceDTOs);
     }
 
     @GetMapping("/assignment/{assignmentId}")

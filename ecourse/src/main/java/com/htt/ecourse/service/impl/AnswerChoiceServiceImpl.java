@@ -6,6 +6,7 @@ import com.htt.ecourse.pojo.*;
 import com.htt.ecourse.repository.*;
 import com.htt.ecourse.responses.AnswerChoiceResponse;
 import com.htt.ecourse.service.AnswerChoiceService;
+import com.htt.ecourse.service.AssignmentDoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,9 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
     private final EnrollmentRepository enrollmentRepository;
 
     @Override
-    public Answerchoice createAnswerChoice(AnswerChoiceDTO answerChoiceDTO) throws DataNotFoundException {
+    public Answerchoice createAnswerChoice(AnswerChoiceDTO answerChoiceDTO, Long assignmentId) throws DataNotFoundException {
         Assignment existingAssignment = assignmentRepository
-                .findById(answerChoiceDTO.getAssignmentId())
+                .findById(assignmentId)
                 .orElseThrow(() -> new DataNotFoundException("Assignment not found"));
 
         Question existingQuestion = questionRepository
@@ -47,11 +48,11 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
         }
 
         Optional<Answerchoice> checkAnswerchoice = answerChoiceRepository
-                .findByAssignmentIdAndQuestionIdAndChoiceId
+                .findByAssignmentIdAndQuestionIdAndUserId
                         (
-                                existingAssignment.getId(),
-                                existingQuestion.getId(),
-                                answerChoiceDTO.getChoiceId());
+                            assignmentId,
+                            existingQuestion.getId(),
+                            user.getId());
         if (checkAnswerchoice.isPresent()) {
             throw new DataNotFoundException("This answer choice already exists!");
         }
@@ -82,7 +83,7 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
             throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
         }
 
-        List<Answerchoice> list = answerChoiceRepository.findByAssignmentId(assignmentId);
+        List<Answerchoice> list = answerChoiceRepository.findByAssignmentIdAndUserId(assignmentId, userId);
         return list.stream()
                 .map(this::convertToResponse)  // Sử dụng phương thức chuyển đổi
                 .collect(Collectors.toList());

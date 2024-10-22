@@ -31,7 +31,7 @@ public class Question {
     @JoinColumn(name = "assignment_id")
     private Assignment assignment;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Choice> choices = new LinkedHashSet<>();
 

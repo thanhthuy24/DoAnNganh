@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "api/assignment-done/**").hasAnyRole(Role.USER)
 
                             .requestMatchers(GET, "api/answer-choices").hasAnyRole(Role.USER, Role.TEACHER)
-                            .requestMatchers(POST, "api/answer-choices").hasAnyRole(Role.USER)
+                            .requestMatchers(POST, "api/answer-choices/**").hasAnyRole(Role.USER)
 
                             .requestMatchers(GET, "api/categories/**").permitAll()
                             .requestMatchers(POST, "api/categories/**").hasAnyRole(Role.ADMIN)
@@ -96,7 +96,7 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, "api/register/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(PATCH, "api/register/update/**").hasAnyRole(Role.ADMIN)
 
-                            .requestMatchers(POST, "api/score/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
+                            .requestMatchers(POST, "api/score/**").hasAnyRole(Role.TEACHER, Role.ADMIN, Role.USER)
 
                             .requestMatchers(POST, "api/token").permitAll()
 

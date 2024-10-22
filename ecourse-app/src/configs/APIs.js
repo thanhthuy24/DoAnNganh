@@ -26,6 +26,10 @@ export const endpoints = {
 
     assignment: '/assignments',
 
+    answerDone: '/answer-choices',
+
+    question: 'questions',
+
     assignmentDone: '/assignment-done',
 
     progress: '/progress',

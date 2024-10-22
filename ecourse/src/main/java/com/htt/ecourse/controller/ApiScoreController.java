@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,14 @@ public class ApiScoreController {
         }
         scoreService.createScore(scoreDTO);
         return ResponseEntity.ok(scoreDTO);
+    }
+
+    @GetMapping("/{assignmentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getScoreByAssignmentId(
+            @PathVariable Long assignmentId
+    ) throws DataNotFoundException {
+        return ResponseEntity.ok(scoreService.getScoreByAssignmentId(assignmentId));
     }
 
 }

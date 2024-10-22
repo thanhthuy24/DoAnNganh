@@ -102,7 +102,9 @@
                                     class="border-assignment"
                                 >
                                     <div class="flex justify-between">
-                                        <router-link to="">
+                                        <router-link
+                                            :to="{ name: 'AssignmentDetail', params: { assignmentId: item.id || 'defaultId' } }"
+                                            >
                                             <p style="font-weight: bold">{{item.name}}</p>
                                         </router-link>
                                         <button v-if="assignmentDone[item.id]"

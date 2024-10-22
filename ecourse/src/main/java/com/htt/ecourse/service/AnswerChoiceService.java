@@ -8,7 +8,7 @@ import com.htt.ecourse.responses.AnswerChoiceResponse;
 import java.util.List;
 
 public interface AnswerChoiceService {
-    Answerchoice createAnswerChoice(AnswerChoiceDTO answerChoiceDTO) throws DataNotFoundException;
+    Answerchoice createAnswerChoice(AnswerChoiceDTO answerChoiceDTO, Long assignmentId) throws DataNotFoundException;
     List<AnswerChoiceResponse> checkAnswersByAssignmentId(Long assignmentId) throws DataNotFoundException;
     Answerchoice getAnswerChoice(Long questionId, Long assignmentId) throws DataNotFoundException;
 }

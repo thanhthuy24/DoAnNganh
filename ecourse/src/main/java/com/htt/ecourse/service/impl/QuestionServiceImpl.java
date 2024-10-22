@@ -40,11 +40,13 @@ public class QuestionServiceImpl implements QuestionService {
 
         List<Question> questions = questionRepository.findByAssignmentId(assignmentId);
         return questions.stream().map(this::convertToDTO).collect(Collectors.toList());
+//        return questions;
     }
 
     private QuestionChoiceDTO convertToDTO(Question question) {
-        List<ChoiceDTO> choices = question.getChoices().stream()
-                .map(choice -> ChoiceDTO.builder()
+        List<Choice> choices = question.getChoices().stream()
+                .map(choice -> Choice.builder()
+                        .id(choice.getId())
                         .content(choice.getContent())
                         .isCorrect(choice.getIsCorrect())
                         .build())

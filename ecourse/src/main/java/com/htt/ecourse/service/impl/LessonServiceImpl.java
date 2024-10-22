@@ -125,10 +125,6 @@ public class LessonServiceImpl implements LessonService {
                         .build())
                 .collect(Collectors.toList());
 
-//        CourseDTO course = CourseDTO.builder()
-//                .name(lesson.getCourse().getName())
-//                        .build();
-
         // Sử dụng builder để tạo LessonDTO
         return LessonVideoDTO.builder()
                 .id(lesson.getId())
