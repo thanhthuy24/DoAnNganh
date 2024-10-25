@@ -29,7 +29,14 @@
                                                 </label>
                                             </div>
                                         </li>
+                                        
                                     </ul>
+                                    <div v-if="checkStatusDone" class="my-4 mx-3">
+                                        <p 
+                                            style="color: green; font-weight: bold;"
+                                            v-if="correctAnswers[index]?.correctChoice">
+                                            Correct answer: {{ correctAnswers[index].correctChoice.content }}</p>
+                                    </div>
                                 </div>
                             </div>
                             <button v-if="checkStatusDone"
@@ -65,12 +72,12 @@
                         margin-left: 35%;
                         font-size: large;
                         font-weight: bold;
-                    ">Score</p>
+                    ">Result</p>
                     </div>
                     <hr />
                     <div>
-                        <p class="py-5 px-5">Target: </p>
-                        <p class="py-5 px-5">Remark: </p>
+                        <p class="py-5 px-5">Score: <span style="color: red; font-weight: bold;">{{score.score}} / {{questions.length}}</span></p>
+                        <p class="py-5 px-5">Remark: <span style="color: red; font-weight: bold;">{{score.feedBack}}</span></p>
                     </div>
                 </div>
             </div>
@@ -118,6 +125,7 @@ export default ({
     }
 
     const questions = ref({});
+    const correctAnswers = ref([]);
     const loadQuestions = async() => {
         try {
             let res = await authAPIs().get(`${endpoints.question}/assignment/${assignmentId}`, {
@@ -127,6 +135,16 @@ export default ({
             })
             questions.value = res.data;
             // console.log(questions.value);
+            correctAnswers.value = questions.value.map(question => {
+            // Assuming question.choices is an array of choices with isCorrect field
+            const correctChoice = question.choices.find(choice => choice.isCorrect);
+            return {
+                questionId: question.id,
+                correctChoice: correctChoice ? correctChoice : null // Handle case where no correct choice is found
+            };
+            });
+
+            console.log(correctAnswers.value);
         } catch(err){
             console.error(err);
         }
@@ -141,7 +159,7 @@ export default ({
                 }
             })
             answerChoices.value = res.data;
-            console.log(answerChoices.value);
+            // console.log(answerChoices.value);
         } catch(err){
             console.error(err);
         }
@@ -149,6 +167,7 @@ export default ({
 
     const getSelectedChoiceId = (questionId) => {
         const answer = answerChoices.value.find(ans => ans.question_id === questionId);
+        // const correctAnswer = questions[questionId].choices.isCorrect;
         return answer ? answer.choice_id : null;
     };
 
@@ -213,19 +232,37 @@ export default ({
         });
         }
     };
+
+    const score = ref({});
+    const loadScore = async() => {
+        try {
+            let res = await authAPIs().get(`${endpoints.score}/${assignmentId}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+
+            score.value = res.data;
+            // console.log(score.value);
+        } catch(err) {
+            console.error(err);
+        }
+    }
         
     onMounted(() => {
         loadAssignment();
         loadQuestions();
         loadAnswerChoices();
         loadCheckStatusDone(assignmentId);
+        loadScore();
     })
 
     return {
         notify,
         assignmentId, assignment, questions, logChoiceId,
         answerChoices, checkStatusDone, getSelectedChoiceId,
-        answers, addAnswerChoice
+        answers, addAnswerChoice,
+        score, correctAnswers, 
     }
   }
 })

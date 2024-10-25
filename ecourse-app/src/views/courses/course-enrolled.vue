@@ -46,7 +46,6 @@
                                         <div v-for="starCount in 5" :key="starCount" class="mt-3 flex">
                                             <svg v-for="i in (6 - starCount)" :key="i" class="h-6 w-6 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
-                                                
                                             </svg>
                                             <div>
                                                 <span 
@@ -86,12 +85,16 @@
                                                 Rating
                                             </span>
                                         </div>
-                                        <button 
-                                            type="button"
-                                            class="mt-5 ml-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                            >
-                                            View a review  
-                                        </button>
+                                        <router-link 
+                                        :to="{ name: 'CourseRating', params: { courseId: courseId || 'defaultId' } }"
+                                        >
+                                            <button 
+                                                type="button"
+                                                class="mt-5 ml-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                                >
+                                                View a review  
+                                            </button>
+                                        </router-link>
                                     </div>
                                 </div>
                             </div>
@@ -183,6 +186,15 @@
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 10.5h.01m-4.01 0h.01M8 10.5h.01M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-6.6a1 1 0 0 0-.69.275l-2.866 2.723A.5.5 0 0 1 8 18.635V17a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
                                                     </svg>
                                                 </button>
+                                            </div>
+                                            <div
+                                                style="cursor: pointer; " 
+                                                class="mt-5 ml-5"
+                                                @click="loadReplyComment(c.id)"
+                                                >
+                                                <p
+                                                    style="color: grey; font-size: 12px"
+                                                >Read reply comments!</p>
                                             </div>
                                             
                                         </div>
@@ -548,20 +560,21 @@ export default({
                     },
                 });
                  await loadReplyComment(commentId);
+                 replyContent.value = '';
             } catch(ex){
                 console.error(ex);
             }
         }
 
         const listReply = ref([]);
-        const loadReplyComment = async (comment) => {
+        const loadReplyComment = async (commentId) => {
             try {
-                let res = await authAPIs().get(`${endpoints.reply}/${comment.id}`, {
+                let res = await authAPIs().get(`${endpoints.reply}/${commentId}`, {
                     headers: {
                         Authorization: `Bearer ${store.getters.token}`,
                     },
                 });
-                listReply.value[comment.id] = res.data; // Attach replies to the comment object
+                listReply.value[commentId] = res.data; // Attach replies to the comment object
                 console.log("reply comment: ", res.data);
             } catch (err) {
                 console.error(err);

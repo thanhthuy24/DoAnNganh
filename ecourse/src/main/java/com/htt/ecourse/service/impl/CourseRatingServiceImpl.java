@@ -98,6 +98,22 @@ public class CourseRatingServiceImpl implements CourseRatingService {
     }
 
     @Override
+    public Long countAll(Long courseId) throws DataNotFoundException {
+        Course existingCourse = getExistingCourse(courseId);
+        Long countRating = courseRatingRepository.countByCourseId(existingCourse.getId());
+
+        if (countRating == 0) {
+            return 0L;
+        }
+        return countRating;
+    }
+
+    private Course getExistingCourse(Long courseId) throws DataNotFoundException {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+    }
+
+    @Override
     public Long countRatingByCourseIdByRating(Long courseId, Long rating) throws DataNotFoundException {
         Course existingCourse = courseRepository.findById(courseId)
                 .orElseThrow(() -> new DataNotFoundException("Course not found!!"));

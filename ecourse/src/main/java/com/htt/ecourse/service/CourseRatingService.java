@@ -13,6 +13,7 @@ public interface CourseRatingService {
     Page<Courserating> getRatingByCourseId(Long courseId, PageRequest pageRequest) throws DataNotFoundException;
     Float averageRatingByCourseId(Long courseId) throws DataNotFoundException;
 
+    Long countAll(Long courseId) throws DataNotFoundException;
     Long countRatingByCourseIdByRating(Long courseId, Long rating) throws DataNotFoundException;
     Float averageRatingByStar(Long rate, Long courseId) throws DataNotFoundException;
 }

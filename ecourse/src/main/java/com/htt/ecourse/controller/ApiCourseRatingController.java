@@ -89,5 +89,12 @@ public class ApiCourseRatingController {
         return ResponseEntity.ok(courseRatingService.countRatingByCourseIdByRating(courseId, rating));
     }
 
+    @GetMapping("/{courseId}/count")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> countRatingByCourseId(
+        @PathVariable Long courseId
+    ) throws DataNotFoundException {
+        return ResponseEntity.ok(courseRatingService.countAll(courseId));
+    }
 
 }

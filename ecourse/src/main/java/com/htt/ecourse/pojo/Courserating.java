@@ -48,6 +48,7 @@ public class Courserating {
 
     public static Courserating fromRating(Courserating courserating) {
         Courserating courseRating = Courserating.builder()
+                .id(courserating.getId())
                 .rating(courserating.getRating())
                 .course(courserating.getCourse())
                 .user(courserating.getUser())

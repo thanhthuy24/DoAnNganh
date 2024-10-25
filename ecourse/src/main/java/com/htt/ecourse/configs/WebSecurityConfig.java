@@ -97,6 +97,7 @@ public class WebSecurityConfig {
                             .requestMatchers(PATCH, "api/register/update/**").hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(POST, "api/score/**").hasAnyRole(Role.TEACHER, Role.ADMIN, Role.USER)
+                            .requestMatchers(GET, "api/score/**").hasAnyRole(Role.USER, Role.TEACHER, Role.ADMIN)
 
                             .requestMatchers(POST, "api/token").permitAll()
 

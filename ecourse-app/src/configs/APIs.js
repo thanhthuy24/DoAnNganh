@@ -32,6 +32,8 @@ export const endpoints = {
 
     assignmentDone: '/assignment-done',
 
+    score: '/score',
+
     progress: '/progress',
 
     lessons: `/lessons/course`,
