@@ -112,7 +112,9 @@
         <div class="flex items-center justify-between rounded-t border-b border-gray-200 p-4 dark:border-gray-700 md:p-5">
             <div>
             <h3 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">Add a review for:</h3>
-            <a href="#" class="font-medium text-primary-700 hover:underline dark:text-primary-500">Apple iMac 24" All-In-One Computer, Apple M1, 8GB RAM, 256GB SSD</a>
+            <a href="#" class="font-medium text-primary-700 hover:underline dark:text-primary-500">
+                {{courses.name}}
+            </a>
             </div>
             <button type="button" class="absolute right-5 top-5 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="review-modal">
             <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -158,11 +160,13 @@
     </AppLayout>
 </template>
 <script>
-import { authAPIs, endpoints } from "@/configs/APIs";
+import APIs, { authAPIs, endpoints } from "@/configs/APIs";
 import AppLayout from "@/layouts/default.vue"
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default ({
     components: {
@@ -178,6 +182,33 @@ export default ({
         const totalPages = ref(0);
         const currentPage = ref(0);
         const itemsPerPage = ref(12);
+
+        const notifySuccess = () => {
+            toast("Rating successfully", {
+            "theme": "auto",
+            "type": "success","autoClose": 3000,
+            "dangerouslyHTMLString": true
+            })
+        }
+
+        const notifyError = () => {
+            toast("You've rated before!!", {
+            "theme": "auto",
+            "type": "error","autoClose": 3000,
+            "dangerouslyHTMLString": true
+            })
+        }
+
+        const courses = ref({});
+        const loadCourse = async() => {
+            try {
+                let res = await APIs.get(`${endpoints.courses}/${courseId}`);
+                courses.value = res.data;
+                console.log(courses.value);
+            } catch(err){
+                console.error(err);
+            }
+        }
 
         const average = ref('');
         const loadAverage = async() => {
@@ -285,8 +316,9 @@ export default ({
                 await loadCountReviews();
                 await loadAverage();
                 await loadProgressByStar();
+                notifySuccess();
             } catch(err) {
-                console.error(err);
+                notifyError();
             }
         }
 
@@ -294,6 +326,7 @@ export default ({
             loadAverage();
             loadReviews();
             loadCountReviews();
+            loadCourse();
             for (let star = 1; star <= 5; star++) {
                     loadCountRating(star);
                     loadProgressByStar(star);
@@ -312,6 +345,7 @@ export default ({
         };
 
         return {
+            notifySuccess, notifyError, courses,
             average, progressByStar, rates, loadAverage, loadProgressByStar,
             totalPages, currentPage, itemsPerPage, formattedDate,
             reviews, countReviews, rating, setRating, loadReviews, 

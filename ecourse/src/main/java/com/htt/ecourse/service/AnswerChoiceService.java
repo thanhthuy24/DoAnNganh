@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface AnswerChoiceService {
     Answerchoice createAnswerChoice(AnswerChoiceDTO answerChoiceDTO, Long assignmentId) throws DataNotFoundException;
-    List<AnswerChoiceResponse> checkAnswersByAssignmentId(Long assignmentId) throws DataNotFoundException;
-    Answerchoice getAnswerChoice(Long questionId, Long assignmentId) throws DataNotFoundException;
+    List<AnswerChoiceResponse> checkAnswersByAssignmentId(Long assignmentId);
+//    Answerchoice getAnswerChoice(Long questionId, Long assignmentId) throws DataNotFoundException;
 }

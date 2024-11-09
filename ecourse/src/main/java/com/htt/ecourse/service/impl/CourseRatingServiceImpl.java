@@ -8,8 +8,10 @@ import com.htt.ecourse.service.CourseRatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -28,27 +30,28 @@ public class CourseRatingServiceImpl implements CourseRatingService {
     public Courserating createRating(CourseRatingDTO courseRatingDTO) throws DataNotFoundException {
         Course existingCourse = courseRepository
                 .findById(courseRatingDTO.getCourseId())
-                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Course not found!!"));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
 
         Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(user.getId(), courseRatingDTO.getCourseId());
         if (checkEnrollment == null) {
-            throw new DataNotFoundException("You must register course before rating!!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "You must register course before rating!!!");
         }
 
         Optional<Progress> checkProgress = progressRepository
                 .findByCourseIdAndUserId(existingCourse.getId(), user.getId());
         if (checkProgress.get().getStatus() == "In Progress") {
-            throw new DataNotFoundException("You must complete!!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "You must complete!!!");
         }
 
         Optional<Courserating> existingRating = courseRatingRepository
                 .findByCourseIdAndUserId(courseRatingDTO.getCourseId(), user.getId());
 
         if (!existingRating.isEmpty()) {
-            throw new DataNotFoundException("Rating already exist!!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Rating already exist!!!");
         }
 
         Courserating newRating = Courserating.builder()
@@ -67,7 +70,8 @@ public class CourseRatingServiceImpl implements CourseRatingService {
     @Override
     public Page<Courserating> getRatingByCourseId(Long courseId, PageRequest pageRequest) throws DataNotFoundException {
         Course existingCourse = courseRepository.findById(courseId)
-                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Course not found!!"));
 
         return courseRatingRepository.findByCourseId(courseId, pageRequest)
                 .map(Courserating::fromRating);
@@ -76,13 +80,14 @@ public class CourseRatingServiceImpl implements CourseRatingService {
     @Override
     public Float averageRatingByCourseId(Long courseId) throws DataNotFoundException {
         Course existingCourse = courseRepository.findById(courseId)
-                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Course not found!!"));
 
         List<Courserating> getCourseRating = courseRatingRepository.findByCourseId(existingCourse.getId());
         Long countRating = courseRatingRepository.countByCourseId(existingCourse.getId());
 
         if (countRating == 0) {
-            throw new DataNotFoundException("Don't have any rating to count!!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Don't have any rating to count!!!");
         }
 
         Long sum = 0L;
@@ -110,13 +115,15 @@ public class CourseRatingServiceImpl implements CourseRatingService {
 
     private Course getExistingCourse(Long courseId) throws DataNotFoundException {
         return courseRepository.findById(courseId)
-                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Course not found!!"));
     }
 
     @Override
     public Long countRatingByCourseIdByRating(Long courseId, Long rating) throws DataNotFoundException {
         Course existingCourse = courseRepository.findById(courseId)
-                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Course not found!!"));
 
         Long countRating = courseRatingRepository.countByCourseIdAndRating(existingCourse.getId(), rating);
         if (countRating == 0) {
@@ -128,7 +135,8 @@ public class CourseRatingServiceImpl implements CourseRatingService {
     @Override
     public Float averageRatingByStar(Long rate, Long courseId) throws DataNotFoundException {
         Course existingCourse = courseRepository.findById(courseId)
-                .orElseThrow(() -> new DataNotFoundException("Course not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Course not found!!"));
 
         List<Courserating> getCourseRating = courseRatingRepository.findByCourseId(existingCourse.getId());
         //đếm số luong tai khoan danh gia khoa hoc nay
@@ -136,7 +144,7 @@ public class CourseRatingServiceImpl implements CourseRatingService {
         Long countRate = courseRatingRepository.countByCourseIdAndRating(courseId, rate);
 
         if (countAll == 0) {
-            throw new DataNotFoundException("Don't have any rating to count!!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Don't have any rating to count!!!");
         }
 
         Float averageRating = (float) countRate / countAll;

@@ -47,7 +47,7 @@ public class ApiAnswerChoiceController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<AnswerChoiceResponse>> getAnswerChoiceByAssignment(
             @PathVariable Long assignmentId
-    ) throws DataNotFoundException {
+    ) {
         List<AnswerChoiceResponse> answerchoiceList = answerChoiceService.checkAnswersByAssignmentId(assignmentId);
         return ResponseEntity.ok(answerchoiceList);
     }

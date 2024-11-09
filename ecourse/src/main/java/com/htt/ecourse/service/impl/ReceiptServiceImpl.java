@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.Date;
@@ -42,7 +44,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public Receipt getReceipt(Long id) {
-        return receiptRepository.findById(id).orElseThrow(() -> new DateTimeException("Can not find receipt with id " + id));
+        return receiptRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find receipt with id " + id));
 
     }
 
@@ -86,7 +90,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
                 Optional<Enrollment> enrollments = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
                 if (!enrollments.isEmpty()) {
-                    throw new DataNotFoundException("This course had in your list course!!");
+                    new ResponseStatusException(HttpStatus.NOT_FOUND, "This course had in your list course!!");
                 }
             }
 

@@ -76,12 +76,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> getTeacherByUserId(Long userId) {
-        List<Teacher> teacher = teacherRepository.findByUserId(userId);
-        if (!teacher.isEmpty()) {
-            return teacher;
+    public Teacher getTeacherByUserId(Long userId) {
+        Teacher teacher = teacherRepository.findByUserId(userId);
+        if (teacher == null) {
+            return null;
         }
-        return null;
+        return teacher;
     }
 
     @Override

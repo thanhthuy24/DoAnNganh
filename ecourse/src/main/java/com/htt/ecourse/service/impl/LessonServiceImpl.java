@@ -1,11 +1,9 @@
 package com.htt.ecourse.service.impl;
 
 import com.htt.ecourse.dtos.*;
+import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.exceptions.InvalidParamException;
-import com.htt.ecourse.pojo.Course;
-import com.htt.ecourse.pojo.Enrollment;
-import com.htt.ecourse.pojo.Lesson;
-import com.htt.ecourse.pojo.Video;
+import com.htt.ecourse.pojo.*;
 import com.htt.ecourse.repository.*;
 import com.htt.ecourse.responses.LessonResponse;
 import com.htt.ecourse.service.LessonService;
@@ -13,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.List;
@@ -29,12 +29,13 @@ public class LessonServiceImpl implements LessonService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final TeacherRepository teacherRepository;
 
     @Override
     public Lesson createLesson(LessonDTO lessonDTO) {
         Course existCourse = courseRepository
                 .findById(lessonDTO.getCourseId())
-                .orElseThrow(() -> new DateTimeException("Can nit find course by id " + lessonDTO.getCourseId()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Can nit find course by id " + lessonDTO.getCourseId()));
 
         Lesson newLesson = Lesson.builder()
                 .name(lessonDTO.getName())
@@ -47,7 +48,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Lesson getLessonById(Long id) {
         return lessonRepository.findById(id)
-                .orElseThrow(() -> new DateTimeException("Can nit find lesson by id " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find lesson by id " + id));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class LessonServiceImpl implements LessonService {
         Lesson existingLesson = getLessonById(id);
         if (existingLesson != null) {
             Course existCourse = courseRepository.findById(lessonDTO.getCourseId())
-                    .orElseThrow(() -> new DateTimeException("Can nit find course by id " + id));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find course by id " + id));
             existingLesson.setName(lessonDTO.getName());
             existingLesson.setDescription(lessonDTO.getDescription());
             existingLesson.setCourse(existCourse);
@@ -76,7 +77,8 @@ public class LessonServiceImpl implements LessonService {
         Lesson existingLesson = getLessonById(id);
         if (existingLesson != null) {
             Course existCouse = courseRepository.findById(lessonDTO.getCourseId())
-                    .orElseThrow(() -> new DateTimeException("Can nit find course by id " + id));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Cannot find course by id " + id));
             existingLesson.setName(lessonDTO.getName());
             existingLesson.setDescription(lessonDTO.getDescription());
             existingLesson.setCourse(existCouse);
@@ -103,17 +105,30 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<LessonVideoDTO> getLessonByCourseId(Long courseId) {
+    public List<LessonVideoDTO> getLessonByCourseId(Long courseId) throws DataNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long role = userRepository.getUserByUsername(username).getRole().getId();
         Long userId = userRepository.getUserByUsername(username).getId();
 
-        Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
-        if (checkEnrollment.isEmpty()) {
-            throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
+        if(role != 3) {
+            Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
+            if (checkEnrollment.isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "You must enroll this course first!!"
+                );
+            }
+        }
+        Course course = courseRepository.getCourseById(courseId);
+        Long ownerCourseId = course.getTeacher().getId();
+        Teacher teacher = teacherRepository.findByUserId(userId);
+        Long teacherId = teacher.getId();
+        if (ownerCourseId != teacherId) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "You don't have permission to access this course!!"
+            );
         }
         List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
         return lessons.stream().map(this::convertToDTO).collect(Collectors.toList());
-
     }
 
     private LessonVideoDTO convertToDTO(Lesson lesson) {
@@ -141,7 +156,8 @@ public class LessonServiceImpl implements LessonService {
             VideoDTO videoDTO) throws InvalidParamException {
         Lesson existingLesson = lessonRepository
                 .findById(lessonId)
-                .orElseThrow(() -> new DateTimeException("Can not find Lesson with id " + videoDTO.getLessonId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find Lesson with id " + videoDTO.getLessonId()));
 
         Video newVideo = Video.builder()
                 .name(videoDTO.getName())

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,7 +25,7 @@ public class Certificate {
 
     @NotNull
     @Column(name = "issuance_date", nullable = false)
-    private Instant issuanceDate;
+    private Date issuanceDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")

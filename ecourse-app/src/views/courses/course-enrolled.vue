@@ -6,12 +6,12 @@
             </div>
             <div class="flex">
                 <div style="width: 980px; border: 1px solid black;" >
-                        <div>
-                            <video ref="videoPlayer" style="width: 980px" controls @ended="handleVideoEnded(currentVideoId)">
-                                <source :src="videoUrl" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
+                    <div>
+                        <video ref="videoPlayer" style="width: 980px" controls @ended="handleVideoEnded(currentVideoId)">
+                            <source :src="videoUrl" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                     <div>
                         <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
                             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
@@ -106,7 +106,14 @@
                                 >
                                     <div class="flex justify-between">
                                         <router-link
+                                             v-if="item.tag && item.tag.id === 5"
                                             :to="{ name: 'AssignmentDetail', params: { assignmentId: item.id || 'defaultId' } }"
+                                            >
+                                            <p style="font-weight: bold">{{item.name}}</p>
+                                        </router-link>
+                                        <router-link
+                                             v-else
+                                            :to="{ name: 'AssignmentEssayDetail', params: { assignmentId: item.id || 'defaultId' } }"
                                             >
                                             <p style="font-weight: bold">{{item.name}}</p>
                                         </router-link>
@@ -306,7 +313,16 @@
                                
                             </div>
                         </div>
+                        <hr/>
+                        <div style="margin-left: 30%;" class="my-4">
+                            <button 
+                                @click="downloadCertificate(courses.name, formatDate(new Date()), userinfor.username)"
+                                type="button" 
+                                class="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                >Download Certificate</button>
+                        </div>
                     </div>
+                    
                 </div>
             </div>
         </main>
@@ -316,7 +332,7 @@
 <script>
 import APIs, { authAPIs, endpoints } from "@/configs/APIs";
 import AppLayout from "@/layouts/default.vue";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import Pagination from '@/views/Pagination-view.vue'
@@ -334,6 +350,7 @@ export default({
         const courseId = route.params.courseId || route.query.courseId;
         const lessons = ref([]);
         const comments = ref([]);
+        const userinfor = computed(() => store.state.user);
         
         const totalPages = ref(0);
         const currentPage = ref(0);
@@ -427,9 +444,7 @@ export default({
                         Authorization: `Bearer ${token}`,
                     }
                 })
-
                 assignments.value = res.data;
-                // console.log(assignments.value);
                 assignments.value.forEach(item => {
                     loadAssignmentDone(item.id);
                 });
@@ -659,6 +674,43 @@ export default({
             activeAccordion.value = activeAccordion.value === index ? null : index;
         };
 
+        const downloadCertificate = async(courseName, completionDate, username) => {
+            try {
+                const params = new URLSearchParams({
+                    courseName,
+                    completionDate,
+                    username
+                });
+                const response = await authAPIs().post(`${endpoints.certificate}?${params.toString()}`, null,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    responseType: 'blob' // Đặt kiểu phản hồi là blob
+                });
+            if (response.status === 200) {
+                console.log(response.data);
+
+                // const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                // const iframe = document.createElement('iframe');
+                // iframe.src = url;
+                // iframe.style.width = '100%';
+                // iframe.style.height = '100vh';
+                // document.body.appendChild(iframe);
+
+                // Tạo URL từ blob
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'certificate.pdf'); // Tên file khi tải về
+                document.body.appendChild(link);
+                link.click(); // Kích hoạt tải xuống
+                link.remove(); // Xóa link sau khi tải xong
+            }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
         onMounted(() => {
             loadLessons(courseId);
             if (lessons.value.length > 0) {
@@ -700,7 +752,7 @@ export default({
         }
 
         return {
-            AppLayout,
+            AppLayout, userinfor, 
             courseId, lessons, comments, loadComments, lId,
             handlePageChange, currentPage, itemsPerPage, totalPages,
             addComment, newCmt, addLike, loadLike, newLikes,
@@ -711,7 +763,8 @@ export default({
             courses, 
             rates, progressByStar, average,
             assignments, formatDate, isExpired,
-            assignmentDone
+            assignmentDone,
+            downloadCertificate
         }
     },
     

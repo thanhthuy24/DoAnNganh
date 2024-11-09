@@ -10,8 +10,10 @@ import com.htt.ecourse.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.Optional;
@@ -32,13 +34,14 @@ public class LikeServiceImpl implements LikeService {
         Long userId = user.getId();
 
         Comment existingComment = commentRepository.findById(likeDTO.getCommentId())
-                .orElseThrow(() -> new DataNotFoundException("Comment not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Comment not found"));
 
         Optional<Enrollment> existingEnrollment = enrollmentRepository
                 .findByUserIdAndCourseId(userId, existingComment.getLesson().getCourse().getId());
 
         if (existingEnrollment == null || !existingEnrollment.isPresent()) {
-            throw new DataNotFoundException("Enrollment not found");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Enrollment not found");
         }
 
         Optional<Commentlike> existingLike = likeRepository.findByUserIdAndCommentId(userId, existingComment.getId());

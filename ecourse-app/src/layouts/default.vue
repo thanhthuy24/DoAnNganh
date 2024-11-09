@@ -137,12 +137,12 @@ export default {
 		const totalQuantity = computed(() => store.state.totalQuantity);
 
 		const isLoggedIn = computed(() => store.state.isLoggedIn);
-    const user = computed(() => store.state.user);
+		const user = computed(() => store.state.user);
 
-	const total = computed(() => {
-            // Update the cookie value whenever totalQuantity changes
-            cookies.set("totalQuantity", totalQuantity.value);
-            return totalQuantity.value; // or any calculation you need
+		const total = computed(() => {
+			// Update the cookie value whenever totalQuantity changes
+			cookies.set("totalQuantity", totalQuantity.value);
+			return totalQuantity.value; // or any calculation you need
         });
 
     // Định nghĩa các phương thức

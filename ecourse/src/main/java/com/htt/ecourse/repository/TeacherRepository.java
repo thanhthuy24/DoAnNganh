@@ -11,5 +11,6 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     Page<Teacher> findAll(Pageable pageable); //phân trang
 
     @Query("SELECT t FROM Teacher t WHERE t.user.id = :userId")
-    List<Teacher> findByUserId(Long userId);
+    Teacher findByUserId(Long userId);
+
 }

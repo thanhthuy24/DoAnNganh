@@ -10,7 +10,9 @@ import com.htt.ecourse.repository.ReceiptDetailRepository;
 import com.htt.ecourse.repository.ReceiptRepository;
 import com.htt.ecourse.service.ReceiptDetailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.List;
@@ -30,16 +32,19 @@ public class ReceiptDetailServiceImpl implements ReceiptDetailService {
     @Override
     public Receiptdetail getReceiptDetail(Long id) {
         return receiptDetailRepository.findById(id)
-                .orElseThrow(() -> new DateTimeException("Cannot find receipt detail id "  + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cannot find receipt detail id "  + id));
     }
 
     @Override
     public Receiptdetail createReceiptDetail(ReceiptDetailDTO receiptDetailDTO) throws DataNotFoundException {
         // tim xem receipt id co ton tai khong
         Receipt receipt = receiptRepository.findById(receiptDetailDTO.getReceiptId())
-                .orElseThrow(() -> new DataNotFoundException("Cannot find receipt id " + receiptDetailDTO.getReceiptId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cannot find receipt id " + receiptDetailDTO.getReceiptId()));
         Course course = courseRepository.findById(receiptDetailDTO.getCourseId())
-                .orElseThrow(() -> new DataNotFoundException("Cannot find course id " + receiptDetailDTO.getCourseId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cannot find course id " + receiptDetailDTO.getCourseId()));
         Receiptdetail receiptDetail = Receiptdetail.builder()
                 .receipt(receipt)
                 .course(course)

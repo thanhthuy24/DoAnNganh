@@ -52,8 +52,9 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/courses/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(DELETE, "api/courses/**").hasAnyRole(Role.ADMIN)
 
+                            .requestMatchers(GET, "api/certificate/**").hasAnyRole(Role.USER)
+
                             .requestMatchers(GET, "api/rating/**").hasAnyRole(Role.ADMIN, Role.USER)
-//                            .requestMatchers(GET, "api/rating/course/")
                             .requestMatchers(POST, "api/rating/**").hasAnyRole(Role.USER)
 
                             .requestMatchers(POST, "api/choices/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
@@ -72,7 +73,7 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "api/essays/**").hasAnyRole(Role.USER)
                             .requestMatchers(PUT, "api/essays/**").hasAnyRole(Role.USER)
 
-                            .requestMatchers(GET, "api/lessons/**").hasAnyRole(Role.USER, Role.ADMIN)
+                            .requestMatchers(GET, "api/lessons/**").hasAnyRole(Role.USER, Role.ADMIN, Role.TEACHER)
                             .requestMatchers(POST, "api/lessons/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST, "api/lessons/uploads/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/lessons/**").hasAnyRole(Role.ADMIN)

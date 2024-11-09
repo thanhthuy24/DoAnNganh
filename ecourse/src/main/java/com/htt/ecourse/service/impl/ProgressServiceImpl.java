@@ -65,7 +65,8 @@ public class ProgressServiceImpl implements ProgressService {
 
         Progress newProcess = new Progress();
         try {
-            newProcess.setUser(userRepository.findById(user).orElseThrow(() -> new DataNotFoundException("User not found")));
+            newProcess.setUser(userRepository.findById(user)
+                    .orElseThrow(() -> new DataNotFoundException("User not found")));
         } catch (DataNotFoundException e) {
             throw new RuntimeException(e);
         }

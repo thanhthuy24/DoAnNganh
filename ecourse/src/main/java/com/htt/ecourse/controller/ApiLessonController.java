@@ -3,6 +3,7 @@ package com.htt.ecourse.controller;
 import com.htt.ecourse.dtos.LessonDTO;
 import com.htt.ecourse.dtos.LessonVideoDTO;
 import com.htt.ecourse.dtos.VideoDTO;
+import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Lesson;
 import com.htt.ecourse.pojo.Video;
 import com.htt.ecourse.responses.list.LessonListResponse;
@@ -180,7 +181,7 @@ public class ApiLessonController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<LessonVideoDTO>> getLessonsByCourseId(
             @PathVariable("courseId") Long courseId
-    ){
+    ) throws DataNotFoundException {
         List<LessonVideoDTO> listLesson = lessonService.getLessonByCourseId(courseId);
         return ResponseEntity.ok(listLesson);
     }

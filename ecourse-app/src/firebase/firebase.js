@@ -5,7 +5,6 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 // import { useStore } from "vuex";
 
 const firebaseConfig = {  
-
 };
 
 // Initialize Firebase

@@ -14,7 +14,9 @@ import com.htt.ecourse.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.Date;
@@ -34,15 +36,18 @@ public class CourseServiceImpl implements CourseService {
     public Course createCourse(CourseDTO courseDTO) throws DataNotFoundException {
         Category existCategory = categoryRepository
                 .findById(courseDTO.getCategoryId())
-                .orElseThrow(() -> new DataNotFoundException("Can not find category by id: " + courseDTO.getCategoryId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find category by id: " + courseDTO.getCategoryId()));
 
         Tag existTag = tagRepository
                 .findById(courseDTO.getTagId())
-                .orElseThrow(() -> new DataNotFoundException("Can not find tag by id: " + courseDTO.getTagId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find tag by id: " + courseDTO.getTagId()));
 
         Teacher existTeacher = teacherRepository
                 .findById(courseDTO.getTeacherId())
-                .orElseThrow(() -> new DateTimeException("Can not find teacher by id: " + courseDTO.getTeacherId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find teacher by id: " + courseDTO.getTeacherId()));
 
         Course newCourse = Course.builder()
                 .name(courseDTO.getName())
@@ -61,7 +66,8 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course getCourseById(Long id) {
         return courseRepository.findById(id)
-                .orElseThrow(() -> new DateTimeException("Can not find course with id : " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find course with id : " + id));
     }
 
     public List<Course> searchCourses(String keyword) {
@@ -86,14 +92,17 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course updateCourse(Long id, CourseDTO courseDTO) {
         Course existingCourse = courseRepository.findById(id)
-                .orElseThrow(() -> new DateTimeException("Can not find course with id : " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find course with id : " + id));
         if(existingCourse != null){
             //copy thuộc tính từ DTO sang
             Category existCategory = categoryRepository.findById(courseDTO.getCategoryId())
-                    .orElseThrow(() -> new DateTimeException("Can not find category by id: " + courseDTO.getCategoryId()));
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Can not find category by id: " + courseDTO.getCategoryId()));
 
             Teacher existTeacher = teacherRepository.findById(courseDTO.getTeacherId())
-                            .orElseThrow(() -> new DateTimeException("Can not find teacher by id: " + courseDTO.getTeacherId()));
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Can not find teacher by id: " + courseDTO.getTeacherId()));
             existingCourse.setName(courseDTO.getName());
             existingCourse.setDescription(courseDTO.getDescription());
             existingCourse.setPrice(courseDTO.getPrice());
@@ -122,7 +131,8 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getCoursesByTeacher(Long teacherId) throws DataNotFoundException {
         Teacher existingTeacher = teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy giảng viên!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cannot find teacher with id " + teacherId));
 
         List<Course> list = courseRepository.findCourseByTeacherId(teacherId);
         if (!list.isEmpty()){

@@ -89,7 +89,6 @@ public class ApiEssayController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
-
         essayService.updateEssay(essayId, essayDTO);
         return ResponseEntity.ok(essayDTO);
     }

@@ -14,8 +14,10 @@ import com.htt.ecourse.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -37,13 +39,15 @@ public class CommentServiceImpl implements CommentService {
         Long userId = user.getId();
 
         Lesson existingLesson = lessonRepository.findById(commentDTO.getLessonId())
-                .orElseThrow(() -> new DataNotFoundException("Lesson not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Lesson not found"));
 
         Optional<Enrollment> existingEnrollment = enrollmentRepository
                 .findByUserIdAndCourseId(userId, existingLesson.getCourse().getId());
 
         if (existingEnrollment == null || !existingEnrollment.isPresent()) {
-            throw new DataNotFoundException("Enrollment not found");
+            new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This course isn't enrolled in your list! Please enroll before participating in this course!!");
         }
 
         Comment existingParentComment = commentRepository.getCommentById(commentDTO.getParentId());
@@ -73,7 +77,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Page<Comment> getComments(Long lessonId, PageRequest pageRequest) throws DataNotFoundException {
         Lesson existingLesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new DataNotFoundException("Lesson not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Lesson not found"));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
@@ -90,13 +95,15 @@ public class CommentServiceImpl implements CommentService {
         Long userId = user.getId();
 
         Lesson existingLesson = lessonRepository.findById(commentDTO.getLessonId())
-                .orElseThrow(() -> new DataNotFoundException("Lesson not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Lesson not found"));
 
         Optional<Enrollment> existingEnrollment = enrollmentRepository
                 .findByUserIdAndCourseId(userId, existingLesson.getCourse().getId());
 
         if (existingEnrollment == null || !existingEnrollment.isPresent()) {
-            throw new DataNotFoundException("Enrollment not found");
+            new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This course isn't enrolled in your list! Please enroll before participating in this course!!");
         }
 
         Comment newComment = Comment.builder()

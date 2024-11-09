@@ -12,8 +12,10 @@ import com.htt.ecourse.repository.EnrollmentRepository;
 import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.service.AssignmentDoneService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.Date;
@@ -28,9 +30,11 @@ public class AssignmentDoneServiceImpl implements AssignmentDoneService {
     private final EnrollmentRepository enrollmentRepository;
 
     @Override
-    public Userassignmentdone createAssignmentDone(AssignmentDoneDTO assignmentDoneDTO) throws DataNotFoundException {
+    public Userassignmentdone createAssignmentDone(AssignmentDoneDTO assignmentDoneDTO){
         Assignment existingAssignment = assignmentRepository.findById(assignmentDoneDTO.getAssignmentId())
-                .orElseThrow(() -> new DataNotFoundException("Assignment not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find Assignment with id "
+                        + assignmentDoneDTO.getAssignmentId()));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
@@ -38,7 +42,8 @@ public class AssignmentDoneServiceImpl implements AssignmentDoneService {
         Optional<Enrollment> checkEnrollment = enrollmentRepository
                 .findByUserIdAndCourseId(user.getId(), existingAssignment.getCourse().getId());
         if (checkEnrollment.isEmpty()) {
-            throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This course isn't enrolled in your list! Please enroll before participating in this course!!");
         }
 
         Userassignmentdone newAssignmentDone = Userassignmentdone.builder()
@@ -52,9 +57,11 @@ public class AssignmentDoneServiceImpl implements AssignmentDoneService {
     }
 
     @Override
-    public Userassignmentdone getAssignmentDone(Long assignmentId) throws DataNotFoundException {
+    public Userassignmentdone getAssignmentDone(Long assignmentId) {
         Assignment existingAssignment = assignmentRepository.findById(assignmentId)
-                .orElseThrow(() -> new DataNotFoundException("Assignment not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find Assignment with id "
+                        + assignmentId));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);

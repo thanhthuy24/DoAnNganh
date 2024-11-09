@@ -3,6 +3,7 @@ package com.htt.ecourse.service;
 import com.htt.ecourse.dtos.LessonDTO;
 import com.htt.ecourse.dtos.LessonVideoDTO;
 import com.htt.ecourse.dtos.VideoDTO;
+import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.exceptions.InvalidParamException;
 import com.htt.ecourse.pojo.Lesson;
 import com.htt.ecourse.pojo.Video;
@@ -23,7 +24,7 @@ public interface LessonService {
     void deleteLesson(Long id);
     boolean existByName(String name);
 
-    List<LessonVideoDTO> getLessonByCourseId(Long courseId);
+    List<LessonVideoDTO> getLessonByCourseId(Long courseId) throws DataNotFoundException;
     Video createVideo(Long lessonId, VideoDTO videoDTO) throws InvalidParamException;
 
     Long countLessonInCourse(Long courseId);

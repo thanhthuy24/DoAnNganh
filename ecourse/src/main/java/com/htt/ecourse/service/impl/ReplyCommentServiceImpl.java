@@ -14,8 +14,10 @@ import com.htt.ecourse.responses.AssignmentResponse;
 import com.htt.ecourse.responses.ReplyCommentResponse;
 import com.htt.ecourse.service.ReplyCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +33,8 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
     @Override
     public Replycomment createReplyComment(ReplyDTO replyDTO) throws DataNotFoundException {
         Comment existingComment = commentRepository.findById(replyDTO.getCommentId())
-                .orElseThrow(() -> new DataNotFoundException("Comment not found!!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Comment not found!!!"));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
@@ -51,7 +54,8 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
     @Override
     public List<Replycomment> getReplyByCommentId(Long commentId) throws DataNotFoundException {
         Comment existingComment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new DataNotFoundException("Comment not found!!"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Comment not found!!"));
 
         return replyCommentRepository.findByCommentId(commentId);
     }

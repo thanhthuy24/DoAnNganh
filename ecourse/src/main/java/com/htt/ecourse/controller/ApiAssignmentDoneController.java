@@ -19,7 +19,7 @@ public class ApiAssignmentDoneController {
     @GetMapping("/assignment/{assignmentId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAssignmentDone(
-            @PathVariable Long assignmentId) throws DataNotFoundException {
+            @PathVariable Long assignmentId) {
         return ResponseEntity.ok(assignmentDoneService.getAssignmentDone(assignmentId));
     }
 
@@ -28,7 +28,7 @@ public class ApiAssignmentDoneController {
     public ResponseEntity<Userassignmentdone> createAssignmentDone(
             @RequestBody AssignmentDoneDTO assignmentDoneDTO,
             BindingResult rs
-    ) throws DataNotFoundException {
+    ) {
         Userassignmentdone newAssignmentDone = assignmentDoneService.createAssignmentDone(assignmentDoneDTO);
         return ResponseEntity.ok(newAssignmentDone);
     }

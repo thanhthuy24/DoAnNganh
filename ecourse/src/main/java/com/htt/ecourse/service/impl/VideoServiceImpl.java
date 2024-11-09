@@ -7,7 +7,9 @@ import com.htt.ecourse.repository.LessonRepository;
 import com.htt.ecourse.repository.VideoRepository;
 import com.htt.ecourse.service.VideoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public List<Video> findByLessonId(Long lessonId) throws DataNotFoundException {
         Lesson existingLesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy bài học tương ứng"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy bài học tương ứng"));
         List<Video> list = videoRepository.findByLessonId(lessonId);
         if (list != null) {
             return list;

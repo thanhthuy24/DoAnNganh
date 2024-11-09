@@ -267,7 +267,7 @@ export default ({
   }
 })
 </script>
-<style scoped>
+<style>
     .border-score {
         border: 1px solid black;
         border-radius: 10px;

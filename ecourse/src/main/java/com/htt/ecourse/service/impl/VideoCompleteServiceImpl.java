@@ -10,8 +10,10 @@ import com.htt.ecourse.repository.*;
 import com.htt.ecourse.service.ProgressService;
 import com.htt.ecourse.service.VideoCompleteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.ArrayList;
@@ -39,12 +41,13 @@ public class VideoCompleteServiceImpl implements VideoCompleteService {
 
         Videocompleted checkVideoCompleted = videoCompletedRepository.findByVideoIdAndUserId(videoCompleteDTO.getVideoId(), userId);
         if (checkVideoCompleted != null) {
-            throw new DataNotFoundException("Video already completed!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Video already completed!");
         }
 
         Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, existingVideo.getLesson().getCourse().getId());
         if (checkEnrollment.isEmpty()) {
-            throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This course isn't enrolled in your list! Please enroll before participating in this course!!");
         }
 
         Videocompleted videocompleted = Videocompleted.builder()
@@ -64,8 +67,6 @@ public class VideoCompleteServiceImpl implements VideoCompleteService {
     public List<Videocompleted> getVideoCompletedBy(Long userId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userID = userRepository.getUserByUsername(username).getId();
-
-
 
         if (userID == userId){
             List<Videocompleted> listVideosCompleted = videoCompletedRepository.findByUserId(userID);

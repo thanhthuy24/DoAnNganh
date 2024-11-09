@@ -8,8 +8,10 @@ import com.htt.ecourse.responses.AnswerChoiceResponse;
 import com.htt.ecourse.service.AnswerChoiceService;
 import com.htt.ecourse.service.AssignmentDoneService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.List;
@@ -30,21 +32,26 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
     public Answerchoice createAnswerChoice(AnswerChoiceDTO answerChoiceDTO, Long assignmentId) throws DataNotFoundException {
         Assignment existingAssignment = assignmentRepository
                 .findById(assignmentId)
-                .orElseThrow(() -> new DataNotFoundException("Assignment not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find Assignment with id " + assignmentId));
 
         Question existingQuestion = questionRepository
                 .findById(answerChoiceDTO.getQuestionId())
-                .orElseThrow(() -> new DataNotFoundException("Question not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find question with id " + answerChoiceDTO.getQuestionId()));
 
-        Choice existingChoice = choiceRepository.findById(answerChoiceDTO.getChoiceId())
-                .orElseThrow(() -> new DataNotFoundException("Choice not found"));
+        Choice existingChoice = choiceRepository
+                .findById(answerChoiceDTO.getChoiceId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find question with id " + answerChoiceDTO.getChoiceId()));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
 
         Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(user.getId(), existingAssignment.getCourse().getId());
         if (checkEnrollment.isEmpty()) {
-            throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This course isn't enrolled in your list! Please enroll before participating in this course!!");
         }
 
         Optional<Answerchoice> checkAnswerchoice = answerChoiceRepository
@@ -68,9 +75,10 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
     }
 
     @Override
-    public List<AnswerChoiceResponse> checkAnswersByAssignmentId(Long assignmentId) throws DataNotFoundException {
+    public List<AnswerChoiceResponse> checkAnswersByAssignmentId(Long assignmentId) {
         Assignment existingAssignment = assignmentRepository.findById(assignmentId)
-                .orElseThrow(() -> new DataNotFoundException("Assignment not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find Assignment with id " + assignmentId));
 
         List<Question> existingQuestions = questionRepository.findByAssignmentId(assignmentId);
         List<Choice> existingChoice = choiceRepository.findByQuestionIn(existingQuestions);
@@ -80,7 +88,8 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
 
         Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, existingAssignment.getCourse().getId());
         if (checkEnrollment.isEmpty()) {
-            throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This course isn't enrolled in your list! Please enroll before participating in this course!!");
         }
 
         List<Answerchoice> list = answerChoiceRepository.findByAssignmentIdAndUserId(assignmentId, userId);
@@ -99,9 +108,9 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
                 .build();
     }
 
-    @Override
-    public Answerchoice getAnswerChoice(Long questionId, Long assignmentId) throws DataNotFoundException {
-        return null;
+//    @Override
+//    public Answerchoice getAnswerChoice(Long questionId, Long assignmentId) throws DataNotFoundException {
+//        return null;
 //        Assignment existingAssignment = assignmentRepository.findById(assignmentId)
 //                .orElseThrow(() -> new DataNotFoundException("Assignment not found"));
 //
@@ -119,6 +128,6 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
 //        Optional<Answerchoice> check = answerChoiceRepository.findByAssignmentIdAndQuestionId(assignmentId, questionId);
 //        return check.orElse(null);
 
-    }
+//    }
 
 }

@@ -9,8 +9,10 @@ import com.htt.ecourse.pojo.User;
 import com.htt.ecourse.repository.*;
 import com.htt.ecourse.service.ScoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +31,13 @@ public class ScoreServiceImpl implements ScoreService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
 
-        Assignment existingAssignment = assignmentRepository
-                .findById(assignmentId).orElseThrow(() -> new DataNotFoundException("Assignment not found!!"));
+        Assignment existingAssignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Assignment not found!!"));
 
         Score score = scoreRepository.findByAssignmentId(assignmentId);
         if (score == null) {
-            throw new DataNotFoundException("Score not found!!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Score not found!!!");
         }
         return score;
     }
@@ -45,19 +48,21 @@ public class ScoreServiceImpl implements ScoreService {
         User user = userRepository.getUserByUsername(username);
 
         Assignment existingAssignment = assignmentRepository
-                .findById(scoreDTO.getAssignmentId()).orElseThrow(() -> new DataNotFoundException("Assignment not found!!"));
+                .findById(scoreDTO.getAssignmentId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Assignment not found!!"));
 
         Optional<Score> existingScore = scoreRepository
                 .findByUserIdAndAssignmentId(user.getId(), existingAssignment.getId());
         if (existingScore.isPresent()) {
-            throw new DataNotFoundException("Score already exist!!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Score already exist!!!");
         }
 
         List<Answerchoice> answerchoiceList = answerChoiceRepository
                 .findByAssignmentIdAndUserId(existingAssignment.getId(), user.getId());
 
         if (answerchoiceList.isEmpty()) {
-            throw new DataNotFoundException("Answer choice not found!!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Answer choice not found!!!");
         }
 
         Long countQues = questionRepository.countQuestionsByAssignmentId(existingAssignment.getId());

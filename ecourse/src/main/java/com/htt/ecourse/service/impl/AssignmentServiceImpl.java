@@ -11,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.Date;
@@ -40,22 +42,26 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Assignment getAssignmentById(Long id) {
         return assignmentRepository.findById(id)
-                .orElseThrow(() -> new DateTimeException("Can not find Assignment by id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find Assignment with id " + id));
     }
 
     @Override
     public Assignment createAssignment(AssignmentDTO assignmentDTO) throws DataNotFoundException {
         Tag existTag = tagRepository
                 .findById(assignmentDTO.getTagId())
-                .orElseThrow(() -> new DataNotFoundException("Can not find tag by id: " + assignmentDTO.getTagId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find Assignment with id " + assignmentDTO.getTagId()));
 
         Course existCourse = courseRepository
                 .findById(assignmentDTO.getCourseId())
-                .orElseThrow(() -> new DataNotFoundException("Can not find course by id: " + assignmentDTO.getCourseId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find course by id: " + assignmentDTO.getCourseId()));
 
         Lesson existLesson = lessonRepository
                 .findById(assignmentDTO.getLessonId())
-                .orElseThrow(() -> new DataNotFoundException("Can not find lesson by id: " + assignmentDTO.getLessonId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find lesson by id: " + assignmentDTO.getLessonId()));
 
         Assignment newAssignment = Assignment.builder()
                 .name(assignmentDTO.getName())
@@ -81,7 +87,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
         if (checkEnrollment.isEmpty()) {
-            throw new DateTimeException("This course isn't enrolled in your list! Please enroll before participating in this course!!");
+            new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This course isn't enrolled in your list! Please enroll before participating in this course!!");
         }
         return assignmentRepository.findByCourseId(courseId);
     }
@@ -92,15 +99,18 @@ public class AssignmentServiceImpl implements AssignmentService {
         if(existingAssignment != null) {
             Tag existTag = tagRepository
                     .findById(assignmentDTO.getTagId())
-                    .orElseThrow(() -> new DataNotFoundException("Can not find tag by id: " + assignmentDTO.getTagId()));
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Can not find tag by id: " + assignmentDTO.getTagId()));
 
             Course existCourse = courseRepository
                     .findById(assignmentDTO.getCourseId())
-                    .orElseThrow(() -> new DataNotFoundException("Can not find course by id: " + assignmentDTO.getCourseId()));
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Can not find course by id: " + assignmentDTO.getCourseId()));
 
             Lesson existLesson = lessonRepository
                     .findById(assignmentDTO.getLessonId())
-                    .orElseThrow(() -> new DataNotFoundException("Can not find lesson by id: " + assignmentDTO.getLessonId()));
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Can not find lesson by id: " + assignmentDTO.getLessonId()));
 
             existingAssignment.setName(assignmentDTO.getName());
             existingAssignment.setCourse(existCourse);

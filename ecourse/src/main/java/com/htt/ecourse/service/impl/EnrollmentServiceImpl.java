@@ -12,8 +12,10 @@ import com.htt.ecourse.service.EnrollmentService;
 import com.htt.ecourse.service.ProgressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
 import java.util.Date;
@@ -46,7 +48,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     public Enrollment createEnrollment(EnrollmentDTO enrollmentDTO) {
         Course existingCourse = courseRepository.findById(enrollmentDTO.getCourseId())
-                .orElseThrow(() -> new DateTimeException("Cannot find course with id " + enrollmentDTO.getCourseId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cannot find course with id " + enrollmentDTO.getCourseId()));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user1 = userRepository.getUserByUsername(username);

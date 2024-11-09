@@ -17,8 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,10 +35,12 @@ public class EssayServiceImpl implements EssayService {
     @Override
     public Essay createEssay(EssayDTO essayDTO) throws DataNotFoundException {
         Assignment existingAssignment = assignmentRepository.findById(essayDTO.getAssignmentId())
-                .orElseThrow(() -> new DataNotFoundException("Can not find assignment by id "+essayDTO.getAssignmentId() ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find assignment by id "+essayDTO.getAssignmentId() ));
 
         Question existingQuestion = questionRepository.findById(essayDTO.getQuestionId())
-            .orElseThrow(() -> new DataNotFoundException("Can not find question by id "+essayDTO.getQuestionId() ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find question by id "+essayDTO.getQuestionId() ));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
@@ -54,13 +58,16 @@ public class EssayServiceImpl implements EssayService {
     @Override
     public Essay updateEssay(Long essayId, EssayDTO essayDTO) throws DataNotFoundException {
         Essay existingEssay = essayRepository.findById(essayId)
-                .orElseThrow(() -> new DataNotFoundException("Can not find essay by id " + essayId));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find essay by id " + essayId));
 
         Assignment existingAssignment = assignmentRepository.findById(essayDTO.getAssignmentId())
-                .orElseThrow(() -> new DataNotFoundException("Can not find assignment by id "+essayDTO.getAssignmentId() ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find assignment by id "+essayDTO.getAssignmentId() ));
 
         Question existingQuestion = questionRepository.findById(essayDTO.getQuestionId())
-                .orElseThrow(() -> new DataNotFoundException("Can not find question by id "+essayDTO.getQuestionId() ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find question by id "+essayDTO.getQuestionId() ));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
