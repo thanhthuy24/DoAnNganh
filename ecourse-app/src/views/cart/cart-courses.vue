@@ -2,7 +2,7 @@
     <AppLayout >
          <main class="ml-32 mt-10">
             <h1 class="font-size-title">LIST COURSES IN CART</h1>
-            <div v-if="cart === {}">
+            <div v-if="Object.keys(cart).length === 0">
                 <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                     <span class="font-medium">Không có sản phẩm nào trong giỏ hàng</span>
                 </div>
@@ -58,6 +58,7 @@
                                 <td>
                                     <svg
                                         @click="removeFromCart(item.id)"
+                                        style="cursor: pointer;"
                                         class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                         <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd"/>
                                     </svg>
@@ -139,7 +140,7 @@ export default ({
     }
 
     let cart = cookies.get("cart") || {};  // Load cart from cookies or initialize as an empty object
-    console.log(cart);
+    // console.log(cart);
 
     const totalPrice = computed(() => {
             return cart
@@ -161,16 +162,12 @@ export default ({
 		return roundedValue.toLocaleString().replace(/\B(?=(\d{3})+(?!))/g, ",");
 	};
 
-    const total = cookies.get("totalQuantity");
+    // const total = cookies.get("totalQuantity");
 
     const removeFromCart = (courseId) => {
-        // console.log("bla bla delete");
-        const updated = { ...cart };
-        delete updated[courseId];
-        cart = updated; // Cập nhật giá trị cart
-        cookies.set("cart", updated);
-        cookies.set("totalQuantity", total);
-        store.commit('updateCart', cart);  // Lưu giỏ hàng đã cập nhật vào cookie
+        store.commit('removeFromCart', courseId);
+        const updatedCart = store.state.cart; // Lấy giỏ hàng mới từ Vuex store
+        console.log("Cart updated:", updatedCart);
     };
     
     const checkout = async () => {

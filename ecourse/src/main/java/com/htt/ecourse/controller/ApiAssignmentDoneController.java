@@ -32,4 +32,10 @@ public class ApiAssignmentDoneController {
         Userassignmentdone newAssignmentDone = assignmentDoneService.createAssignmentDone(assignmentDoneDTO);
         return ResponseEntity.ok(newAssignmentDone);
     }
+
+    @GetMapping("/assignment/{assignmentId}/count")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> getCountAssignmentDone(@PathVariable Long assignmentId) {
+        return ResponseEntity.ok(assignmentDoneService.getCountByAssignmentId(assignmentId));
+    }
 }

@@ -35,7 +35,8 @@ public class LessonServiceImpl implements LessonService {
     public Lesson createLesson(LessonDTO lessonDTO) {
         Course existCourse = courseRepository
                 .findById(lessonDTO.getCourseId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Can nit find course by id " + lessonDTO.getCourseId()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Can not find course by id " + lessonDTO.getCourseId()));
 
         Lesson newLesson = Lesson.builder()
                 .name(lessonDTO.getName())
@@ -114,19 +115,23 @@ public class LessonServiceImpl implements LessonService {
             Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
             if (checkEnrollment.isEmpty()) {
                 throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "You must enroll this course first!!"
+                    HttpStatus.NOT_FOUND, "You must enroll this course first!!"
                 );
             }
         }
         Course course = courseRepository.getCourseById(courseId);
         Long ownerCourseId = course.getTeacher().getId();
         Teacher teacher = teacherRepository.findByUserId(userId);
-        Long teacherId = teacher.getId();
-        if (ownerCourseId != teacherId) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "You don't have permission to access this course!!"
-            );
+
+        if(role == 3) {
+            Long teacherId = teacher.getId();
+            if (ownerCourseId != teacherId) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "You don't have permission to access this course!!"
+                );
+            }
         }
+
         List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
         return lessons.stream().map(this::convertToDTO).collect(Collectors.toList());
     }

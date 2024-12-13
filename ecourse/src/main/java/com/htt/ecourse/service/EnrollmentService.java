@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface EnrollmentService {
     Optional<Enrollment> findByUserIdAndCourseId(Long userId, Long courseId);
     List<Enrollment> getEnrollmentByUser();
-
+    Long getCountEnrollmentByCourseId(Long courseId);
     Enrollment createEnrollment(EnrollmentDTO enrollmentDTO);
 }

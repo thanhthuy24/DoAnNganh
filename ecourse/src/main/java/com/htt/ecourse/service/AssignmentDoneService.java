@@ -7,4 +7,5 @@ import com.htt.ecourse.pojo.Userassignmentdone;
 public interface AssignmentDoneService {
     Userassignmentdone createAssignmentDone(AssignmentDoneDTO assignmentDoneDTO);
     Userassignmentdone getAssignmentDone(Long assignmentId);
+    Long getCountByAssignmentId(Long assignmentId);
 }

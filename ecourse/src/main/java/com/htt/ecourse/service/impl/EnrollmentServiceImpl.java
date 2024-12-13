@@ -63,4 +63,17 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         return enrollment;
     }
+
+    @Override
+    public Long getCountEnrollmentByCourseId(Long courseId) {
+        Course existingCourse = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cannot find course with id " + courseId));
+
+        Long count = enrollmentRepository.countEnrollmentByCourseId(existingCourse.getId());
+        if (count != null) {
+            return count;
+        }
+        return 0L;
+    }
 }

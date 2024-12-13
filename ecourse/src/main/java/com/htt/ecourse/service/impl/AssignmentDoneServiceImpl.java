@@ -72,4 +72,17 @@ public class AssignmentDoneServiceImpl implements AssignmentDoneService {
         }
         return assignmentDone;
     }
+
+    @Override
+    public Long getCountByAssignmentId (Long assignmentId) {
+        Assignment existingAssignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find Assignment with id "
+                        + assignmentId));
+        Long count = assignmentDoneRepository.countByAssignmentId(existingAssignment.getId());
+        if (count == 0) {
+            return 0L;
+        } return count;
+    }
+
 }

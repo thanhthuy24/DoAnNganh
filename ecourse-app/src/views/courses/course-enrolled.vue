@@ -542,7 +542,6 @@ export default({
         const newLikes = ref([]); // Sử dụng ref để theo dõi sự thay đổi của newLikes
         const loadLike = async(commentID) => {
             try {
-                
                 let res = await authAPIs().get(`${endpoints.like}/${commentID}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -726,7 +725,7 @@ export default({
                     loadProgressByStar(star);
                 }
                 
-        });
+            });
 
         const videoPlayer = ref(null);
         watch(videoUrl, () => {

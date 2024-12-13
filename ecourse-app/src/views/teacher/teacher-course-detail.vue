@@ -42,19 +42,19 @@
                                     class="border-assignment ml-5"
                                 >
                                     <div class="flex justify-between">
-                                        <router-link
+                                        <!-- <router-link
                                              v-if="item.tag && item.tag.id === 5"
                                             :to="{ name: 'AssignmentDetail', params: { assignmentId: item.id || 'defaultId' } }"
-                                            >
+                                            > -->
                                             <p style="font-weight: bold">{{item.name}}</p>
-                                        </router-link>
-                                        <router-link
+                                        <!-- </router-link>  -->
+                                        <!-- <router-link
                                              v-else
                                             :to="{ name: 'AssignmentEssayDetail', params: { assignmentId: item.id || 'defaultId' } }"
                                             >
                                             <p style="font-weight: bold">{{item.name}}</p>
-                                        </router-link>
-                                        <button 
+                                        </router-link> -->
+                                        <button
                                             style="width: 120px"
                                             type="button" 
                                             class="flex focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm 
@@ -63,9 +63,9 @@
                                             <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                             </svg>
-
-                                            <p class="ml-2 mt-1">20/29</p>
-                                            </button>
+ 
+                                            <p class="ml-2 mt-1">{{totalAssignmentDoneNum[item.id]}} / {{total}}</p>
+                                        </button>
                                     </div>
                                     <div class="mt-5 flex justify-between">
                                         <p>Created date: <span style="color: red">
@@ -73,7 +73,8 @@
                                             </span></p>
                                         <p>Deadline: <span style="color: red">
                                             {{formatDate(item.dueDate)}}
-                                            </span></p>
+                                            </span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -83,6 +84,57 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div style="border: 1px solid black; width: 500px" class="mt-5 ml-5">
+                        <div 
+                            v-for="(item, index) in lessons" 
+                            :key="index"
+                        >
+                            <h2 :id="`accordion-color-heading-${index}`">
+                                <button 
+                                    type="button" 
+                                    class="flex items-center justify-between w-full p-5 font-small  text-gray-500 border border-b-0 border-gray-200  focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3"
+                                    @click="toggleAccordion(index)"
+                                    :aria-expanded="activeAccordion === index"
+                                >
+                                <!-- @click="loadComments(item.id, currentPage.value, itemsPerPage.value)" -->
+                                    <span 
+                                         
+                                    >
+                                    {{ item.name }}</span>
+                                    <svg 
+                                       
+                                        class="w-3 h-3" 
+                                        :class="{'rotate-180': activeAccordion === index}" 
+                                        aria-hidden="true" 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        fill="none" 
+                                        viewBox="0 0 10 6"
+                                    >
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5L5 1 1 5" />
+                                    </svg>
+                                </button>
+                            </h2>
+                            <div v-if="item.videos && item.videos.length > 0"
+                                :id="`accordion-color-body-${index}`" 
+                                v-show="activeAccordion === index" 
+                                class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900"
+                                :aria-labelledby="`accordion-color-heading-${index}`"
+                            >
+                            <div 
+                            class="flex"
+                            v-for="(video, index1) in item.videos" :key="index1">
+                                <p 
+                                    style="cursor: pointer; "
+                                    class="mb-5 text-gray-500 dark:text-gray-400 "
+                                    @click="handleVideo(video)"
+                                >
+                                    Video {{index1 + 1}} 
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
                 </div>
             </div>
         </main>
@@ -117,7 +169,40 @@ export default ({
                     }
                 })
                 assignments.value = res.data;
-                console.log(assignments.value);
+                for (let assignment of assignments.value) {
+                    await loadTotalAssignmentsDone(assignment.id);
+                }
+                // console.log(assignments.value);
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        const totalAssignmentDoneNum = ref({});
+        const loadTotalAssignmentsDone = async(assignmentId) => {
+            try {
+                let res = await authAPIs().get(`${endpoints.assignmentDone}/assignment/${assignmentId}/count`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                })
+                totalAssignmentDoneNum.value[assignmentId] = res.data;
+                console.log(totalAssignmentDoneNum.value);
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        const total = ref(0);
+        const loadTotalEnrollment = async() => {
+            try {
+                let res = await authAPIs().get(`${endpoints.enrollments}/course/${courseId}/count`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                })
+                total.value = res.data;
+                console.log(total.value);
             } catch(err) {
                 console.error(err);
             }
@@ -140,11 +225,37 @@ export default ({
             }
         }
 
-        const currentVideoId = ref(null);
-        // const handleVideo = (video) => {
-        //     videoUrl.value = video.name;
-        //     currentVideoId.value = video.id;
+        // const lId = ref('');
+        // const loadComments = async(lessonId, page = currentPage.value, limit = itemsPerPage.value) => {
+        //     try {
+        //         let token = store.getters.token;
+        //         let res = await authAPIs().get(`${endpoints.comments}/${lessonId}?page=${page}&limit=${limit}`, {
+        //             headers: {
+        //                 Authorization: `Bearer ${token}`,
+        //             },
+        //         });
+        //         comments.value = res.data.comments;
+        //         console.log(comments.value)
+        //         lId.value = lessonId;
+        //         totalPages.value = res.data.totalPages;
+                
+        //         // Gọi loadLike cho mỗi comment
+        //         for (const comment of comments.value) {
+        //             await loadLike(comment.id); // Gọi loadLike với commentId
+        //             await loadReplyComment(comment);
+        //         }
+
+        //     } catch(ex){
+        //         console.error(ex);
+        //     }
         // }
+
+        const currentVideoId = ref(null);
+        const handleVideo = (video) => {
+            // console.log("5454")
+            videoUrl.value = video.name;
+            currentVideoId.value = video.id;
+        }
 
         const activeAccordion = ref(null);
 
@@ -153,11 +264,11 @@ export default ({
         };
 
         const videoPlayer = ref(null);
-            watch(videoUrl, () => {
-                if (videoPlayer.value) {
-                    videoPlayer.value.load(); // Load the new video source
-                }
-            }); 
+        watch(videoUrl, () => {
+            if (videoPlayer.value) {
+                videoPlayer.value.load(); // Load the new video source
+            }
+        }); 
 
         const formatDate = (timestamp) => {
             try {
@@ -169,16 +280,25 @@ export default ({
             }
         };
 
+        const isExpired = (dueDate) => {
+            const now = new Date();
+            // console.log(now);
+            return dueDate > now.getTime();
+        }
+
         onMounted(() => {
             loadAssignments();
             loadLessons(courseId);
+            loadTotalEnrollment();
         })
         return {
-            courseId, user, token,
+            courseId, user, token, isExpired,
             assignments, 
             videoUrl, currentVideoId, 
             lessons, 
-            toggleAccordion, formatDate, 
+            toggleAccordion, formatDate, activeAccordion,
+            total, totalAssignmentDoneNum,
+            handleVideo, 
         }
     },
 })

@@ -21,36 +21,47 @@ export default createStore({
     userRole: null
   },
   mutations: {
-    login(state, user) {
-      state.isLoggedIn = true;
-      state.user = user;
-    },
-    setUserRole(state, role) {
-      state.userRole = role;
-    }
-    ,
-    logout(state) {
-      state.token = null;
-      state.isLoggedIn = false;
-      state.user = null;
-      state.userRole = null;
-    },
-    set_token(state, token) {
-      state.token = token;
-    },
-    updateCart(state, cart) {
-      state.cart = cart;
+  login(state, user) {
+    state.isLoggedIn = true;
+    state.user = user;
+  },
+  setUserRole(state, role) {
+    state.userRole = role;
+  }
+  ,
+  logout(state) {
+    state.token = null;
+    state.isLoggedIn = false;
+    state.user = null;
+    state.userRole = null;
+  },
+  set_token(state, token) {
+    state.token = token;
+  },
+  updateCart(state, cart) {
+    state.cart = cart;
 
-      // Calculate total quantity
-      state.totalQuantity = Object.values(cart).reduce((total, item) => total + item.quantity, 0);
+    // Calculate total quantity
+    state.totalQuantity = Object.values(cart).reduce((total, item) => total + item.quantity, 0);
 
-      // Save updated cart to cookies
-      cookies.set("cart", state.cart, { path: '/' });
-      cookies.set("totalQuantity", state.totalQuantity, { path: '/' });
+    // Save updated cart to cookies
+    cookies.set("cart", state.cart, { path: '/' });
+    cookies.set("totalQuantity", state.totalQuantity, { path: '/' });
   },
   paid(state) {
       state.totalQuantity = 0;
   },
+  removeFromCart(state, courseId) {
+    const updatedCart = {...state.cart};
+    delete updatedCart[courseId];
+    state.cart = updatedCart;
+
+    state.totalQuantity = Object.values(updatedCart).reduce(
+    (total, item) => total + item.quantity, 0);
+
+    cookies.set("cart", state.cart, { path: '/' });
+    cookies.set("totalQuantity", state.totalQuantity, { path: '/' });
+  }
   },
   actions: {
     async login({ commit }, credentials) {
