@@ -63,6 +63,7 @@ public class ApiCourseRatingController {
                 .build());
     }
 
+
     @GetMapping("/{courseId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> averageRating(

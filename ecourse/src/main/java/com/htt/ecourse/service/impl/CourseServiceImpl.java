@@ -85,6 +85,39 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<Course> getCoursesByCategoryId(Long categoryId) {
+//        Category existingCate = categoryRepository.findById(categoryId)
+//                .orElseThrow(() -> new ResponseStatusException(
+//                        HttpStatus.NOT_FOUND, "Can not find category by id: " + categoryId));
+        if (categoryId != null) {
+            return courseRepository.findByCategoryId(categoryId);
+        }
+        else {
+            return courseRepository.findAll();
+        }
+    }
+
+    @Override
+    public Page<Course> getCoursesByCategoryIdPage(Pageable pageable, Long categoryId) {
+        if (categoryId != null) {
+            return courseRepository.findByCategoryId(categoryId, pageable);
+        }
+        else {
+            return courseRepository.findAll(pageable);
+        }
+    }
+
+    @Override
+    public List<Course> getCoursesByPrice(Float minPrice, Float maxPrice) {
+        if (minPrice == null && maxPrice == null) {
+            return courseRepository.findAll();
+        }
+        else {
+            return courseRepository.getCoursesByPrice(minPrice, maxPrice);
+        }
+    }
+
+    @Override
     public List<Course> getCoursesByTeacherId(Long teacherId) {
         return courseRepository.findByTeacherId(teacherId);
     }

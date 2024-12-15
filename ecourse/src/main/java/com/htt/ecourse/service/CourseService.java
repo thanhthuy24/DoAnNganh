@@ -24,4 +24,7 @@ public interface CourseService {
     boolean existByName(String name);
     List<Course> getCoursesByTeacher(Long teacherId) throws DataNotFoundException;
     List<Course> getAllCourseName();
+    List<Course> getCoursesByCategoryId(Long categoryId);
+    Page<Course> getCoursesByCategoryIdPage(Pageable pageable, Long categoryId);
+    List<Course> getCoursesByPrice(Float minPrice, Float maxPrice);
 }

@@ -51,6 +51,24 @@ public class ApiCourseController {
                 .build());
     }
 
+    @GetMapping("/filter-cate")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<CourseListResponse> getCoursesByCategoryId(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
+    ) {
+        Pageable pageRequest = PageRequest.of(page, limit,
+                Sort.by("createdDate").descending());
+        Page<Course> coursePage = courseService.getCoursesByCategoryIdPage(pageRequest, categoryId);
+        int totalPage = coursePage.getTotalPages();
+        List<Course> courses = coursePage.getContent();
+        return ResponseEntity.ok(CourseListResponse.builder()
+                .courses(courses)
+                .totalPages(totalPage)
+                .build());
+    }
+
     @GetMapping("/search")
     public List<Course> searchCourses(
             @RequestParam String keyword
@@ -148,4 +166,12 @@ public class ApiCourseController {
         return ResponseEntity.ok(courseService.getCoursesByTeacherId(teacherId));
     }
 
+    @GetMapping("/filter-price")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<Course>> getCoursesByPrice(
+            @RequestParam Float minPrice,
+            @RequestParam Float maxPrice
+    ) {
+        return ResponseEntity.ok(courseService.getCoursesByPrice(minPrice, maxPrice));
+    }
 }
