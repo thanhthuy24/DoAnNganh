@@ -26,5 +26,5 @@ public interface CourseService {
     List<Course> getAllCourseName();
     List<Course> getCoursesByCategoryId(Long categoryId);
     Page<Course> getCoursesByCategoryIdPage(Pageable pageable, Long categoryId);
-    List<Course> getCoursesByPrice(Float minPrice, Float maxPrice);
+    Page<Course> getCoursesByPrice(Float minPrice, Float maxPrice, Pageable pageable);
 }

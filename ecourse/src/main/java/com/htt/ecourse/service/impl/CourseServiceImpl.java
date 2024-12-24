@@ -108,12 +108,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getCoursesByPrice(Float minPrice, Float maxPrice) {
-        if (minPrice == null && maxPrice == null) {
-            return courseRepository.findAll();
+    public Page<Course> getCoursesByPrice(Float minPrice, Float maxPrice, Pageable pageable) {
+        if (minPrice != null && maxPrice != null) {
+            return courseRepository.getCoursesByPrice(minPrice, maxPrice, pageable);
         }
         else {
-            return courseRepository.getCoursesByPrice(minPrice, maxPrice);
+            return courseRepository.findAll(pageable);
         }
     }
 
