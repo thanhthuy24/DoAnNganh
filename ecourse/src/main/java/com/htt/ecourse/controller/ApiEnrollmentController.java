@@ -53,6 +53,16 @@ public class ApiEnrollmentController {
 
     }
 
+    @GetMapping("check-enrollment-boolean")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> checkEnrollment(
+            @RequestParam Long userId,
+            @RequestParam Long courseId
+    ){
+        return ResponseEntity.ok(enrollmentService.checkEnrolled(userId, courseId));
+
+    }
+
     @GetMapping("/get-courses")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Enrollment>> getEnrollments(

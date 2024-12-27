@@ -32,6 +32,15 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final ProgressService progressService;
 
     @Override
+    public Boolean checkEnrolled(Long userId, Long courseId) {
+        Optional<Enrollment> listEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
+        if (listEnrollment.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Optional<Enrollment> findByUserIdAndCourseId(Long userId, Long courseId) {
         return enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
     }
