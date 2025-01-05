@@ -86,6 +86,8 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "api/like").hasAnyRole(Role.USER, Role.TEACHER)
 
                             .requestMatchers(POST, "api/payment/update-payment").hasAnyRole(Role.USER)
+                            .requestMatchers(POST, "api/paypal/**").hasAnyRole(Role.USER)
+                            .requestMatchers(GET, "api/paypal/**").hasAnyRole(Role.USER)
 
                             .requestMatchers(POST, "api/progress/**").hasAnyRole(Role.USER)
 

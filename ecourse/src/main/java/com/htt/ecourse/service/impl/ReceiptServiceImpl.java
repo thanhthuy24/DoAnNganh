@@ -99,7 +99,7 @@ public class ReceiptServiceImpl implements ReceiptService {
             receipt.setOrderDate(new Date());
 
             float totalPrice = (float) cartList.stream()
-                    .mapToDouble(c ->(c.getPrice() * c.getQuantity() * (1 - c.getDiscount() / 100)))
+                    .mapToDouble(c ->(c.getPrice() * (1 - c.getDiscount() / 100)))
                     .sum();
             receipt.setTotalMoney(totalPrice);
 
@@ -108,7 +108,7 @@ public class ReceiptServiceImpl implements ReceiptService {
             for (Cart c : cartList) {
                 Receiptdetail d = new Receiptdetail();
                 d.setPrice(c.getPrice());
-                d.setQuantity(c.getQuantity());
+                d.setQuantity(1);
                 d.setDiscount(c.getDiscount());
                 d.setReceipt(receipt);
                 d.setCourse(courseRepository.getCourseById(c.getId()));

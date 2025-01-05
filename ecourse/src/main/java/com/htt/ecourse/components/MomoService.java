@@ -74,37 +74,11 @@ public class MomoService {
         post.setHeader("Content-Type", "application/json");
 
         HttpResponse response = client.execute(post);
-        return EntityUtils.toString(response.getEntity());
 
-//        HttpClient client = HttpClients.createDefault();
-//        HttpPost post = new HttpPost(endpoint);
-//
-//        String orderInfo = "Thanh toán đơn hàng";
-//        String notifyUrl = "http://localhost:3000/cart";
-//        String requestType = "captureATM"; // Thay đổi thành captureATM
-//
-//        String rawSignature = "partnerCode=" + partnerCode
-//                + "&accessKey=" + accessKey
-//                + "&requestId=" + orderId
-//                + "&amount=" + String.valueOf((int) amount)
-//                + "&orderId=" + orderId
-//                + "&orderInfo=" + orderInfo
-//                + "&returnUrl=" + returnUrl
-//                + "&notifyUrl=" + notifyUrl
-//                + "&extraData=";
-//
-//        String signature = createSignature(rawSignature);
-//
-//        String json = String.format("{\"partnerCode\": \"%s\",\"accessKey\": \"%s\",\"requestId\": \"%s\"," +
-//                        "\"amount\": \"%d\",\"orderId\": \"%s\",\"orderInfo\": \"%s\"," +
-//                        "\"returnUrl\": \"%s\",\"notifyUrl\": \"%s\",\"extraData\": \"\"," +
-//                        "\"requestType\": \"%s\",\"signature\": \"%s\"}",
-//                partnerCode, accessKey, orderId, String.valueOf((int) amount), orderId, orderInfo, returnUrl, notifyUrl, requestType, signature);
-//
-//        post.setEntity(new StringEntity(json, "UTF-8"));
-//        post.setHeader("Content-Type", "application/json");
-//
-//        HttpResponse response = client.execute(post);
+        String jsonResponse = EntityUtils.toString(response.getEntity());
+//        System.out.println("Response: " + jsonResponse);
+
 //        return EntityUtils.toString(response.getEntity());
+        return jsonResponse;
     }
 }
