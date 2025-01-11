@@ -86,6 +86,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public Long countQuestionByAssignmentId(Long assignmentId) {
+        Long countQues = questionRepository.countQuestionsByAssignmentId(assignmentId);
+        return countQues;
+    }
+
+    @Override
     public Question updateQuestion(Long questionId, QuestionDTO questionDTO) {
         Question existinQuestion = getQuestionById(questionId);
         if(existinQuestion != null) {

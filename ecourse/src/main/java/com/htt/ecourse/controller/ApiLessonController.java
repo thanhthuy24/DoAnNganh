@@ -30,6 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/lessons")
+@CrossOrigin
 @RequiredArgsConstructor
 public class ApiLessonController {
     private final LessonService lessonService;
@@ -53,7 +54,7 @@ public class ApiLessonController {
                 .build());
     }
 
-    @GetMapping("/{lessonId}")
+    @GetMapping("/auth/{lessonId}")
     public ResponseEntity<Lesson> getLessonById(
             @PathVariable("lessonId") Long lessonId
     ) {
@@ -87,7 +88,8 @@ public class ApiLessonController {
     @PostMapping(value = "/uploads/{lessonId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadVideos(
             @PathVariable("lessonId") Long lessonId,
-            @ModelAttribute("files") List<MultipartFile> files
+            @ModelAttribute("files") List<MultipartFile> files,
+            @ModelAttribute("description") String description
     ) {
         try {
         Lesson existingLesson = lessonService.getLessonById(lessonId);
@@ -115,6 +117,7 @@ public class ApiLessonController {
                     existingLesson.getId(),
                     VideoDTO.builder()
                             .name(videoUrl)
+                            .description(description)
                             .build()
             );
             videos.add(video);
@@ -177,7 +180,7 @@ public class ApiLessonController {
         return ResponseEntity.ok("delete lesson success");
     }
 
-    @GetMapping("/course/{courseId}")
+    @GetMapping("/auth/course/{courseId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<LessonVideoDTO>> getLessonsByCourseId(
             @PathVariable("courseId") Long courseId
@@ -192,6 +195,14 @@ public class ApiLessonController {
             @PathVariable Long courseId
     ){
         return ResponseEntity.ok(lessonService.countLessonInCourse(courseId));
+    }
+
+    @GetMapping("/get-first-lesson/course/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getFirstLessonByCourseId(
+            @PathVariable Long courseId
+    ){
+        return ResponseEntity.ok(lessonService.getFirstLesson(courseId));
     }
 
 }

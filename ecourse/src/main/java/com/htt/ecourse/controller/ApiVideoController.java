@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class ApiVideoController {
     public final VideoService videoService;
 
-    @GetMapping("/lesson/{lessonId}/count")
+    @GetMapping("/count/lesson/{lessonId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> getLessonCount(
             @PathVariable Long lessonId

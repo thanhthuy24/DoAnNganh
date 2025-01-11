@@ -2,6 +2,7 @@ package com.htt.ecourse.service;
 
 import com.htt.ecourse.dtos.LessonDTO;
 import com.htt.ecourse.dtos.LessonVideoDTO;
+import com.htt.ecourse.dtos.LessonVideoIntro;
 import com.htt.ecourse.dtos.VideoDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.exceptions.InvalidParamException;
@@ -28,4 +29,6 @@ public interface LessonService {
     Video createVideo(Long lessonId, VideoDTO videoDTO) throws InvalidParamException;
 
     Long countLessonInCourse(Long courseId);
+
+    LessonVideoIntro getFirstLesson(Long courseId);
 }

@@ -30,6 +30,14 @@ public class ApiQuestionController {
         return ResponseEntity.ok(questionChoiceDTOList);
     }
 
+    @GetMapping("/count/assignment/{assignmentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> countQuestionByAssignmentId(
+            @PathVariable(value = "assignmentId") Long assignmentId
+    ){
+        return ResponseEntity.ok(questionService.countQuestionByAssignmentId(assignmentId));
+    }
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createQuestion(

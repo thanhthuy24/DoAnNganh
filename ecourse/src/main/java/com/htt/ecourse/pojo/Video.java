@@ -24,6 +24,11 @@ public class Video {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Size(max = 400)
+    @NotNull
+    @Column(name = "description", nullable = false, length = 400)
+    private String description;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;

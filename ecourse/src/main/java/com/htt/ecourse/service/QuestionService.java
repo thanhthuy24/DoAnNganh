@@ -12,4 +12,6 @@ public interface QuestionService {
     Question createQuestion(QuestionDTO questionDTO) throws DataNotFoundException;
     Question updateQuestion(Long questionId, QuestionDTO questionDTO);
     Question getQuestionById(Long questionId);
+
+    Long countQuestionByAssignmentId(Long assignmentId);
 }

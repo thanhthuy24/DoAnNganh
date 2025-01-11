@@ -106,6 +106,12 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    public LessonVideoIntro getFirstLesson(Long courseId) {
+        Lesson lesson = lessonRepository.findFirstLesson(courseId);
+        return converToIntro(lesson);
+    }
+
+    @Override
     public List<LessonVideoDTO> getLessonByCourseId(Long courseId) throws DataNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Long role = userRepository.getUserByUsername(username).getRole().getId();
@@ -155,6 +161,23 @@ public class LessonServiceImpl implements LessonService {
                 .build();
     }
 
+    private LessonVideoIntro converToIntro(Lesson lesson) {
+        List<Video> videos = lesson.getVideos().stream()
+                .map(video -> Video.builder()
+                        .id(video.getId())
+                        .name(video.getName())
+                        .description(video.getDescription())
+                        .build())
+                .collect(Collectors.toList());
+
+        return LessonVideoIntro.builder()
+                .id(lesson.getId())
+                .name(lesson.getName())
+                .description(lesson.getDescription())
+                .videos(videos)
+                .build();
+    }
+
     @Override
     public Video createVideo(
             Long lessonId,
@@ -166,6 +189,7 @@ public class LessonServiceImpl implements LessonService {
 
         Video newVideo = Video.builder()
                 .name(videoDTO.getName())
+                .description(videoDTO.getDescription())
                 .lesson(existingLesson)
                 .build();
 
@@ -186,4 +210,6 @@ public class LessonServiceImpl implements LessonService {
         }
         return 0L;
     }
+
+
 }

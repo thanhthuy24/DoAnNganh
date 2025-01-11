@@ -62,6 +62,15 @@ public class ApiAssignmentController {
         return ResponseEntity.ok(assignmentList);
     }
 
+    @GetMapping("/lesson/{lessonId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getAssignmentsByLessonId(
+            @PathVariable Long lessonId
+    ){
+        List<Assignment> assignmentList = assignmentService.getAssignmentByLessonId(lessonId);
+        return ResponseEntity.ok(assignmentList);
+    }
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createAssignment(
