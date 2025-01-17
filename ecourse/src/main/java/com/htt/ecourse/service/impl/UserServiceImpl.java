@@ -1,6 +1,7 @@
 package com.htt.ecourse.service.impl;
 
 import com.htt.ecourse.components.JwtTokenUtil;
+import com.htt.ecourse.dtos.ChangePasswordDTO;
 import com.htt.ecourse.dtos.UserDTO;
 import com.htt.ecourse.dtos.UserUpdateDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
@@ -135,5 +136,30 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(existingUser);
         }
         return null;
+    }
+
+    @Override
+    public User updateAvatar(Long userId, UserUpdateDTO userUpdateDTO) {
+        User existingUser = getUserById(userId);
+        existingUser.setAvatar(userUpdateDTO.getAvatar());
+        existingUser.setFirstName(userUpdateDTO.getFirstName());
+        existingUser.setLastName(userUpdateDTO.getLastName());
+        existingUser.setEmail(userUpdateDTO.getEmail());
+        existingUser.setPhone(userUpdateDTO.getPhone());
+        existingUser.setUsername(userUpdateDTO.getUsername());
+        existingUser.setDateOfBirth(userUpdateDTO.getDateOfBirth());
+        return userRepository.save(existingUser);
+    }
+
+    @Override
+    public void changePassword(Long userId, ChangePasswordDTO changePasswordDTO) throws Exception {
+        User existingUser = getUserById(userId);
+        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), existingUser.getPassword())){
+            throw new IllegalArgumentException("Old password does not match!");
+        }
+        String encodedPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
+
+        existingUser.setPassword(encodedPassword);
+        userRepository.save(existingUser);
     }
 }
