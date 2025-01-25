@@ -14,6 +14,8 @@ import com.htt.ecourse.responses.AssignmentResponse;
 import com.htt.ecourse.responses.ReplyCommentResponse;
 import com.htt.ecourse.service.ReplyCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -52,11 +54,12 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
     }
 
     @Override
-    public List<Replycomment> getReplyByCommentId(Long commentId) throws DataNotFoundException {
+    public Page<Replycomment> getReplyByCommentId(Long commentId, Pageable pageable) throws DataNotFoundException {
         Comment existingComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Comment not found!!"));
 
-        return replyCommentRepository.findByCommentId(commentId);
+        return replyCommentRepository.findByCommentId(commentId, pageable)
+                .map(Replycomment::fromReplyComment);
     }
 }

@@ -52,51 +52,23 @@ public class ApiCommentController {
         return ResponseEntity.ok(commentDTO);
     }
 
-    @PostMapping("/{commentId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createCommentChild(
-            @Valid
-            @RequestBody CommentDTO commentDTO,
-            @PathVariable Long commentId,
-            BindingResult rs
-    ) throws DataNotFoundException {
-        if(rs.hasErrors()){
-            List<String> errorMessages = rs.getFieldErrors()
-                    .stream()
-                    .map(FieldError::getDefaultMessage)
-                    .toList();
-            return ResponseEntity.badRequest().body(errorMessages);
-        }
-        commentService.createCommentChild(commentDTO, commentId);
-        return ResponseEntity.ok(commentDTO);
-    }
-
-//    @GetMapping("/lesson/{lessonId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity<?> getLessonComments(
-//            @PathVariable("lessonId") Long lessonId,
-//            @RequestParam("page") int page,
-//            @RequestParam("limit") int limit
+//    @PostMapping("/{commentId}")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ResponseEntity<?> createCommentChild(
+//            @Valid
+//            @RequestBody CommentDTO commentDTO,
+//            @PathVariable Long commentId,
+//            BindingResult rs
 //    ) throws DataNotFoundException {
-//
-//        if (page < 0 || limit <= 0) {
-//            return ResponseEntity.badRequest().body("Page and limit must be positive numbers.");
+//        if(rs.hasErrors()){
+//            List<String> errorMessages = rs.getFieldErrors()
+//                    .stream()
+//                    .map(FieldError::getDefaultMessage)
+//                    .toList();
+//            return ResponseEntity.badRequest().body(errorMessages);
 //        }
-//
-//        if (lessonRepository.findById(lessonId) == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found.");
-//        }
-//
-//        PageRequest pageRequest = PageRequest.of(page, limit);
-//        Page<CommentResponse> commentResponsePage = commentService.getCommentsByLessonId(lessonId, pageRequest);
-//
-//        // lay tong so trang
-//        int totalPage = commentResponsePage.getTotalPages();
-//        List<CommentResponse> comments = commentResponsePage.getContent();
-//        return ResponseEntity.ok(CommentListResponse.builder()
-//                .comments(comments)
-//                .totalPages(totalPage)
-//                .build());
+//        commentService.createCommentChild(commentDTO, commentId);
+//        return ResponseEntity.ok(commentDTO);
 //    }
 
     @GetMapping("/{lessonId}")
@@ -117,5 +89,13 @@ public class ApiCommentController {
                 .comments(cmts)
                 .totalPages(totalPages)
                 .build());
+    }
+
+    @GetMapping("/count/lesson/{lessonId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> countCommentsByLessonId(
+            @PathVariable("lessonId") Long lessonId
+    ){
+        return ResponseEntity.ok(commentService.countCommentByLessonId(lessonId));
     }
 }

@@ -12,4 +12,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByLessonId(Long lessonId, PageRequest pageRequest);
     Comment getCommentById(Long id);
     Page<Comment> getCommentByLessonId(Long lessonId, PageRequest pageRequest);
+    Long countCommentByLessonId(Long lessonId);
 }

@@ -19,14 +19,4 @@ public class ReplyCommentResponse {
     private Long commentId;
     @JsonProperty("user_id")
     private Long userId;
-
-    public static ReplyCommentResponse fromReplyComment(Replycomment replycomment) {
-        ReplyCommentResponse replyCommentResponse = ReplyCommentResponse.builder()
-                .content(replycomment.getContent())
-                .commentId(replycomment.getComment().getId())
-                .userId(replycomment.getUser().getId())
-                .build();
-        replyCommentResponse.setCreatedDate(replycomment.getCreatedDate());
-        return replyCommentResponse;
-    }
 }

@@ -148,6 +148,8 @@ public class LessonServiceImpl implements LessonService {
                 .map(video -> Video.builder()
                         .id(video.getId())
                         .name(video.getName())
+                        .description(video.getDescription())
+                        .lesson(video.getLesson())
                         .build())
                 .collect(Collectors.toList());
 

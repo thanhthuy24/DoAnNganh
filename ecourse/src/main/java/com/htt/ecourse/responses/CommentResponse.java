@@ -23,14 +23,4 @@ public class CommentResponse {
     @JsonProperty("parent_id")
     private Long parentId;
 
-    public static CommentResponse fromComment(Comment comment) {
-        CommentResponse commentResponse = CommentResponse.builder()
-                .content(comment.getContent())
-                .lessonId(comment.getLesson().getId())
-                .userId(comment.getUser().getId())
-//                .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
-                .build();
-        commentResponse.setCreatedDate(comment.getCreatedDate());
-        return commentResponse;
-    }
 }

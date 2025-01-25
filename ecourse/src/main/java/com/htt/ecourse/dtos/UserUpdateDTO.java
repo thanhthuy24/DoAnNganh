@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class UserUpdateDTO {
     private String username;
     private String phone;
     private String avatar;
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dateOfBirth;
     @JsonProperty("facebook_account")
     private int facebookAccountId;

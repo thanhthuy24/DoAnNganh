@@ -60,7 +60,6 @@ public class ApiEnrollmentController {
             @RequestParam Long courseId
     ){
         return ResponseEntity.ok(enrollmentService.checkEnrolled(userId, courseId));
-
     }
 
     @GetMapping("/get-courses")

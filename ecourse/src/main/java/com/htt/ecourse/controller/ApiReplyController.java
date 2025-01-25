@@ -2,11 +2,17 @@ package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.ReplyDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
+import com.htt.ecourse.pojo.Comment;
 import com.htt.ecourse.pojo.Replycomment;
 import com.htt.ecourse.responses.ReplyCommentResponse;
+import com.htt.ecourse.responses.list.CommentListRes;
+import com.htt.ecourse.responses.list.ReplyCommentListResponse;
 import com.htt.ecourse.service.ReplyCommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -23,11 +29,24 @@ public class ApiReplyController {
 
     @GetMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Replycomment>> getReplyComment(
-            @PathVariable Long commentId
+    public ResponseEntity<ReplyCommentListResponse> getReplyComment(
+            @PathVariable Long commentId,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
     ) throws DataNotFoundException {
-        List<Replycomment> list = replyCommentService.getReplyByCommentId(commentId);
-        return ResponseEntity.ok(list);
+//        List<Replycomment> list = replyCommentService.getReplyByCommentId(commentId);
+//        return ResponseEntity.ok(list);
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by("createdDate").descending());
+        Page<Replycomment> list = replyCommentService.getReplyByCommentId(commentId, pageRequest);
+
+        int totalPages = list.getTotalPages();
+
+        List<Replycomment> replycomments = list.getContent();
+        return ResponseEntity.ok(ReplyCommentListResponse.builder()
+                .replycomments(replycomments)
+                .totalPages(totalPages)
+                .build());
     }
 
     @PostMapping

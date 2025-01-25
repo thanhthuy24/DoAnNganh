@@ -117,4 +117,13 @@ public class CommentServiceImpl implements CommentService {
 
         return newComment;
     }
+
+    @Override
+    public Long countCommentByLessonId(Long lessonId) {
+        Lesson existingLesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Lesson not found"));
+        Long countCommentByLessonId = commentRepository.countCommentByLessonId(lessonId);
+        return countCommentByLessonId;
+    }
 }

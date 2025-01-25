@@ -157,6 +157,9 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), existingUser.getPassword())){
             throw new IllegalArgumentException("Old password does not match!");
         }
+        if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getRetypePassword())){
+            throw new IllegalArgumentException("New password and retype password does not match!");
+        }
         String encodedPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
 
         existingUser.setPassword(encodedPassword);
