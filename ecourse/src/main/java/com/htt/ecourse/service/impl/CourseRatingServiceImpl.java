@@ -38,20 +38,20 @@ public class CourseRatingServiceImpl implements CourseRatingService {
 
         Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(user.getId(), courseRatingDTO.getCourseId());
         if (checkEnrollment == null) {
-            new ResponseStatusException(HttpStatus.NOT_FOUND, "You must register course before rating!!!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You must register course before rating!!!");
         }
 
         Optional<Progress> checkProgress = progressRepository
                 .findByCourseIdAndUserId(existingCourse.getId(), user.getId());
         if (checkProgress.get().getStatus() == "In Progress") {
-            new ResponseStatusException(HttpStatus.NOT_FOUND, "You must complete!!!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You must complete!!!");
         }
 
         Optional<Courserating> existingRating = courseRatingRepository
                 .findByCourseIdAndUserId(courseRatingDTO.getCourseId(), user.getId());
 
-        if (!existingRating.isEmpty()) {
-            new ResponseStatusException(HttpStatus.NOT_FOUND, "Rating already exist!!!");
+        if (existingRating.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rating already exist!!!");
         }
 
         Courserating newRating = Courserating.builder()
