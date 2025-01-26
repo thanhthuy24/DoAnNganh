@@ -8,4 +8,5 @@ import java.util.List;
 public interface RegisterRepository extends JpaRepository<Register, Long> {
     List<Register> findByStatus(Boolean status);
     Register findByUserId(Long userId);
+    List<Register> findRegisterByUserId(Long userId);
 }

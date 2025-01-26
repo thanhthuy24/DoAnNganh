@@ -95,4 +95,10 @@ public class ApiRegisterController {
         return ResponseEntity.ok(registerService.getRegisterByUser(userId));
     }
 
+    @GetMapping("/list-form/user")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getListFormByUser(
+    ){
+        return ResponseEntity.ok(registerService.getListFormByUserId());
+    }
 }

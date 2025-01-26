@@ -72,6 +72,8 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, "api/enrollments/**").hasAnyRole(Role.USER, Role.TEACHER)
                             .requestMatchers(POST, "api/enrollments").hasAnyRole(Role.USER)
 
+                            .requestMatchers(POST, "api/email").hasAnyRole(Role.USER, Role.ADMIN)
+
                             .requestMatchers(GET, "api/essays/**").hasAnyRole(Role.TEACHER, Role.ADMIN)
                             .requestMatchers(POST, "api/essays/**").hasAnyRole(Role.USER)
                             .requestMatchers(PUT, "api/essays/**").hasAnyRole(Role.USER)

@@ -50,6 +50,16 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
+    public List<Register> getListFormByUserId() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userRepository.getUserByUsername(username).getId();
+
+        List<Register> list = registerRepository.findRegisterByUserId(userId);
+
+        return list;
+    }
+
+    @Override
     public Register getRegisterByUserId(Long userId) {
         if (registerRepository.findByUserId(userId) == null) {
             return null;
