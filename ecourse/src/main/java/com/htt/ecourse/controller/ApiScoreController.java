@@ -39,6 +39,24 @@ public class ApiScoreController {
         return ResponseEntity.ok(scoreDTO);
     }
 
+    @PostMapping("/essay/{essayId}")
+    public ResponseEntity<?> createScoreEssay(
+            @Valid
+            @RequestBody ScoreDTO scoreDTO,
+            @PathVariable Long essayId,
+                    BindingResult rs
+    ) throws DataNotFoundException {
+        if(rs.hasErrors()){
+            List<String> errorMessages = rs.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        scoreService.createScoreEssay(scoreDTO, essayId);
+        return ResponseEntity.ok(scoreDTO);
+    }
+
     @GetMapping("/{assignmentId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getScoreByAssignmentId(

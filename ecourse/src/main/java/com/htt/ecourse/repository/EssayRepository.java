@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EssayRepository extends JpaRepository<Essay, Long> {
-    Optional<Essay> findById(Long id);
+//    Optional<Essay> findById(Long id);
     Page<Essay> findByAssignmentId(Long assignmentId, PageRequest pageRequest);
     List<Essay> findByQuestionId(Long questionId);
-    List<Essay> findByUserId(Long userId);
+//    List<Essay> findByAssignmentId(Long assignmentId);
+
 }

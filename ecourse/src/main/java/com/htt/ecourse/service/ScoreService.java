@@ -7,4 +7,5 @@ import com.htt.ecourse.pojo.Score;
 public interface ScoreService {
     Score createScore(ScoreDTO scoreDTO) throws DataNotFoundException;
     Score getScoreByAssignmentId(Long assignmentId) throws DataNotFoundException;
+    Score createScoreEssay(ScoreDTO scoreDTO, Long essayId) throws DataNotFoundException;
 }

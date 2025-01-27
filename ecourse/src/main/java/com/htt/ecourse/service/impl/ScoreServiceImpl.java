@@ -2,10 +2,7 @@ package com.htt.ecourse.service.impl;
 
 import com.htt.ecourse.dtos.ScoreDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
-import com.htt.ecourse.pojo.Answerchoice;
-import com.htt.ecourse.pojo.Assignment;
-import com.htt.ecourse.pojo.Score;
-import com.htt.ecourse.pojo.User;
+import com.htt.ecourse.pojo.*;
 import com.htt.ecourse.repository.*;
 import com.htt.ecourse.service.ScoreService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +22,7 @@ public class ScoreServiceImpl implements ScoreService {
     private final AssignmentRepository assignmentRepository;
     private final AnswerChoiceRepository answerChoiceRepository;
     private final QuestionRepository questionRepository;
+    private final EssayRepository essayRepository;
 
     @Override
     public Score getScoreByAssignmentId(Long assignmentId) throws DataNotFoundException {
@@ -40,6 +38,41 @@ public class ScoreServiceImpl implements ScoreService {
             new ResponseStatusException(HttpStatus.NOT_FOUND, "Score not found!!!");
         }
         return score;
+    }
+
+    @Override
+    public Score createScoreEssay(ScoreDTO scoreDTO, Long essayId) throws DataNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.getUserByUsername(username);
+        if (user.getRole().getName().equals("ADMIN")){
+            Essay existingEssay = essayRepository.findById(essayId)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Essay not found!!"));
+
+            Assignment existingAssignment = assignmentRepository
+                    .findById(scoreDTO.getAssignmentId())
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Assignment not found!!"));
+
+            Optional<Score> existingScore = scoreRepository
+                    .findByUserIdAndAssignmentId(existingEssay.getUser().getId(), existingAssignment.getId());
+            if (existingScore.isPresent()) {
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Score already exist!!!");
+            }
+
+            Score newScore = Score.builder()
+                    .score(scoreDTO.getScore())
+                    .feedBack(scoreDTO.getFeedback())
+                    .assignment(existingAssignment)
+                    .user(existingEssay.getUser())
+                    .build();
+
+            scoreRepository.save(newScore);
+            return newScore;
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You don't have permission to add score");
+        }
     }
 
     @Override
@@ -75,11 +108,11 @@ public class ScoreServiceImpl implements ScoreService {
 
         double percentage = (double) score / countQues;
         String feedback = "";
-        if (percentage >= 80){
+        if (percentage >= 0.8){
             feedback = "Bravo!!!";
-        } else if (percentage >= 60){
+        } else if (percentage >= 0.6){
             feedback = "Good!";
-        } else if (percentage < 60){
+        } else if (percentage < 0.6){
             feedback = "You need to be more careful!";
         }
 
