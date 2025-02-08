@@ -42,6 +42,10 @@ public class EssayServiceImpl implements EssayService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Can not find question by id "+essayDTO.getQuestionId() ));
 
+        if (existingQuestion != null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Question already exists");
+        }
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
 
@@ -81,6 +85,15 @@ public class EssayServiceImpl implements EssayService {
         }
         return null;
     }
+
+//    @Override
+//    public Essay getEssayByAssignmentId(Long assignmentId) {
+//        Essay existingEssay = essayRepository.findByAssignment(assignmentId)
+//                .orElseThrow(() -> new ResponseStatusException(
+//                        HttpStatus.NOT_FOUND, "Can not find essay by id " + essayId));
+//
+//        return existingEssay;
+//    }
 
     @Override
     public Page<EssayResponse> getEssaysByAssignment(Long assignmentId, PageRequest pageRequest) {

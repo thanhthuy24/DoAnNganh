@@ -2,6 +2,7 @@ package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.QuestionChoiceDTO;
 import com.htt.ecourse.dtos.QuestionDTO;
+import com.htt.ecourse.dtos.QuestionEssayDTO;
 import com.htt.ecourse.pojo.Lesson;
 import com.htt.ecourse.pojo.Question;
 import com.htt.ecourse.service.QuestionService;
@@ -28,6 +29,15 @@ public class ApiQuestionController {
     ){
         List<QuestionChoiceDTO> questionChoiceDTOList = questionService.getQuestionsByAssignmentId(assignmentId);
         return ResponseEntity.ok(questionChoiceDTOList);
+    }
+
+    @GetMapping("/essay/assignment/{assignmentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<QuestionEssayDTO>> getQuestionEssayByAssignmentId(
+            @PathVariable(value = "assignmentId") Long assignmentId
+    ){
+        List<QuestionEssayDTO> QuestionEssayDTOList = questionService.getQuestionEssaysByAssignmentId(assignmentId);
+        return ResponseEntity.ok(QuestionEssayDTOList);
     }
 
     @GetMapping("/count/assignment/{assignmentId}")

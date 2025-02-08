@@ -47,6 +47,25 @@ public class QuestionServiceImpl implements QuestionService {
 //        return questions;
     }
 
+    @Override
+    public List<QuestionEssayDTO> getQuestionEssaysByAssignmentId(Long assignmentId) {
+        Assignment existingAssignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Can not find assignment!"));
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userRepository.getUserByUsername(username).getId();
+
+        Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, existingAssignment.getCourse().getId());
+        if (checkEnrollment.isEmpty()) {
+            new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This course isn't enrolled in your list! Please enroll before participating in this course!!");
+        }
+
+        List<Question> questions = questionRepository.findByAssignmentId(assignmentId);
+        return questions.stream().map(this::convertEssayToDTO).collect(Collectors.toList());
+    }
+
     private QuestionChoiceDTO convertToDTO(Question question) {
         List<Choice> choices = question.getChoices().stream()
                 .map(choice -> Choice.builder()
@@ -60,6 +79,21 @@ public class QuestionServiceImpl implements QuestionService {
                 .id(question.getId())
                 .content(question.getContent())
                 .choices(choices)
+                .build();
+    }
+
+    private QuestionEssayDTO convertEssayToDTO(Question question) {
+        List<Essay> essays = question.getEssays().stream()
+                .map(e -> Essay.builder()
+                        .id(e.getId())
+                        .content(e.getContent())
+                        .build())
+                .collect(Collectors.toList());
+
+        return QuestionEssayDTO.builder()
+                .id(question.getId())
+                .content(question.getContent())
+                .essays(essays)
                 .build();
     }
 

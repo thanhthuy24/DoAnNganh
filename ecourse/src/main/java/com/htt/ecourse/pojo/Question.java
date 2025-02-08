@@ -35,4 +35,9 @@ public class Question {
     @JsonIgnore
     private Set<Choice> choices = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Essay> essays = new LinkedHashSet<>();
+
+
 }

@@ -1,5 +1,6 @@
 package com.htt.ecourse.controller;
 
+import com.htt.ecourse.dtos.AnswerChoiceDTO;
 import com.htt.ecourse.dtos.EssayDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Essay;
@@ -59,7 +60,7 @@ public class ApiEssayController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createEssay(
-            @Valid @RequestBody EssayDTO essayDTO,
+            @Valid @RequestBody List<EssayDTO> essayDTOs,
             BindingResult rs
     ) throws DataNotFoundException {
         if(rs.hasErrors()){
@@ -70,8 +71,14 @@ public class ApiEssayController {
             return ResponseEntity.badRequest().body(errorMessages);
         }
 
-        essayService.createEssay(essayDTO);
-        return ResponseEntity.ok(essayDTO);
+        for (EssayDTO essayDTO : essayDTOs) {
+            essayService.createEssay(essayDTO);
+        }
+
+        return ResponseEntity.ok(essayDTOs);
+
+
+//        return ResponseEntity.ok();
     }
 
     @PutMapping("/{essayId}")
@@ -92,5 +99,13 @@ public class ApiEssayController {
         essayService.updateEssay(essayId, essayDTO);
         return ResponseEntity.ok(essayDTO);
     }
+
+//    @GetMapping("/{assignmentId}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity<?> getEssayById(
+//            @PathVariable Long assignmentId
+//    ){
+//        return ResponseEntity.ok(essayService.getEssayById(assignmentId));
+//    }
 
 }
