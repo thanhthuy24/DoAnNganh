@@ -13,6 +13,9 @@ import java.util.List;
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
     boolean existsByName(String name);
     Page<Lesson> findAll(Pageable pageable);
+    @Query("SELECT l FROM Lesson l WHERE LOWER(l.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(l.course.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Lesson> searchLessonsAll(@Param("keyword") String keyword, Pageable pageable);
     List<Lesson> findByCourseId(Long courseId);
     @Query("SELECT COUNT(l) FROM Lesson l WHERE l.course.id = :courseId")
     long countLessonsByCourseId(@Param("courseId") Long courseId);

@@ -9,6 +9,7 @@ import com.htt.ecourse.pojo.Video;
 import com.htt.ecourse.responses.list.LessonListResponse;
 import com.htt.ecourse.responses.LessonResponse;
 import com.htt.ecourse.service.LessonService;
+import com.htt.ecourse.service.VideoService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,15 +36,20 @@ import java.util.Map;
 public class ApiLessonController {
     private final LessonService lessonService;
     private final CloudinaryService cloudinaryService;
+    private final VideoService videoService;
     @GetMapping("")
     public ResponseEntity<LessonListResponse> getLessons(
             @RequestParam("page") int page,
-            @RequestParam("limit") int limit
+            @RequestParam("limit") int limit,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword
     ) {
+        Sort.Direction direction = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         // tao pageable tu thong tin page va limit
         PageRequest pageRequest = PageRequest.of(page, limit,
-                Sort.by("createdDate").descending());
-        Page<Lesson> lessonPage = lessonService.getAllLessons(pageRequest);
+                Sort.by(direction, sortBy));
+        Page<Lesson> lessonPage = lessonService.getAllLessons(keyword, pageRequest);
 
         // lay tong so trang
         int totalPage = lessonPage.getTotalPages();
@@ -149,6 +155,24 @@ public class ApiLessonController {
         }
         lessonService.updateLesson(lessonId, lessonDTO);
         return ResponseEntity.ok(lessonDTO);
+    }
+
+    @PutMapping("/update-video/{videoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> updateVideo(
+            @PathVariable Long videoId,
+            @ModelAttribute VideoDTO videoDTO,
+            BindingResult rs
+    ){
+        if (rs.hasErrors()) {
+            List<String> errorMessages = rs.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        videoService.updateVideo(videoId, videoDTO);
+        return ResponseEntity.ok(videoDTO);
     }
 
     @PutMapping("/{lessonId}/active")

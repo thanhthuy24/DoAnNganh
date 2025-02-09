@@ -87,7 +87,9 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "api/lessons/uploads/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/lessons/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/lessons/**/active").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(PUT, "api/lessons/update-video/").hasAnyRole(Role.ADMIN)
                             .requestMatchers(DELETE, "api/lessons/**").hasAnyRole(Role.ADMIN)
+
 
                             .requestMatchers(GET, "api/like/**").hasAnyRole(Role.USER, Role.TEACHER)
                             .requestMatchers(POST, "api/like").hasAnyRole(Role.USER, Role.TEACHER)
@@ -129,7 +131,9 @@ public class WebSecurityConfig {
 
                             .requestMatchers(PUT, "api/receipts/**").hasAnyRole(Role.USER)
 
-                            .requestMatchers("api/videos/count/lesson/").permitAll()
+                            .requestMatchers(PUT, "api/videos/update/").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(GET, "api/videos/count/lesson/").permitAll()
+
 
                             .requestMatchers(GET, "api//**").hasAnyRole(Role.USER, Role.ADMIN, Role.TEACHER)
                             .requestMatchers(POST, "api/video-completed/").hasAnyRole(Role.USER)

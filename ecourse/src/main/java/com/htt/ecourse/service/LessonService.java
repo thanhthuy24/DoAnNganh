@@ -19,7 +19,7 @@ public interface LessonService {
 //    Admin use
     Lesson createLesson(LessonDTO lessonDTO);
     Lesson getLessonById(Long id);
-    Page<Lesson> getAllLessons(PageRequest pageRequest);
+    Page<Lesson> getAllLessons(String keyword, PageRequest pageRequest);
     Lesson updateLesson(Long id, LessonDTO lessonDTO);
     Lesson updateActiveLesson(Long id,LessonDTO lessonDTO);
     void deleteLesson(Long id);
