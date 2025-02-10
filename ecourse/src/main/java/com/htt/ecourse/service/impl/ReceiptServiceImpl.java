@@ -31,10 +31,9 @@ public class ReceiptServiceImpl implements ReceiptService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Page<ReceiptResponse> getAllReceipts(PageRequest pageRequest) {
+    public Page<Receipt> getAllReceipts(PageRequest pageRequest, String keyword) {
         return receiptRepository
-                .findAll(pageRequest)
-                .map(ReceiptResponse::fromReceipt);
+                .searchReceiptsAll(keyword, pageRequest);
     }
 
     @Override

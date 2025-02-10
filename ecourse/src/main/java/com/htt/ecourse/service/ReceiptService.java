@@ -12,7 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 public interface ReceiptService {
-    Page<ReceiptResponse> getAllReceipts(PageRequest pageRequest);
+    Page<Receipt> getAllReceipts(PageRequest pageRequest, String keyword);
+
     List<Receipt> findByUserId(Long userId);
     Receipt getReceipt(Long id);
     Receipt createReceipt(ReceiptDTO receiptDTO);

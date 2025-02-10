@@ -4,9 +4,14 @@ import com.htt.ecourse.dtos.ReceiptDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.Cart;
 import com.htt.ecourse.pojo.Receipt;
+import com.htt.ecourse.responses.ReceiptResponse;
+import com.htt.ecourse.responses.list.ReceiptListResponse;
 import com.htt.ecourse.service.ReceiptService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -95,6 +100,30 @@ public class ApiReceiptController {
             @RequestBody List<Cart> carts
     ) throws DataNotFoundException {
         this.receipService.addReceipt(carts);
+    }
+
+    @GetMapping("/get-all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ReceiptListResponse> getAllReceiptsByAdmin(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(value = "keyMoney", required = false, defaultValue = "") Float keyMoney
+    ){
+        Sort.Direction direction = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by(direction, sortBy));
+        Page<Receipt> receiptPage = receipService.getAllReceipts(pageRequest, keyword);
+
+        int totalPage = receiptPage.getTotalPages();
+        List<Receipt> receipts = receiptPage.getContent();
+        return ResponseEntity.ok(ReceiptListResponse.builder()
+                        .receipts(receipts)
+                        .totalPages(totalPage)
+                .build());
     }
 
 }

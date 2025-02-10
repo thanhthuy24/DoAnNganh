@@ -10,6 +10,8 @@ import com.htt.ecourse.repository.ReceiptDetailRepository;
 import com.htt.ecourse.repository.ReceiptRepository;
 import com.htt.ecourse.service.ReceiptDetailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,5 +55,10 @@ public class ReceiptDetailServiceImpl implements ReceiptDetailService {
                 .quantity(receiptDetailDTO.getQuantity())
                 .build();
         return receiptDetailRepository.save(receiptDetail);
+    }
+
+    @Override
+    public Page<Receiptdetail> getAllReceiptDetails(Pageable pageable, String keyword) {
+        return receiptDetailRepository.searchReceiptsAll(keyword, pageable);
     }
 }

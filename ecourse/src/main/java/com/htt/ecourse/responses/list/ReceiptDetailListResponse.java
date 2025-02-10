@@ -1,17 +1,17 @@
 package com.htt.ecourse.responses.list;
 
-import com.htt.ecourse.pojo.Receipt;
-import com.htt.ecourse.responses.ReceiptResponse;
+import com.htt.ecourse.pojo.Receiptdetail;
 import lombok.*;
 
 import java.util.List;
+
 @Data
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReceiptListResponse {
-    private List<Receipt> receipts;
+public class ReceiptDetailListResponse {
+    private List<Receiptdetail> receiptDetails;
     private int totalPages;
 }
