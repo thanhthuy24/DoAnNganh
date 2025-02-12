@@ -55,6 +55,7 @@ public class ApiRegisterController {
         return ResponseEntity.ok(registerDTO);
     }
 
+
     @PatchMapping("/update/{registerId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> updateRegister(

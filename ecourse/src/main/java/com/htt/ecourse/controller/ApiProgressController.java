@@ -1,10 +1,13 @@
 package com.htt.ecourse.controller;
 
+import com.htt.ecourse.pojo.Progress;
 import com.htt.ecourse.service.ProgressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,4 +23,20 @@ public class ApiProgressController {
         return ResponseEntity.ok(progressService.calculateProgress(courseId));
     }
 
+    @GetMapping("/user/{userId}/course/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getProgress(
+            @PathVariable Long userId,
+            @PathVariable Long courseId
+    ){
+        return ResponseEntity.ok(progressService.getProgressByAdmin(userId, courseId));
+    }
+
+    @GetMapping("/get-progress/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getProgressByUser(
+            @PathVariable Long courseId
+    ){
+        return ResponseEntity.ok(progressService.getProgressByUser(courseId));
+    }
 }

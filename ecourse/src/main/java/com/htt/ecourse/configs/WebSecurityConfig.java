@@ -28,7 +28,8 @@ public class WebSecurityConfig {
                     requests
                             .requestMatchers(
                                     "api/users/login",
-                                    "api/users/register")
+                                    "api/users/register",
+                                    "api/users/register-account")
                             .permitAll()
 
                             .requestMatchers(GET, "api/assignments?**").hasAnyRole(Role.ADMIN)
@@ -69,7 +70,7 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, "api/reply/**").hasAnyRole(Role.USER, Role.ADMIN)
                             .requestMatchers(POST, "api/reply/**").hasAnyRole(Role.USER, Role.TEACHER)
 
-                            .requestMatchers(GET, "api/enrollments/**").hasAnyRole(Role.USER, Role.TEACHER)
+                            .requestMatchers(GET, "api/enrollments/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(POST, "api/enrollments").hasAnyRole(Role.USER)
 
                             .requestMatchers(POST, "api/email").hasAnyRole(Role.USER, Role.ADMIN)
@@ -97,6 +98,8 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "api/paypal/**").hasAnyRole(Role.USER)
                             .requestMatchers(GET, "api/paypal/**").hasAnyRole(Role.USER)
 
+                            .requestMatchers(GET, "api/progress/user/").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(GET, "api/progress/get-progress/").hasAnyRole(Role.USER)
                             .requestMatchers(POST, "api/progress/**").hasAnyRole(Role.USER, Role.TEACHER, Role.ADMIN)
 
                             .requestMatchers(GET, "api/questions/count/assignment/**").permitAll()
@@ -123,9 +126,13 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT, "api/teachers/**").hasAnyRole(Role.ADMIN, Role.TEACHER)
                             .requestMatchers(DELETE, "api/teachers/**").hasAnyRole(Role.ADMIN)
 
-                            .requestMatchers(GET, "api/users/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
+                            .requestMatchers(GET, "api/users/all-users").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(GET, "api/users/get-users/").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(GET, "api/users/current-user").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(POST, "api/users/**").hasAnyRole(Role.ADMIN)
-                            .requestMatchers(PUT, "api/users/update-user/**").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
+
+                            .requestMatchers(PATCH, "api/users/update-active/").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(PUT, "api/users/update-user/").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(DELETE, "api/users/**").hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(GET, "api/tags").hasAnyRole(Role.ADMIN)

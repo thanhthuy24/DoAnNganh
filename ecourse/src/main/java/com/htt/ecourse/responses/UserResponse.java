@@ -1,0 +1,33 @@
+package com.htt.ecourse.responses;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.htt.ecourse.pojo.Role;
+import jakarta.persistence.JoinColumn;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class UserResponse {
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String username;
+    private String phone;
+    private String avatar;
+    private boolean isActive;
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    private Date dateOfBirth;
+    @JsonProperty("facebook_account")
+    private int facebookAccountId;
+    @JsonProperty("google_account")
+    private int googleAccountId;
+    @JoinColumn(name = "role_id")
+    private Long roleId;
+}

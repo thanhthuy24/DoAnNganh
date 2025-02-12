@@ -1,15 +1,19 @@
 package com.htt.ecourse.controller;
 
-import com.htt.ecourse.dtos.ChangePasswordDTO;
-import com.htt.ecourse.dtos.UserDTO;
-import com.htt.ecourse.dtos.UserLoginDTO;
-import com.htt.ecourse.dtos.UserUpdateDTO;
+import com.htt.ecourse.dtos.*;
+import com.htt.ecourse.pojo.Lesson;
 import com.htt.ecourse.pojo.User;
 import com.htt.ecourse.repository.UserRepository;
+import com.htt.ecourse.responses.UserResponse;
+import com.htt.ecourse.responses.list.LessonListResponse;
+import com.htt.ecourse.responses.list.UserListResponse;
 import com.htt.ecourse.service.UserService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +35,57 @@ public class ApiUserController {
     private final UserService userService;
     private final CloudinaryService cloudinaryService;
     private final UserRepository userRepository;
+
+    @GetMapping("/all-users")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getAllUsers(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword
+    ) {
+        Sort.Direction direction = order.equalsIgnoreCase("asc")
+                ? Sort.Direction.ASC : Sort.Direction.DESC;
+        // tao pageable tu thong tin page va limit
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by(direction, sortBy));
+        Page<UserResponse> userPage = userService.getAllUsers(pageRequest, keyword);
+
+        // lay tong so trang
+        int totalPage = userPage.getTotalPages();
+        List<UserResponse> users = userPage.getContent();
+        return ResponseEntity.ok(UserListResponse.builder()
+                .users(users)
+                .totalPages(totalPage)
+                .build());
+    }
+
+    @GetMapping("/get-users/{roleId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getStudents(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(value = "key", required = false, defaultValue = "") String key,
+            @PathVariable Long roleId
+    ) {
+        Sort.Direction direction = order.equalsIgnoreCase("asc")
+                ? Sort.Direction.ASC : Sort.Direction.DESC;
+        // tao pageable tu thong tin page va limit
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by(direction, sortBy));
+        Page<UserResponse> userPage = userService.getUsersByRole(roleId, key, pageRequest);
+
+        // lay tong so trang
+        int totalPage = userPage.getTotalPages();
+        List<UserResponse> users = userPage.getContent();
+        return ResponseEntity.ok(UserListResponse.builder()
+                .users(users)
+                .totalPages(totalPage)
+                .build());
+    }
 
     @GetMapping(path = "/current-user", produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
@@ -84,6 +139,29 @@ public class ApiUserController {
         }
     }
 
+    @PostMapping(value = "/register-account", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> registerAccount(
+            @Valid @ModelAttribute UserRegisterAccDTO userRegisterAccDTO,
+            BindingResult rs
+    ) {
+        try{
+            if(rs.hasErrors()){
+                List<String> errorMessages = rs.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList();
+                return ResponseEntity.badRequest().body(errorMessages);
+            }
+            if(!userRegisterAccDTO.getPassword().equals(userRegisterAccDTO.getRetypePassword())){
+                return ResponseEntity.badRequest().body("Passwords do not match");
+            }
+            User user = userService.registerAccount(userRegisterAccDTO);
+            return ResponseEntity.ok(user);
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     private String storeFile(MultipartFile file) throws IOException {
         Map<String, Object> uploadResult = cloudinaryService.uploadFile(file);
         return uploadResult.get("url").toString();
@@ -125,7 +203,7 @@ public class ApiUserController {
     public ResponseEntity<?> getUser(
             @PathVariable("userId") Long userId
     ) {
-        return ResponseEntity.ok(userService.getUserById(userId));
+        return ResponseEntity.ok(userService.getUserByUserId(userId));
     }
 
     @PatchMapping("/update-avatar/{userId}")
@@ -165,6 +243,15 @@ public class ApiUserController {
     ) throws Exception {
         userService.changePassword(userId, changePasswordDTO);
         return ResponseEntity.ok("Mật khẩu đã được thay đổi thành công");
+    }
+
+    @PatchMapping("/update-active/{userId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> updateUserActive(
+            @PathVariable("userId") Long userId
+    ){
+        userService.updateStatus(userId);
+        return ResponseEntity.ok("Successfull");
     }
 
 }

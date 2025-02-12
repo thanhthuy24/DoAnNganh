@@ -2,10 +2,14 @@ package com.htt.ecourse.service;
 
 import com.htt.ecourse.dtos.ChangePasswordDTO;
 import com.htt.ecourse.dtos.UserDTO;
+import com.htt.ecourse.dtos.UserRegisterAccDTO;
 import com.htt.ecourse.dtos.UserUpdateDTO;
 import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.exceptions.InvalidParamException;
 import com.htt.ecourse.pojo.User;
+import com.htt.ecourse.responses.UserResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -19,4 +23,12 @@ public interface UserService {
 
     User updateAvatar(Long userId, UserUpdateDTO userUpdateDTO);
     void changePassword(Long userId, ChangePasswordDTO changePasswordDTO) throws Exception;
+
+    Page<UserResponse> getAllUsers(Pageable pageable, String keyword);
+    Page<UserResponse> getUsersByRole(Long roleId, String key, Pageable pageable);
+
+    UserResponse getUserByUserId(Long userId);
+    User updateStatus(Long userId);
+
+    User registerAccount(UserRegisterAccDTO userRegisterAccDTO) throws DataNotFoundException;
 }

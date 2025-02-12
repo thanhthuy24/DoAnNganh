@@ -1,18 +1,17 @@
 package com.htt.ecourse.service.impl;
 
 import com.htt.ecourse.exceptions.DataNotFoundException;
-import com.htt.ecourse.pojo.Course;
+import com.htt.ecourse.pojo.Enrollment;
 import com.htt.ecourse.pojo.Lesson;
 import com.htt.ecourse.pojo.Progress;
-import com.htt.ecourse.pojo.User;
 import com.htt.ecourse.repository.*;
 import com.htt.ecourse.service.ProgressService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.DateTimeException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +25,7 @@ public class ProgressServiceImpl implements ProgressService {
     private final UserRepository userRepository;
     private final LessonRepository lessonRepository;
     private final CourseRepository courseRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @Override
     public float calculateProgress(Long courseId) {
@@ -82,5 +82,38 @@ public class ProgressServiceImpl implements ProgressService {
 
         progressRepository.save(newProcess);
         return progress;
+    }
+
+    @Override
+    public Optional<Progress> getProgressByAdmin(Long userId, Long courseId) {
+        Optional<Progress> progressList = progressRepository.findByCourseIdAndUserId(courseId, userId);
+        if (progressList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+        }
+        return progressList;
+    }
+
+    @Override
+    public Optional<Progress> getProgressByUser(Long courseId){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long role = userRepository.getUserByUsername(username).getRole().getId();
+        Long userId = userRepository.getUserByUsername(username).getId();
+        if(role == 1) { //role = 3 -> teacher
+            Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
+            if (checkEnrollment.isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "You must enroll this course first!!"
+                );
+            }
+        } else  {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "You dont have permission!!"
+            );
+        }
+        Optional<Progress> progressList = progressRepository.findByCourseIdAndUserId(courseId, userId);
+        if (progressList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+        }
+        return progressList;
     }
 }

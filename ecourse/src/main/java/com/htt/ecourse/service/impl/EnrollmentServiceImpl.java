@@ -55,6 +55,18 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
+    public List<Enrollment> getCousesEnrolledByUser(Long userId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long role = userRepository.getUserByUsername(username).getRole().getId();
+        if (role != 2){
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Authorization!!"
+            );
+        }
+        return enrollmentRepository.findByUserId(userId);
+    }
+
+    @Override
     public Enrollment createEnrollment(EnrollmentDTO enrollmentDTO) {
         Course existingCourse = courseRepository.findById(enrollmentDTO.getCourseId())
                 .orElseThrow(() -> new ResponseStatusException(
@@ -71,6 +83,19 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         progressService.calculateProgress(existingCourse.getId());
 
         return enrollment;
+    }
+
+    @Override
+    public Long countEnrollmentByUserId(Long userId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long role = userRepository.getUserByUsername(username).getRole().getId();
+        if (role != 2){
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Authorization!!"
+            );
+        }
+
+        return enrollmentRepository.countEnrollmentByUserId(userId);
     }
 
     @Override

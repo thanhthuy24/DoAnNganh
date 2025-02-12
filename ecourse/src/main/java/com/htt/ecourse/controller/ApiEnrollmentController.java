@@ -70,11 +70,28 @@ public class ApiEnrollmentController {
         return ResponseEntity.ok(enrollments);
     }
 
+    @GetMapping("/get-courses/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<Enrollment>> getEnrollments(
+            @PathVariable Long userId
+    ){
+        List<Enrollment> enrollments = enrollmentService.getCousesEnrolledByUser(userId);
+        return ResponseEntity.ok(enrollments);
+    }
+
     @GetMapping("/course/{courseId}/count")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> getEnrollmentCountByCourse(
             @PathVariable Long courseId
     ){
         return ResponseEntity.ok(enrollmentService.getCountEnrollmentByCourseId(courseId));
+    }
+
+    @GetMapping("/count-enroll/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> countEnrollmentByUser(
+            @PathVariable Long userId
+    ){
+        return ResponseEntity.ok(enrollmentService.countEnrollmentByUserId(userId));
     }
 }
