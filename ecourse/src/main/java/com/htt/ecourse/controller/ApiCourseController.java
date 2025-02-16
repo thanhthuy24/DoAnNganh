@@ -110,6 +110,26 @@ public class ApiCourseController {
         return ResponseEntity.ok(courseById);
     }
 
+    @GetMapping("/teacher/{teacherId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getCourseByTeacherId(
+            @PathVariable("teacherId") Long teacherId,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
+    ) {
+//        return ResponseEntity.ok(courseService.getCoursesByTeacherId(teacherId));
+        Pageable pageRequest = PageRequest.of(page, limit,
+                Sort.by("createdDate").descending());
+        Page<Course> coursePage = courseService.getCoursesByTeacherId(teacherId, pageRequest);
+        int totalPage = coursePage.getTotalPages();
+        List<Course> courses = coursePage.getContent();
+        return ResponseEntity.ok(CourseListResponse.builder()
+                .courses(courses)
+                .totalPages(totalPage)
+                .build());
+    }
+
+
     //them category
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -179,11 +199,23 @@ public class ApiCourseController {
         return ResponseEntity.ok("delete course");
     }
 
-    @GetMapping("/teacher/{teacherId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getCoursesByTeacher(@PathVariable Long teacherId) {
-        return ResponseEntity.ok(courseService.getCoursesByTeacherId(teacherId));
-    }
+//    @GetMapping("/get-courses-teacher/{teacherId}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity<CourseListResponse> getCoursesOfTeacher(
+//        @PathVariable Long teacherId,
+//        @RequestParam("page") int page,
+//        @RequestParam("limit") int limit
+//    ){
+//        Pageable pageRequest = PageRequest.of(page, limit,
+//                Sort.by("createdDate").descending());
+//        Page<Course> coursePage = courseService.getCoursesByTeacher(teacherId, pageRequest);
+//        int totalPage = coursePage.getTotalPages();
+//        List<Course> courses = coursePage.getContent();
+//        return ResponseEntity.ok(CourseListResponse.builder()
+//                .courses(courses)
+//                .totalPages(totalPage)
+//                .build());
+//    }
 
 
 }

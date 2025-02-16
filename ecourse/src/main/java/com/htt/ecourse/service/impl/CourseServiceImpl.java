@@ -6,15 +6,13 @@ import com.htt.ecourse.pojo.Category;
 import com.htt.ecourse.pojo.Course;
 import com.htt.ecourse.pojo.Tag;
 import com.htt.ecourse.pojo.Teacher;
-import com.htt.ecourse.repository.CategoryRepository;
-import com.htt.ecourse.repository.CourseRepository;
-import com.htt.ecourse.repository.TagRepository;
-import com.htt.ecourse.repository.TeacherRepository;
+import com.htt.ecourse.repository.*;
 import com.htt.ecourse.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,6 +29,7 @@ public class CourseServiceImpl implements CourseService {
     private final CategoryRepository categoryRepository;
     private final TeacherRepository teacherRepository;
     private final TagRepository tagRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Course createCourse(CourseDTO courseDTO) throws DataNotFoundException {
@@ -117,9 +116,30 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+//    @Override
+//    public Page<Course> getCoursesByTeacher(Long teacherId, Pageable pageable) {
+//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Long role = userRepository.getUserByUsername(username).getRole().getId();
+//        if (role != 2 || role != 3) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
+//        Page<Course> listCourses = courseRepository.getCoursesByTeacherId(teacherId, pageable);
+//        return courseRepository.getCoursesByTeacherId(teacherId, pageable);
+//    }
+
     @Override
-    public List<Course> getCoursesByTeacherId(Long teacherId) {
-        return courseRepository.findByTeacherId(teacherId);
+    public Page<Course> getCoursesByTeacherId(Long teacherId, Pageable pageable) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userRepository.getUserByUsername(username).getId();
+
+        Teacher existingTeacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Can not find teacher with id: " + teacherId));
+
+        if (existingTeacher.getUser().getId() != userId) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
+        }
+        return courseRepository.findByTeacherId(teacherId, pageable);
+
     }
 
     @Override
@@ -159,19 +179,6 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public boolean existByName(String name) {
         return courseRepository.existsByName(name);
-    }
-
-    @Override
-    public List<Course> getCoursesByTeacher(Long teacherId) throws DataNotFoundException {
-        Teacher existingTeacher = teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Cannot find teacher with id " + teacherId));
-
-        List<Course> list = courseRepository.findCourseByTeacherId(teacherId);
-        if (!list.isEmpty()){
-            return list;
-        }
-        return null;
     }
 
 

@@ -117,7 +117,7 @@ public class LessonServiceImpl implements LessonService {
         Long role = userRepository.getUserByUsername(username).getRole().getId();
         Long userId = userRepository.getUserByUsername(username).getId();
 
-        if(role != 3) {
+        if(role != 3 || role != 2) {
             Optional<Enrollment> checkEnrollment = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
             if (checkEnrollment.isEmpty()) {
                 throw new ResponseStatusException(

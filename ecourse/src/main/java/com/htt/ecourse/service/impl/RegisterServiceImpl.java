@@ -113,14 +113,14 @@ public class RegisterServiceImpl implements RegisterService {
             existingRegister.setReason(registerDTO.getReason());
             existingRegister.setUser(existingUser);
 
-            userService.updateRole(existingUser.getId());
-
-            Teacher newTeacher = Teacher.builder()
-                    .description(registerDTO.getReason())
-                    .position(registerDTO.getPosition())
-                    .user(existingUser)
-                    .build();
-            teacherRepository.save(newTeacher);
+//            userService.updateRole(existingUser.getId());
+//
+//            Teacher newTeacher = Teacher.builder()
+//                    .description(registerDTO.getReason())
+//                    .position(registerDTO.getPosition())
+//                    .user(existingUser)
+//                    .build();
+//            teacherRepository.save(newTeacher);
             return registerRepository.save(existingRegister);
         }
         return null;

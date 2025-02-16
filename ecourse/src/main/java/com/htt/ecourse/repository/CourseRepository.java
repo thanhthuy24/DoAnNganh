@@ -15,14 +15,17 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> searchByKeyword(@Param("keyword") String keyword);
     boolean existsByName(String name);
     Page<Course> findAll(Pageable pageable); //phân trang
-    List<Course> findByTeacherId(Long teacherId);
+
+    Page<Course> findByTeacherId(Long teacherId, Pageable pageable);
+
     Course getCourseById(Long id);
-    List<Course> findCourseByTeacherId(Long teacherId);
     List<Course> findByCategoryId(Long categoryId);
+
     Page<Course> findByCategoryId(Long categoryId, Pageable pageable);
     @Query("SELECT c FROM Course c WHERE " +
             "(:minPrice IS NULL OR c.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR c.price <= :maxPrice)")
     Page<Course>  getCoursesByPrice(@Param("minPrice") Float minPrice, @Param("maxPrice") Float maxPrice, Pageable pageable);
+//    Page<Course> getCoursesByTeacherId(Long teacherId, Pageable pageable);
 }
 

@@ -17,14 +17,15 @@ public interface CourseService {
     Course getCourseById(Long id);
     Page<Course> getAllCourses(Pageable pageable);
 
-    List<Course> getCoursesByTeacherId(Long teacherId);
+    Page<Course> getCoursesByTeacherId(Long teacherId, Pageable pageable);
 
     Course updateCourse(Long id, CourseDTO courseDTO);
     void deleteCourse(Long id);
     boolean existByName(String name);
-    List<Course> getCoursesByTeacher(Long teacherId) throws DataNotFoundException;
     List<Course> getAllCourseName();
     List<Course> getCoursesByCategoryId(Long categoryId);
     Page<Course> getCoursesByCategoryIdPage(Pageable pageable, Long categoryId);
     Page<Course> getCoursesByPrice(Float minPrice, Float maxPrice, Pageable pageable);
+
+//    Page<Course> getCoursesByTeacher(Long teacherId, Pageable pageable);
 }
