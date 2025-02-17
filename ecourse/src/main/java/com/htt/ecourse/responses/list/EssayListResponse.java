@@ -1,5 +1,6 @@
 package com.htt.ecourse.responses.list;
 
+import com.htt.ecourse.pojo.Essay;
 import com.htt.ecourse.responses.EssayResponse;
 import lombok.*;
 
@@ -12,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EssayListResponse {
-    private List<EssayResponse> essays;
+    private List<Essay> essays;
     private int totalPages;
 }

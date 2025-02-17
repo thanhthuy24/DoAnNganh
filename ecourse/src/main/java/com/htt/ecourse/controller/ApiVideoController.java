@@ -33,4 +33,12 @@ public class ApiVideoController {
     ) throws DataNotFoundException {
         return ResponseEntity.ok(videoService.findByLessonId(lessonId));
     }
+
+    @GetMapping("/count/course/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> countVideoByCourseId(
+            @PathVariable Long courseId
+    ){
+        return ResponseEntity.ok(videoService.countVideoByCourseId(courseId));
+    }
 }

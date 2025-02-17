@@ -14,5 +14,5 @@ public interface EssayService {
     Essay createEssay(EssayDTO essayDTO) throws DataNotFoundException;
     Essay updateEssay(Long essayId, EssayDTO essayDTO) throws DataNotFoundException;
 //    Essay getEssayByAssignmentId(Long essayId);
-    Page<EssayResponse> getEssaysByAssignment(Long assignmentId, PageRequest pageRequest);
+    Page<Essay> getEssaysByAssignment(Long assignmentId, PageRequest pageRequest);
 }

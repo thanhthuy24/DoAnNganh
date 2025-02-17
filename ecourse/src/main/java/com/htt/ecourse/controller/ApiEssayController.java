@@ -47,10 +47,10 @@ public class ApiEssayController {
 
         PageRequest pageRequest = PageRequest.of(page, limit,
                 Sort.by("createdDate").descending());
-        Page<EssayResponse> essayPage = essayService.getEssaysByAssignment(assignmentId, pageRequest);
+        Page<Essay> essayPage = essayService.getEssaysByAssignment(assignmentId, pageRequest);
 
         int totalPages = essayPage.getTotalPages();
-        List<EssayResponse> essays = essayPage.getContent();
+        List<Essay> essays = essayPage.getContent();
         return ResponseEntity.ok(EssayListResponse.builder()
                         .essays(essays)
                         .totalPages(totalPages)

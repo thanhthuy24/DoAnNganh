@@ -96,8 +96,7 @@ public class EssayServiceImpl implements EssayService {
 //    }
 
     @Override
-    public Page<EssayResponse> getEssaysByAssignment(Long assignmentId, PageRequest pageRequest) {
-        return essayRepository.findByAssignmentId(assignmentId, pageRequest)
-                .map(EssayResponse::fromEssay);
+    public Page<Essay> getEssaysByAssignment(Long assignmentId, PageRequest pageRequest) {
+        return essayRepository.findByAssignmentId(assignmentId, pageRequest);
     }
 }

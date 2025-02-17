@@ -54,4 +54,9 @@ public class VideoServiceImpl implements VideoService {
         }
         return null;
     }
+
+    @Override
+    public Long countVideoByCourseId(Long courseId) {
+        return videoRepository.countByCourseId(courseId);
+    }
 }
