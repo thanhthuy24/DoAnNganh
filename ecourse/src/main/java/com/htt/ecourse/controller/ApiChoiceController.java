@@ -1,6 +1,7 @@
 package com.htt.ecourse.controller;
 
 import com.htt.ecourse.dtos.ChoiceDTO;
+import com.htt.ecourse.dtos.EssayDTO;
 import com.htt.ecourse.pojo.Choice;
 import com.htt.ecourse.service.ChoiceService;
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ public class ApiChoiceController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createChoice(
             @Valid
-            @RequestBody ChoiceDTO choiceDTO,
+            @RequestBody List<ChoiceDTO> choiceDTOs,
             BindingResult rs
     ){
         if(rs.hasErrors()){
@@ -33,8 +34,11 @@ public class ApiChoiceController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
-        choiceService.createChoice(choiceDTO);
-        return ResponseEntity.ok(choiceDTO);
+        for (ChoiceDTO choiceDTO : choiceDTOs) {
+            choiceService.createChoice(choiceDTO);
+        }
+
+        return ResponseEntity.ok(choiceDTOs);
     }
 
     @PutMapping("/{choiceId}")

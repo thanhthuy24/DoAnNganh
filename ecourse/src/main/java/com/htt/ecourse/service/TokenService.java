@@ -6,4 +6,5 @@ import com.htt.ecourse.pojo.Token;
 
 public interface TokenService {
     Token createToken(TokenDTO tokenDTO) throws DataNotFoundException;
+    void saveToken(String token, Long userId);
 }

@@ -65,4 +65,13 @@ public class ApiScoreController {
         return ResponseEntity.ok(scoreService.getScoreByAssignmentId(assignmentId));
     }
 
+    @GetMapping("/get-score/assignment/{assignmentId}/by-user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getScoreByAssignmentIdAndUserId(
+            @PathVariable Long assignmentId,
+            @PathVariable Long userId
+    ) {
+        return ResponseEntity.ok(scoreService.getScoreByAssignmentIdAndUserId(assignmentId, userId));
+    }
+
 }

@@ -21,6 +21,7 @@ import java.time.DateTimeException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +97,17 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         }
 
         return enrollmentRepository.countEnrollmentByUserId(userId);
+    }
+
+    @Override
+    public List<User> getEnrolledUsers(Long courseId) {
+        List<Enrollment> enrollments = enrollmentRepository.findAllByCourseId(courseId);
+        return enrollments.stream().map(Enrollment::getUser).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getEnrolledUserIds(Long courseId) {
+        return enrollmentRepository.findAllEnrollmentByCourseId(courseId);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.htt.ecourse.service;
 
 import com.htt.ecourse.dtos.EnrollmentDTO;
 import com.htt.ecourse.pojo.Enrollment;
+import com.htt.ecourse.pojo.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +17,7 @@ public interface EnrollmentService {
 
 //    đếm số lượng course mà user đã đăng ký
     Long countEnrollmentByUserId(Long userId);
+
+    List<User> getEnrolledUsers(Long courseId);
+    List<Long> getEnrolledUserIds(Long courseId);
 }

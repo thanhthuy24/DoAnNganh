@@ -18,6 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignmentDTO {
+
     @NotNull
     @Size(min = 2, max = 255, message = "Assignment's name must be between 2 and 255 characters")
     private String name;

@@ -6,14 +6,22 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import com.htt.ecourse.pojo.Token;
+import com.htt.ecourse.repository.TokenRepository;
+import com.htt.ecourse.service.EnrollmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FirebaseMessagingService {
+
+
     @PostConstruct
     public void initialize() throws IOException {
         FirebaseOptions options = new FirebaseOptions.Builder()

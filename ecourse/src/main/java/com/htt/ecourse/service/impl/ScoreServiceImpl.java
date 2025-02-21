@@ -25,7 +25,7 @@ public class ScoreServiceImpl implements ScoreService {
     private final EssayRepository essayRepository;
 
     @Override
-    public Score getScoreByAssignmentId(Long assignmentId) throws DataNotFoundException {
+    public List<Score> getScoreByAssignmentId(Long assignmentId) throws DataNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
 
@@ -33,18 +33,18 @@ public class ScoreServiceImpl implements ScoreService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Assignment not found!!"));
 
-        Score score = scoreRepository.findByAssignmentId(assignmentId);
-        if (score == null) {
+        List<Score> scores = scoreRepository.findByAssignmentId(assignmentId);
+        if (scores.isEmpty()) {
             new ResponseStatusException(HttpStatus.NOT_FOUND, "Score not found!!!");
         }
-        return score;
+        return scores;
     }
 
     @Override
     public Score createScoreEssay(ScoreDTO scoreDTO, Long essayId) throws DataNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
-        if (user.getRole().getName().equals("ADMIN")){
+        if (user.getRole().getName().equals("TEACHER")){
             Essay existingEssay = essayRepository.findById(essayId)
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "Essay not found!!"));
@@ -57,7 +57,7 @@ public class ScoreServiceImpl implements ScoreService {
             Optional<Score> existingScore = scoreRepository
                     .findByUserIdAndAssignmentId(existingEssay.getUser().getId(), existingAssignment.getId());
             if (existingScore.isPresent()) {
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Score already exist!!!");
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Score already exist!!!");
             }
 
             Score newScore = Score.builder()
@@ -69,6 +69,28 @@ public class ScoreServiceImpl implements ScoreService {
 
             scoreRepository.save(newScore);
             return newScore;
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You don't have permission to add score");
+        }
+    }
+
+    @Override
+    public Optional<Score> getScoreByAssignmentIdAndUserId(Long assignmentId, Long userId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.getUserByUsername(username);
+        if (user.getRole().getName().equals("TEACHER")){
+            Assignment existingAssignment = assignmentRepository
+                    .findById(assignmentId)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Assignment not found!!"));
+
+            Optional<Score> existingScore = scoreRepository
+                    .findByUserIdAndAssignmentId(userId, existingAssignment.getId());
+            if (existingScore != null) {
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Score already exist!!!");
+            }
+            return existingScore;
         }
         else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You don't have permission to add score");

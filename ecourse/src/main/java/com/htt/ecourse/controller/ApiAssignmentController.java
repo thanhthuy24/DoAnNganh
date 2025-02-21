@@ -84,8 +84,8 @@ public class ApiAssignmentController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
-        assignmentService.createAssignment(assignmentDTO);
-        return ResponseEntity.ok(assignmentDTO);
+        Assignment asignment = assignmentService.createAssignment(assignmentDTO);
+        return ResponseEntity.ok(asignment);
     }
 
     @PutMapping("/{assignmentId}")

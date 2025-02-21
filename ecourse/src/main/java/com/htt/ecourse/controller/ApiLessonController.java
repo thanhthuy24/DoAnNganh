@@ -9,6 +9,7 @@ import com.htt.ecourse.pojo.Video;
 import com.htt.ecourse.responses.list.LessonListResponse;
 import com.htt.ecourse.responses.LessonResponse;
 import com.htt.ecourse.service.LessonService;
+import com.htt.ecourse.service.NotificationService;
 import com.htt.ecourse.service.VideoService;
 import com.htt.ecourse.service.impl.CloudinaryService;
 import jakarta.validation.Valid;
@@ -37,6 +38,8 @@ public class ApiLessonController {
     private final LessonService lessonService;
     private final CloudinaryService cloudinaryService;
     private final VideoService videoService;
+    private final NotificationService notificationService;
+
     @GetMapping("")
     public ResponseEntity<LessonListResponse> getLessons(
             @RequestParam("page") int page,
@@ -83,6 +86,11 @@ public class ApiLessonController {
             }
 
             Lesson newLesson = lessonService.createLesson(lessonDTO);
+            notificationService.sendNotificationToEnrolledUsers(
+                    lessonDTO.getCourseId(),
+                    "Bài học mới!",
+                    "Khóa học của bạn có bài học mới: " + lessonDTO.getName()
+            );
 
             return ResponseEntity.ok(newLesson);
         } catch (Exception e) {

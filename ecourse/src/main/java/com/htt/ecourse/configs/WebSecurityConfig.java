@@ -33,7 +33,7 @@ public class WebSecurityConfig {
                             .permitAll()
 
                             .requestMatchers(GET, "api/assignments?**").hasAnyRole(Role.ADMIN)
-                            .requestMatchers(POST, "api/assignments/**").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(POST, "api/assignments/**").hasAnyRole(Role.ADMIN, Role.TEACHER)
                             .requestMatchers(PUT, "api/assignments/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(DELETE, "api/assignments/**").hasAnyRole(Role.ADMIN)
 
