@@ -32,6 +32,9 @@ public class WebSecurityConfig {
                                     "api/users/register-account")
                             .permitAll()
 
+                            .requestMatchers("/admin/**").hasAnyRole(Role.ADMIN)   // Chỉ Admin truy cập được
+                            .requestMatchers("/teacher/**").hasAnyRole(Role.TEACHER) // Chỉ Teacher truy cập được
+
                             .requestMatchers(GET, "api/assignments?**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST, "api/assignments/**").hasAnyRole(Role.ADMIN, Role.TEACHER)
                             .requestMatchers(PUT, "api/assignments/**").hasAnyRole(Role.ADMIN)
@@ -58,7 +61,7 @@ public class WebSecurityConfig {
 
                             .requestMatchers(GET, "api/course-teacher/").hasAnyRole(Role.TEACHER)
 
-                            .requestMatchers(GET, "api/certificate/**").hasAnyRole(Role.USER)
+                            .requestMatchers(GET, "api/certificate/**").hasAnyRole(Role.ADMIN, Role.USER)
 
 //                            .requestMatchers(GET, "api/rating/**").hasAnyRole(Role.ADMIN, Role.USER)
                             .requestMatchers(GET, "api/rating/**").permitAll()
@@ -104,6 +107,7 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, "api/progress/user/").hasAnyRole(Role.ADMIN)
                             .requestMatchers(GET, "api/progress/get-progress/").hasAnyRole(Role.USER)
                             .requestMatchers(POST, "api/progress/**").hasAnyRole(Role.USER, Role.TEACHER, Role.ADMIN)
+                            .requestMatchers(GET, "api/progress/check-progress/").hasAnyRole(Role.USER, Role.TEACHER)
 
                             .requestMatchers(GET, "api/questions/count/assignment/**").permitAll()
                             .requestMatchers(GET, "api/questions/assignment/").hasAnyRole(Role.TEACHER, Role.USER)
@@ -125,6 +129,7 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, "api/score/**").hasAnyRole(Role.USER, Role.TEACHER, Role.ADMIN)
 
                             .requestMatchers(POST, "api/token").permitAll()
+                            .requestMatchers(DELETE, "api/token/userId").permitAll()
 
                             .requestMatchers(GET, "api/teachers/**").permitAll()
                             .requestMatchers(POST, "api/teachers/**").hasAnyRole(Role.ADMIN)

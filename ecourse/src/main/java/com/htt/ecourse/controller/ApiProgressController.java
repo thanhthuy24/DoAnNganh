@@ -39,4 +39,13 @@ public class ApiProgressController {
     ){
         return ResponseEntity.ok(progressService.getProgressByUser(courseId));
     }
+
+    @GetMapping("/check-progress/{courseId}/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> checkProgress(
+            @PathVariable Long courseId,
+            @PathVariable Long userId
+    ){
+        return ResponseEntity.ok(progressService.checkProgressForCertificate(userId, courseId));
+    }
 }

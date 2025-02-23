@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/token")
@@ -34,4 +35,25 @@ public class ApiTokenController {
         Token token = tokenService.createToken(tokenDTO);
         return ResponseEntity.ok(token);
     }
+
+//    xóa thông tin bằng token
+    @PostMapping("/remove-token")
+    public ResponseEntity<String> removeFcmToken(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+
+        tokenService.removeFcmToken(token);
+        return ResponseEntity.ok("FCM Token removed successfully");
+    }
+
+//    xóa thông tin token bằng userID
+    @DeleteMapping("/userId")
+    public ResponseEntity<?> deleteToken(
+            @PathVariable Long userId
+    ){
+        tokenService.removeTokensByUserId(userId);
+        return ResponseEntity.ok("Token removed successfully");
+    }
+
 }
+
+

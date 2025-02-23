@@ -94,6 +94,21 @@ public class ProgressServiceImpl implements ProgressService {
     }
 
     @Override
+    public Boolean checkProgressForCertificate(Long userId, Long courseId) {
+        Optional<Progress> progress = progressRepository.findByCourseIdAndUserId(courseId, userId);
+        if (progress.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+        }
+
+        Progress progress1 = progressRepository.findProgressByCourseIdAndUserId(courseId, userId);
+        if (progress1.getCompletionPercentage() != 100) {
+            return false;
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course hasn't been completed");
+        }
+        return true;
+    }
+
+    @Override
     public Optional<Progress> getProgressByUser(Long courseId){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Long role = userRepository.getUserByUsername(username).getRole().getId();

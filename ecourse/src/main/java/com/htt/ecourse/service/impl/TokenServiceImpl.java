@@ -26,6 +26,11 @@ public class TokenServiceImpl implements TokenService {
         User existingUser = userRepository.findById(tokenDTO.getUserId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!!"));
 
+        Token existingToken = tokenRepository.findByTokenAndUserId(tokenDTO.getToken(), existingUser.getId());
+        if (existingToken != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Token already exists");
+        }
+
         Token newToken = Token.builder()
                 .token(tokenDTO.getToken())
                 .user(existingUser)
@@ -49,5 +54,15 @@ public class TokenServiceImpl implements TokenService {
         fcmToken .setUser(user);
         tokenRepository.save(fcmToken );
 
+    }
+
+    @Override
+    public void removeTokensByUserId(Long userId) {
+        tokenRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public void removeFcmToken(String token) {
+        tokenRepository.findByToken(token).ifPresent(tokenRepository::delete);
     }
 }

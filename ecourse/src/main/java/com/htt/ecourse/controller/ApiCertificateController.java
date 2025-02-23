@@ -1,37 +1,38 @@
 package com.htt.ecourse.controller;
 
-import com.htt.ecourse.components.PdfGeneratorService;
+
+import com.htt.ecourse.components.CertificateService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/certificate")
 public class ApiCertificateController {
-    private final PdfGeneratorService pdfGeneratorService;
-    private static final Logger logger = LoggerFactory.getLogger(PdfGeneratorService.class);
+    private final CertificateService certificateService;
 
-    @PostMapping("/download")
+    @GetMapping("/download-certificate")
     public ResponseEntity<byte[]> downloadCertificate(
-            @RequestParam String courseName,
-            @RequestParam String completionDate,
-            @RequestParam String username) {
-        byte[] pdfBytes = pdfGeneratorService.generateCertificate(courseName, completionDate, username);
+            @RequestParam String studentName,
+            @RequestParam String courseName) {
+        try {
+            byte[] pdfBytes = certificateService.generateCertificate(studentName, courseName);
 
-        if (pdfBytes == null || pdfBytes.length == 0) {
-            logger.error("Generated PDF is empty");
-            throw new RuntimeException("Generated PDF is empty");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "certificate.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        // Thiết lập response header để tải xuống PDF
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline ; filename=certificate.pdf")
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(pdfBytes);
     }
+
 }
