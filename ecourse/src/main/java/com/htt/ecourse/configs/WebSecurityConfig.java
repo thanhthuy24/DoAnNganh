@@ -73,6 +73,10 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, "api/comments/**").hasAnyRole(Role.USER, Role.TEACHER, Role.ADMIN)
                             .requestMatchers(POST, "api/comments").hasAnyRole(Role.USER, Role.TEACHER)
 
+                            .requestMatchers(GET, "api/get-notification").hasAnyRole(Role.USER)
+                            .requestMatchers(POST, "api/get-notification").hasAnyRole(Role.ADMIN, Role.TEACHER)
+                            .requestMatchers(PATCH, "api/get-notification/**").hasAnyRole(Role.USER)
+
                             .requestMatchers(GET, "api/reply/**").hasAnyRole(Role.USER, Role.ADMIN, Role.TEACHER)
                             .requestMatchers(POST, "api/reply/**").hasAnyRole(Role.USER, Role.TEACHER)
 
@@ -101,6 +105,8 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "api/like").hasAnyRole(Role.USER, Role.TEACHER)
 
                             .requestMatchers(POST, "api/payment/update-payment").hasAnyRole(Role.USER)
+                            .requestMatchers(GET, "api/payment/check-payment").hasAnyRole(Role.USER)
+
                             .requestMatchers(POST, "api/paypal/**").hasAnyRole(Role.USER)
                             .requestMatchers(GET, "api/paypal/**").hasAnyRole(Role.USER)
 

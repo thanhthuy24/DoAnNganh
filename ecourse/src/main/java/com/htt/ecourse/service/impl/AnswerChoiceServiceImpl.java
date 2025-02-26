@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +37,15 @@ public class AnswerChoiceServiceImpl implements AnswerChoiceService {
                 .findById(assignmentId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Can not find Assignment with id " + assignmentId));
+
+        LocalDateTime dueDate = Instant.ofEpochMilli(existingAssignment.getDueDate().getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
+        // Kiểm tra nếu dueDate đã qua hạn
+        if (dueDate.isBefore(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The due date for this assignment has passed. You cannot submit an answer choice.");
+        }
 
         Question existingQuestion = questionRepository
                 .findById(answerChoiceDTO.getQuestionId())

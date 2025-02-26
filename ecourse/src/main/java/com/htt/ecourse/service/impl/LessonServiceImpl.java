@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DateTimeException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class LessonServiceImpl implements LessonService {
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final TeacherRepository teacherRepository;
+    private final NotificationRepository notificationRepository;
 
     @Override
     public Lesson createLesson(LessonDTO lessonDTO) {
@@ -43,6 +45,20 @@ public class LessonServiceImpl implements LessonService {
                 .description(lessonDTO.getDescription())
                 .course(existCourse)
                 .build();
+
+        List<User> users = enrollmentRepository.findUsersByCourseId(lessonDTO.getCourseId());
+        List<Notification> notifications = users.stream()
+                .map(user -> Notification.builder()
+                        .title("Khoá học " + existCourse.getName() + " bạn đang ký vừa có bài học mới!")
+                        .message("Bài học mới: " + lessonDTO.getName())
+                        .user(user)
+                        .isRead(false)
+                        .createdDate(new Date())
+                        .build()
+                )
+                .collect(Collectors.toList());
+        notificationRepository.saveAll(notifications);
+
         return lessonRepository.save(newLesson);
     }
 

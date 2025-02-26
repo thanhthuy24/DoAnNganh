@@ -2,7 +2,6 @@ package com.htt.ecourse.controller;
 
 import com.htt.ecourse.components.FirebaseMessagingService;
 import com.htt.ecourse.service.NotificationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/notifications")
-public class ApiNotificationController {
+public class ApiFirebaseNotificationController {
     private final FirebaseMessagingService firebaseService;
-    
-    @Autowired
-    private NotificationService notificationService;
 
-    public ApiNotificationController(FirebaseMessagingService firebaseService) {
+    public ApiFirebaseNotificationController(FirebaseMessagingService firebaseService) {
         this.firebaseService = firebaseService;
     }
 
@@ -30,14 +26,5 @@ public class ApiNotificationController {
         } catch (Exception e) {
             return "Failed to send notification: " + e.getMessage();
         }
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getNotifications(
-            @RequestParam("page") int page,
-            @RequestParam("limit") int limit
-    ) {
-
     }
 }

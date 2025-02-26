@@ -42,8 +42,9 @@ public class EssayServiceImpl implements EssayService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Can not find question by id "+essayDTO.getQuestionId() ));
 
-        if (existingQuestion != null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Question already exists");
+        Essay checkEssay = essayRepository.findByQuestionId(essayDTO.getQuestionId());
+        if (checkEssay != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Essay already exists");
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

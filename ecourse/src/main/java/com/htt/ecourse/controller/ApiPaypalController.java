@@ -77,11 +77,6 @@ public class ApiPaypalController {
 
             // Đưa các thông tin vào response
             response.put("paymentStatus", paymentStatus);
-//            response.put("paymentId", payment.getId());
-//            response.put("payer", payment.getPayer());
-//            response.put("transactions", payment.getTransactions());
-//            response.put("create_time", payment.getCreateTime());
-//            response.put("update_time", payment.getUpdateTime());
 
             // Trả về ResponseEntity với mã trạng thái 200 OK và dữ liệu JSON
             return ResponseEntity.ok(response);

@@ -86,6 +86,7 @@ public class ApiLessonController {
             }
 
             Lesson newLesson = lessonService.createLesson(lessonDTO);
+
             notificationService.sendNotificationToEnrolledUsers(
                     lessonDTO.getCourseId(),
                     "Bài học mới!",

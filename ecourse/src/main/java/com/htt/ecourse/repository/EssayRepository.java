@@ -10,6 +10,6 @@ import java.util.Optional;
 
 public interface EssayRepository extends JpaRepository<Essay, Long> {
     Page<Essay> findByAssignmentId(Long assignmentId, PageRequest pageRequest);
-    List<Essay> findByQuestionId(Long questionId);
+    Essay findByQuestionId(Long questionId);
 //    List<Essay> findByAssignment(Long assignmentId);
 }

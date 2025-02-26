@@ -70,15 +70,10 @@ public class ApiEssayController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
-
         for (EssayDTO essayDTO : essayDTOs) {
             essayService.createEssay(essayDTO);
         }
-
         return ResponseEntity.ok(essayDTOs);
-
-
-//        return ResponseEntity.ok();
     }
 
     @PutMapping("/{essayId}")

@@ -6,6 +6,7 @@ import com.htt.ecourse.pojo.Assignment;
 import com.htt.ecourse.responses.list.AssignmentListResponse;
 import com.htt.ecourse.responses.AssignmentResponse;
 import com.htt.ecourse.service.AssignmentService;
+import com.htt.ecourse.service.NotificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApiAssignmentController {
     private final AssignmentService assignmentService;
+    private final NotificationService notificationService;
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
@@ -76,7 +78,7 @@ public class ApiAssignmentController {
     public ResponseEntity<?> createAssignment(
             @Valid
             @ModelAttribute AssignmentDTO assignmentDTO,
-            BindingResult rs) throws DataNotFoundException {
+            BindingResult rs) throws Exception {
         if(rs.hasErrors()){
             List<String> errorMessages = rs.getFieldErrors()
                     .stream()
@@ -85,6 +87,11 @@ public class ApiAssignmentController {
             return ResponseEntity.badRequest().body(errorMessages);
         }
         Assignment asignment = assignmentService.createAssignment(assignmentDTO);
+        notificationService.sendNotificationToEnrolledUsers(
+                assignmentDTO.getCourseId(),
+                "Bài tập mới!",
+                "Khóa học của bạn có bài tập mới vừa được tạo: " + assignmentDTO.getName()
+        );
         return ResponseEntity.ok(asignment);
     }
 
