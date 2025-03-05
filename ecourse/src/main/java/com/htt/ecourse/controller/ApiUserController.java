@@ -7,8 +7,10 @@ import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.responses.UserResponse;
 import com.htt.ecourse.responses.list.LessonListResponse;
 import com.htt.ecourse.responses.list.UserListResponse;
+import com.htt.ecourse.service.AuthService;
 import com.htt.ecourse.service.UserService;
 import com.htt.ecourse.service.impl.CloudinaryService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -35,6 +38,7 @@ public class ApiUserController {
     private final UserService userService;
     private final CloudinaryService cloudinaryService;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
     @GetMapping("/all-users")
     @ResponseStatus(HttpStatus.OK)
@@ -254,4 +258,53 @@ public class ApiUserController {
         return ResponseEntity.ok("Successfull");
     }
 
+//    @GetMapping("/auth/social-login")
+//    public ResponseEntity<String> socialAuth(
+//            @RequestParam("login_type") String loginType,
+//            HttpServletRequest request
+//    ){
+//        //request.getRequestURI()
+//        loginType = loginType.trim().toLowerCase();  // Loại bỏ dấu cách và chuyển thành chữ thường
+//        String url = authService.generateAuthUrl(loginType);
+//        return ResponseEntity.ok(url);
+//    }
+
+//    @GetMapping("/auth/social/callback")
+//    public ResponseEntity<?> callback(
+//            @RequestParam("code") String code,
+//            @RequestParam("login_type") String loginType,
+//            HttpServletRequest request
+//    ) throws Exception {
+//        Map<String, Object> userInfo = authService.authenticateAndFetchProfile(code, loginType);
+//
+//        // Extract user information from userInfo map
+//        String accountId = "";
+//        String name = "";
+//        String email = "";
+//
+//        if (loginType.trim().equals("google")) {
+//            accountId = (String) Objects.requireNonNullElse(userInfo.get("sub"), "");
+//            name = (String) Objects.requireNonNullElse(userInfo.get("name"), "");
+//            email = (String) Objects.requireNonNullElse(userInfo.get("email"), "");
+//        }
+//        else if (loginType.trim().equals("facebook")) {
+//            accountId = (String) Objects.requireNonNullElse(userInfo.get("id"), "");
+//            name = (String) Objects.requireNonNullElse(userInfo.get("name"), "");
+//            email = (String) Objects.requireNonNullElse(userInfo.get("email"), "");
+//            // Lấy URL ảnh từ cấu trúc dữ liệu của Facebook
+//            Object pictureObj = userInfo.get("picture");
+//            if (pictureObj instanceof Map) {
+//                Map<?, ?> pictureData = (Map<?, ?>) pictureObj;
+//                Object dataObj = pictureData.get("data");
+//                if (dataObj instanceof Map) {
+//                    Map<?, ?> dataMap = (Map<?, ?>) dataObj;
+//                    Object urlObj = dataMap.get("url");
+//                    if (urlObj instanceof String) {
+//                        picture = (String) urlObj;
+//                    }
+//                }
+//            }
+//        }
+//        return ResponseEntity.ok(userInfo);
+//    }
 }

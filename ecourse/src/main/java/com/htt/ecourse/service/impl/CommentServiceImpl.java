@@ -11,7 +11,9 @@ import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.responses.CommentResponse;
 import com.htt.ecourse.responses.list.CommentListResponse;
 import com.htt.ecourse.service.CommentService;
+import com.htt.ecourse.service.SentimentService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -30,9 +32,10 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final LessonRepository lessonRepository;
     private final UserRepository userRepository;
+    private final SentimentService sentimentService;
 
     @Override
-    public Comment createComment(CommentDTO commentDTO) throws DataNotFoundException {
+    public Comment createComment(CommentDTO commentDTO) throws DataNotFoundException, JSONException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.getUserByUsername(username);
 
@@ -52,11 +55,14 @@ public class CommentServiceImpl implements CommentService {
 
         Comment existingParentComment = commentRepository.getCommentById(commentDTO.getParentId());
 
+        String sentiment = sentimentService.analyzeSentiment(commentDTO.getContent());
+
         Comment newComment = Comment.builder()
                 .content(commentDTO.getContent())
                 .createdDate(new Date())
                 .user(user)
                 .lesson(existingLesson)
+                .sentiment(sentiment)
                 .build();
 
         commentRepository.save(newComment);

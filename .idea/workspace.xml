@@ -2,22 +2,47 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6903edb4-0b54-4fe4-9d54-803cc3080310" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/components/VNPayService.java" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/controller/ApiLoginSocialController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/controller/ApiViewController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/dtos/UserLoginMailDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/pojo/View.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/repository/ViewRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/responses/LoginResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/responses/ResponseObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/service/AuthService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/service/ViewService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/service/impl/AuthServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/service/impl/ViewServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/configs/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/configs/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/controller/ApiVNPayController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/controller/ApiUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/controller/ApiUserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/dtos/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/dtos/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/dtos/UserRegisterAccDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/dtos/UserRegisterAccDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/dtos/UserUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/dtos/UserUpdateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/filters/JwtTokenFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/filters/JwtTokenFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/pojo/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/pojo/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/repository/RoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/responses/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/responses/UserResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/java/com/htt/ecourse/service/impl/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecourse/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecourse/src/main/resources/firebase-service-account.json" beforeDir="false" afterPath="$PROJECT_DIR$/ecourse/src/main/resources/firebase-service-account.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2mf0higJuDJTnvzpchDMPf2v2Mx" />
   <component name="ProjectViewState">
     <option name="autoscrollToSource" value="true" />
@@ -27,7 +52,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

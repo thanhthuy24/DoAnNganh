@@ -15,6 +15,7 @@ import com.htt.ecourse.service.CommentService;
 import com.htt.ecourse.service.LessonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -40,7 +41,7 @@ public class ApiCommentController {
             @Valid
             @RequestBody CommentDTO commentDTO,
             BindingResult rs
-            ) throws DataNotFoundException {
+            ) throws DataNotFoundException, JSONException {
         if(rs.hasErrors()){
             List<String> errorMessages = rs.getFieldErrors()
                     .stream()

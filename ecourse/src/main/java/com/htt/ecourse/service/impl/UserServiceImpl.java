@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
         }
         User existingUser = optionalUser.get();
         //check password
-        if(existingUser.getFacebookAccount() == 0
-            && existingUser.getGoogleAccount() == 0) {
+        if(existingUser.getFacebookAccount().equals('0')
+            && existingUser.getGoogleAccount().equals('0')) {
             if(!passwordEncoder.matches(password, existingUser.getPassword())){
                 throw new BadCredentialsException("Invalid username or password!");
             }
@@ -59,6 +59,68 @@ public class UserServiceImpl implements UserService {
                 new UsernamePasswordAuthenticationToken(username, password);
         authenticationManager.authenticate(authenticationToken);
         return jwtTokenUtil.generateToken(existingUser);
+    }
+
+    @Override
+    public String loginSocial(UserLoginMailDTO userLoginMailDTO) throws InvalidParamException {
+        Optional<User> optionalUser = Optional.empty();
+        Role roleUser = roleRepository.findByName(Role.USER);
+
+        // Kiểm tra Google Account ID
+        if (userLoginMailDTO.isGoogleAccountIdValid()) {
+            optionalUser = userRepository.findByGoogleAccount(userLoginMailDTO.getGoogleAccountId());
+
+            // Tạo người dùng mới nếu không tìm thấy
+            if (optionalUser.isEmpty()) {
+                User newUser = User.builder()
+                    .username(Optional.ofNullable(userLoginMailDTO.getUsername()).orElse(""))
+                    .email(Optional.ofNullable(userLoginMailDTO.getEmail()).orElse(""))
+                    .avatar(Optional.ofNullable(userLoginMailDTO.getAvatar()).orElse(""))
+                    .role(roleUser)
+                    .googleAccount(userLoginMailDTO.getGoogleAccountId())
+                    .password("") // Mật khẩu trống cho đăng nhập mạng xã hội
+                    .isActive(true)
+                    .build();
+
+                // Lưu người dùng mới
+                newUser = userRepository.save(newUser);
+                optionalUser = Optional.of(newUser);
+            }
+        }
+        // Kiểm tra Facebook Account ID
+//        else if (userLoginDTO.isFacebookAccountIdValid()) {
+//            optionalUser = userRepository.findByFacebookAccountId(userLoginDTO.getFacebookAccountId());
+//
+//            // Tạo người dùng mới nếu không tìm thấy
+//            if (optionalUser.isEmpty()) {
+//                User newUser = User.builder()
+//                        .fullName(Optional.ofNullable(userLoginDTO.getFullname()).orElse(""))
+//                        .email(Optional.ofNullable(userLoginDTO.getEmail()).orElse(""))
+//                        .profileImage(Optional.ofNullable(userLoginDTO.getProfileImage()).orElse(""))
+//                        .role(roleUser)
+//                        .facebookAccountId(userLoginDTO.getFacebookAccountId())
+//                        .password("") // Mật khẩu trống cho đăng nhập mạng xã hội
+//                        .active(true)
+//                        .build();
+//
+//                // Lưu người dùng mới
+//                newUser = userRepository.save(newUser);
+//                optionalUser = Optional.of(newUser);
+//            }
+//        }
+        else {
+            throw new IllegalArgumentException("Invalid social account information.");
+        }
+
+        User user = optionalUser.get();
+
+        // Kiểm tra nếu tài khoản bị khóa
+        if (!user.getIsActive()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User is inactive!!");
+        }
+
+        // Tạo JWT token cho người dùng
+        return jwtTokenUtil.generateToken(user);
     }
 
     @Override
@@ -91,7 +153,7 @@ public class UserServiceImpl implements UserService {
 
         newUser.setRole(role);
         // kiểm tra nếu có account_id thì không yêu cầu password
-        if(userDTO.getFacebookAccountId()==0 && userDTO.getGoogleAccountId()==0){
+        if(userDTO.getFacebookAccountId().equals('0') && userDTO.getGoogleAccountId().equals('0')){
             String password = userDTO.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
             // noi sau trong phan spring security
@@ -247,7 +309,7 @@ public class UserServiceImpl implements UserService {
 
         newUser.setRole(role);
         // kiểm tra nếu có account_id thì không yêu cầu password
-        if(userRegisterAccDTO.getFacebookAccountId()==0 && userRegisterAccDTO.getGoogleAccountId()==0){
+        if(userRegisterAccDTO.getFacebookAccountId().equals('0') && userRegisterAccDTO.getGoogleAccountId().equals('0')){
             String password = userRegisterAccDTO.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
             // noi sau trong phan spring security

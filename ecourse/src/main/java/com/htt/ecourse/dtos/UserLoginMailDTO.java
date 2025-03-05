@@ -5,26 +5,18 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Date;
-
 @Data
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterAccDTO {
-    private String firstName;
-    private String lastName;
-    @NotBlank(message = "Email must be required")
-    private String email;
+public class UserLoginMailDTO {
     @NotBlank(message = "Username must be required")
     private String username;
-    @NotBlank(message = "Password must be required")
-    private String password;
-    private String retypePassword;
-    private String phone;
-    private Date dateOfBirth;
+    @NotBlank(message = "Email must be required")
+    private String email;
+    private String avatar;
     @JsonProperty("facebook_account")
     private String facebookAccountId;
     @JsonProperty("google_account")
@@ -32,4 +24,12 @@ public class UserRegisterAccDTO {
     @NotNull(message = "Role ID is required")
     @JsonProperty("role_id")
     private Long roleId;
+    @NotBlank(message = "Password must be required")
+    private String password;
+
+    // Kiểm tra googleAccountId có hợp lệ không
+    public boolean isGoogleAccountIdValid() {
+        return googleAccountId != null && !googleAccountId.isEmpty();
+    }
+
 }

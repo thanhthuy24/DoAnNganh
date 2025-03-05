@@ -39,6 +39,10 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Size(max = 255)
+    @Column(name = "sentiment")
+    private String sentiment;
+
 
     @PrePersist
     protected void onCreate() {

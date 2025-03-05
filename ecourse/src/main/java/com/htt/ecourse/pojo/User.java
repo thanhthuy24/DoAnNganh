@@ -53,7 +53,7 @@ public class User implements UserDetails {
     private Date dateOfBirth;
 
     @JoinColumn(name = "google_account")
-    private int googleAccount;
+    private String googleAccount;
 
     @Column(name = "is_active")
     private Boolean isActive;
@@ -67,7 +67,7 @@ public class User implements UserDetails {
     private Date updatedDate;
 
     @JoinColumn(name = "facebook_account")
-    private int facebookAccount;
+    private String facebookAccount;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")

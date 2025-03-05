@@ -25,9 +25,9 @@ public class UserResponse {
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dateOfBirth;
     @JsonProperty("facebook_account")
-    private int facebookAccountId;
+    private String facebookAccountId;
     @JsonProperty("google_account")
-    private int googleAccountId;
+    private String googleAccountId;
     @JoinColumn(name = "role_id")
     private Long roleId;
 }

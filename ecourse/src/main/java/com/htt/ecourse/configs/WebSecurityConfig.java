@@ -35,6 +35,8 @@ public class WebSecurityConfig {
                             .requestMatchers("/admin/**").hasAnyRole(Role.ADMIN)   // Chỉ Admin truy cập được
                             .requestMatchers("/teacher/**").hasAnyRole(Role.TEACHER) // Chỉ Teacher truy cập được
 
+                            .requestMatchers(GET, "api/ai-recommend/").hasAnyRole(Role.USER)
+
                             .requestMatchers(GET, "api/assignments?**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST, "api/assignments/**").hasAnyRole(Role.ADMIN, Role.TEACHER)
                             .requestMatchers(PUT, "api/assignments/**").hasAnyRole(Role.ADMIN)
@@ -104,6 +106,9 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, "api/like/**").hasAnyRole(Role.USER, Role.TEACHER)
                             .requestMatchers(POST, "api/like").hasAnyRole(Role.USER, Role.TEACHER)
 
+                            .requestMatchers(GET, "api/login/auth/social-login").permitAll()
+                            .requestMatchers(GET, "api/login/auth/social/callback").permitAll()
+
                             .requestMatchers(POST, "api/payment/update-payment").hasAnyRole(Role.USER)
                             .requestMatchers(GET, "api/payment/check-payment").hasAnyRole(Role.USER)
 
@@ -143,18 +148,22 @@ public class WebSecurityConfig {
                             .requestMatchers(DELETE, "api/teachers/**").hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(GET, "api/users/all-users").hasAnyRole(Role.ADMIN)
+                            .requestMatchers(GET, "api/users/auth/").permitAll()
                             .requestMatchers(GET, "api/users/get-users/").hasAnyRole(Role.ADMIN)
                             .requestMatchers(GET, "api/users/current-user").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
-                            .requestMatchers(POST, "api/users/**").hasAnyRole(Role.ADMIN)
 
+                            .requestMatchers(POST, "api/users/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PATCH, "api/users/update-active/").hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT, "api/users/update-user/").hasAnyRole(Role.ADMIN, Role.USER, Role.TEACHER)
                             .requestMatchers(DELETE, "api/users/**").hasAnyRole(Role.ADMIN)
+
 
                             .requestMatchers(GET, "api/tags").hasAnyRole(Role.ADMIN, Role.TEACHER)
                             .requestMatchers(POST, "api/tags").hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(PUT, "api/receipts/**").hasAnyRole(Role.USER)
+
+                            .requestMatchers(POST, "api/views/").hasAnyRole(Role.USER)
 
                             .requestMatchers(PUT, "api/videos/update/").hasAnyRole(Role.ADMIN)
                             .requestMatchers(GET, "api/videos/count/lesson/").permitAll()

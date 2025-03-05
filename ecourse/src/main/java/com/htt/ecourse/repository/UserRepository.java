@@ -34,4 +34,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
         "LOWER(u.email) LIKE LOWER(CONCAT('%', :key, '%')))")
 Page<User> findUsersByRoleId(@Param("roleId") Long roleId, @Param("key") String key, Pageable pageable);
 
+    Optional<User> findByGoogleAccount(String googleId);
+
 }
