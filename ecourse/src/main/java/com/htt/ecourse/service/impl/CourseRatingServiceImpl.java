@@ -5,7 +5,10 @@ import com.htt.ecourse.exceptions.DataNotFoundException;
 import com.htt.ecourse.pojo.*;
 import com.htt.ecourse.repository.*;
 import com.htt.ecourse.service.CourseRatingService;
+import com.htt.ecourse.service.SentimentService;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
+import org.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -25,9 +28,10 @@ public class CourseRatingServiceImpl implements CourseRatingService {
     private final CourseRatingRepository courseRatingRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    private final SentimentService sentimentService;
 
     @Override
-    public Courserating createRating(CourseRatingDTO courseRatingDTO) throws DataNotFoundException {
+    public Courserating createRating(CourseRatingDTO courseRatingDTO) throws DataNotFoundException, JSONException {
         Course existingCourse = courseRepository
                 .findById(courseRatingDTO.getCourseId())
                 .orElseThrow(() -> new ResponseStatusException(
@@ -54,12 +58,15 @@ public class CourseRatingServiceImpl implements CourseRatingService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rating already exist!!!");
         }
 
+        String sentiment = sentimentService.analyzeSentimentRating(courseRatingDTO.getComment());
+
         Courserating newRating = Courserating.builder()
                 .rating(courseRatingDTO.getRating())
                 .course(existingCourse)
                 .ratingDate(new Date())
                 .comment(courseRatingDTO.getComment())
                 .user(user)
+                .sentiment(sentiment)
                 .build();
 
         courseRatingRepository.save(newRating);
@@ -153,5 +160,15 @@ public class CourseRatingServiceImpl implements CourseRatingService {
         Float percentageRating = (float) Math.round(averageRating * 100);
 
         return percentageRating;
+    }
+
+    @Override
+    public Page<Courserating> getRatingsBySentiment(Long courseId, String sentiment, PageRequest pageRequest) {
+        return courseRatingRepository.findByKeyword(courseId, sentiment, pageRequest);
+    }
+
+    @Override
+    public Page<Courserating> getRatingsByRate(Long courseId, Long rate, PageRequest pageRequest) {
+        return courseRatingRepository.findByRating(courseId, rate, pageRequest);
     }
 }

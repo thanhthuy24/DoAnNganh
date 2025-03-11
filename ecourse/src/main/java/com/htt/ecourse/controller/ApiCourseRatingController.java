@@ -7,6 +7,7 @@ import com.htt.ecourse.responses.list.RatingListResponse;
 import com.htt.ecourse.service.CourseRatingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,7 +31,7 @@ public class ApiCourseRatingController {
             @Valid
             @RequestBody CourseRatingDTO courseRatingDTO,
             BindingResult rs
-            ) throws DataNotFoundException {
+            ) throws DataNotFoundException, JSONException {
         if (rs.hasErrors()) {
             List<String> errorMessages = rs.getFieldErrors()
                     .stream()
@@ -63,6 +64,49 @@ public class ApiCourseRatingController {
                 .build());
     }
 
+    @GetMapping("/find-by-sentiment")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<RatingListResponse> findBySentiment(
+            @RequestParam(required = false) String sentiment,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit,
+            @RequestParam(required = false) Long courseId
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by("ratingDate").descending());
+
+        Page<Courserating> courseratingPage = courseRatingService.getRatingsBySentiment(courseId, sentiment, pageRequest);
+
+        int totalPages = courseratingPage.getTotalPages();
+
+        List<Courserating> courseratings = courseratingPage.getContent();
+        return ResponseEntity.ok(RatingListResponse.builder()
+                .ratings(courseratings)
+                .totalPages(totalPages)
+                .build());
+    }
+
+    @GetMapping("/find-by-rate")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<RatingListResponse> findByRate(
+            @RequestParam(required = false) Long rate,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit,
+            @RequestParam(required = false) Long courseId
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, limit,
+                Sort.by("ratingDate").descending());
+
+        Page<Courserating> courseratingPage = courseRatingService.getRatingsByRate(courseId,rate, pageRequest);
+
+        int totalPages = courseratingPage.getTotalPages();
+
+        List<Courserating> courseratings = courseratingPage.getContent();
+        return ResponseEntity.ok(RatingListResponse.builder()
+                .ratings(courseratings)
+                .totalPages(totalPages)
+                .build());
+    }
 
     @GetMapping("/{courseId}")
     @ResponseStatus(HttpStatus.OK)

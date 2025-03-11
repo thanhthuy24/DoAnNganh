@@ -34,9 +34,17 @@ public class SentimentServiceImpl implements SentimentService {
 //        return getSentimentLabel(sentimentScore);
     }
 
-    private String getSentimentLabel(double score){
-        if (score > 0.05) return "Positive";
-        if (score < -0.05) return "Negative";
+    @Override
+    public String analyzeSentimentRating(String comment) throws JSONException {
+        Map<String, String> request = new HashMap<>();
+        request.put("comment", comment);
+
+        String response = restTemplate.postForObject(pythonApiUrl + "/analyze-rating", request, String.class);
+        JSONObject jsonResponse = new JSONObject(response);
+
+        double sentimentScore = jsonResponse.getDouble("sentiment_score");
+        if (sentimentScore > 0.05) return "Positive";
+        if (sentimentScore < -0.05) return "Negative";
         return "Neutral";
     }
 

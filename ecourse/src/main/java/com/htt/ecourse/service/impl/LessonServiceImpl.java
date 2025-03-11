@@ -50,7 +50,7 @@ public class LessonServiceImpl implements LessonService {
         List<Notification> notifications = users.stream()
                 .map(user -> Notification.builder()
                         .title("Khoá học " + existCourse.getName() + " bạn đang ký vừa có bài học mới!")
-                        .message("Bài học mới: " + lessonDTO.getName())
+                        .message("Bài học mới: " + lessonDTO.getName() + ", hãy check ngay nào, " + user.getUsername() + " ơi!")
                         .user(user)
                         .isRead(false)
                         .createdDate(new Date())

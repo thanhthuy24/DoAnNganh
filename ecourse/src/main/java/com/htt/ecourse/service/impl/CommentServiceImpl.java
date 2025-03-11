@@ -11,6 +11,7 @@ import com.htt.ecourse.repository.UserRepository;
 import com.htt.ecourse.responses.CommentResponse;
 import com.htt.ecourse.responses.list.CommentListResponse;
 import com.htt.ecourse.service.CommentService;
+import com.htt.ecourse.service.PerspectiveService;
 import com.htt.ecourse.service.SentimentService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
@@ -33,6 +34,7 @@ public class CommentServiceImpl implements CommentService {
     private final LessonRepository lessonRepository;
     private final UserRepository userRepository;
     private final SentimentService sentimentService;
+    private final PerspectiveService perspectiveService;
 
     @Override
     public Comment createComment(CommentDTO commentDTO) throws DataNotFoundException, JSONException {
@@ -55,7 +57,14 @@ public class CommentServiceImpl implements CommentService {
 
         Comment existingParentComment = commentRepository.getCommentById(commentDTO.getParentId());
 
-        String sentiment = sentimentService.analyzeSentiment(commentDTO.getContent());
+//        String sentiment = sentimentService.analyzeSentiment(commentDTO.getContent());
+
+        Double toxicityScore = perspectiveService.analyzeComment(commentDTO.getContent());
+        String sentiment = perspectiveService.analyzeCommentSentiment(commentDTO.getContent());
+
+        if (sentiment.equals("NEGATIVE") || toxicityScore < 0.5) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bình luận này bị chặn do có nội dung độc hại! 🔴");
+        }
 
         Comment newComment = Comment.builder()
                 .content(commentDTO.getContent())
@@ -66,7 +75,6 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         commentRepository.save(newComment);
-
         return newComment;
     }
 

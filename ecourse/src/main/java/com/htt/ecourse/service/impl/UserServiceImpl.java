@@ -48,6 +48,10 @@ public class UserServiceImpl implements UserService {
             throw new DataNotFoundException("Invalid username or password!");
         }
         User existingUser = optionalUser.get();
+        if(existingUser.getIsActive() == false) {
+            throw new BadCredentialsException("Account is not active!");
+        }
+
         //check password
         if(existingUser.getFacebookAccount().equals('0')
             && existingUser.getGoogleAccount().equals('0')) {

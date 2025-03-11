@@ -41,6 +41,10 @@ public class Courserating {
     @Column(name = "comment")
     private String comment;
 
+    @Size(max = 45)
+    @Column(name = "sentiment", length = 45)
+    private String sentiment;
+
     @PrePersist
     protected void onCreate() {
         this.ratingDate = new Date();

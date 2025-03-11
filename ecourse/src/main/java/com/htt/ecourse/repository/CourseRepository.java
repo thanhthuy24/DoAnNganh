@@ -22,6 +22,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByCategoryId(Long categoryId);
 
     Page<Course> findByCategoryId(Long categoryId, Pageable pageable);
+
     @Query("SELECT c FROM Course c WHERE " +
             "(:minPrice IS NULL OR c.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR c.price <= :maxPrice)")
