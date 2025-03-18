@@ -75,6 +75,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user1 = userRepository.getUserByUsername(username);
+
+        Optional<Enrollment> enrollments = enrollmentRepository.findByUserIdAndCourseId(user1.getId(), enrollmentDTO.getCourseId());
+        if (!enrollments.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This course had in your list course!!");
+        }
+
         Enrollment enrollment = Enrollment.builder()
                 .course(existingCourse)
                 .user(user1)

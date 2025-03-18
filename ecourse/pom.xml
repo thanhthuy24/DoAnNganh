@@ -30,10 +30,15 @@
 		<java.version>17</java.version>
 	</properties>
 	<repositories>
+<!--		<repository>-->
+<!--			<id>central</id>-->
+<!--			<url>https://repo.maven.apache.org/maven2</url>-->
+<!--		</repository>-->
 		<repository>
 			<id>paypal-repo</id>
 			<url>https://github.com/paypal/sdk-packages</url>
 		</repository>
+
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -100,6 +105,7 @@
 			<groupId>com.paypal.sdk</groupId>
 			<artifactId>rest-api-sdk</artifactId>
 			<version>1.14.0</version>
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -143,8 +149,11 @@
             <version>0.0.20131108.vaadin1</version>
             <scope>compile</scope>
         </dependency>
-
-
+		<dependency>
+			<groupId>org.languagetool</groupId>
+			<artifactId>languagetool-core</artifactId>
+			<version>6.3</version>
+		</dependency>
     </dependencies>
 
 	<build>

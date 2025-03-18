@@ -11,8 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,8 @@ public class ScoreServiceImpl implements ScoreService {
     private final AnswerChoiceRepository answerChoiceRepository;
     private final QuestionRepository questionRepository;
     private final EssayRepository essayRepository;
+    private final NotificationRepository notificationRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @Override
     public List<Score> getScoreByAssignmentId(Long assignmentId) throws DataNotFoundException {
@@ -66,6 +70,15 @@ public class ScoreServiceImpl implements ScoreService {
                     .assignment(existingAssignment)
                     .user(existingEssay.getUser())
                     .build();
+
+            Notification notifications = Notification.builder()
+                            .title("Giảng viên vừa chấm điểm bài tập của bạn!")
+                            .message("Bài tập essay: " + existingAssignment.getName() + " vừa được chấm, hãy check ngay nào, " + user.getUsername() + " ơi!")
+                            .user(user)
+                            .isRead(false)
+                            .createdDate(new Date())
+                            .build();
+            notificationRepository.save(notifications);
 
             scoreRepository.save(newScore);
             return newScore;

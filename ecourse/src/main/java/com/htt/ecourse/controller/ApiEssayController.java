@@ -76,6 +76,23 @@ public class ApiEssayController {
         return ResponseEntity.ok(essayDTOs);
     }
 
+    @PostMapping("/create-an-essay")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> createAnEssay(
+            @Valid @RequestBody EssayDTO essayDTO,
+            BindingResult rs
+    ) throws DataNotFoundException {
+        if(rs.hasErrors()){
+            List<String> errorMessages = rs.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+
+        return ResponseEntity.ok(essayService.createEssay(essayDTO));
+    }
+
     @PutMapping("/{essayId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> updateEssay(

@@ -124,6 +124,9 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public LessonVideoIntro getFirstLesson(Long courseId) {
         Lesson lesson = lessonRepository.findFirstLesson(courseId);
+        if (lesson == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find lesson by id " + courseId);
+        }
         return converToIntro(lesson);
     }
 

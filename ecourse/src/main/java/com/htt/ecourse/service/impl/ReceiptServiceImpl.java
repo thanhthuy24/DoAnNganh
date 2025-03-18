@@ -86,10 +86,15 @@ public class ReceiptServiceImpl implements ReceiptService {
 
             for (Cart cart : cartList) {
                 Long courseId = cart.getId();
+                Long count = 0L;
 
                 Optional<Enrollment> enrollments = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
                 if (!enrollments.isEmpty()) {
-                    new ResponseStatusException(HttpStatus.NOT_FOUND, "This course had in your list course!!");
+//                    new ResponseStatusException(HttpStatus.NOT_FOUND, "This course had in your list course!!");
+                    count++;
+                }
+                if (count > 0L) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This course had in your list course!!");
                 }
             }
 

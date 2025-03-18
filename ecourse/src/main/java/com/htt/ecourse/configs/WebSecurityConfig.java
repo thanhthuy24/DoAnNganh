@@ -93,8 +93,9 @@ public class WebSecurityConfig {
 
                             .requestMatchers(GET, "api/lessons").hasAnyRole(Role.USER, Role.ADMIN, Role.TEACHER)
                             .requestMatchers(GET, "api/lessons/auth/**").hasAnyRole(Role.USER, Role.ADMIN, Role.TEACHER)
-                            .requestMatchers(GET, "api/lessons/course/**").hasAnyRole(Role.USER, Role.ADMIN, Role.TEACHER)
-                            .requestMatchers(GET, "api/lessons/get-first-lesson/course/**").permitAll()
+//                            .requestMatchers(GET, "api/lessons/count-by-course/").permitAll()
+                            .requestMatchers(GET, "api/lessons/get-first-lesson/course/**",
+                                    "api/lessons/count-by-course/").permitAll()
 
                             .requestMatchers(POST, "api/lessons/**").hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST, "api/lessons/uploads/**").hasAnyRole(Role.ADMIN)
@@ -138,6 +139,8 @@ public class WebSecurityConfig {
 
                             .requestMatchers(POST, "api/score/**").hasAnyRole(Role.TEACHER, Role.ADMIN, Role.USER)
                             .requestMatchers(GET, "api/score/**").hasAnyRole(Role.USER, Role.TEACHER, Role.ADMIN)
+
+                            .requestMatchers(POST, "api/spell-check").hasAnyRole(Role.USER)
 
                             .requestMatchers(POST, "api/token").permitAll()
                             .requestMatchers(DELETE, "api/token/userId").permitAll()

@@ -222,7 +222,7 @@ public class ApiLessonController {
         return ResponseEntity.ok(listLesson);
     }
 
-    @GetMapping("/course/{courseId}/count")
+    @GetMapping("/count-by-course/{courseId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> countLessonsByCourseId(
             @PathVariable Long courseId
